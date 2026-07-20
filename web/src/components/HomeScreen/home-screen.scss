@@ -1,0 +1,41 @@
+.home-screen {
+  &__container {
+    background: linear-gradient(135deg, var(--color-light-background-1) 0%, var(--color-light-background-2) 100%);
+    padding: var(--spacing-lg);
+  }
+
+  position: relative;
+
+  &__logo {
+    position: absolute;
+
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  &__logo-placeholder {
+    width: 200px;
+    height: 200px;
+    border-radius: var(--border-radius-xl);
+    background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary-main) 100%);
+    box-shadow: var(--shadow-xl);
+  }
+
+  &__login {
+    width: 100%;
+    opacity: 0;
+  }
+
+  &__login-content {
+    background-color: var(--color-light-background-2);
+    padding: var(--spacing-xxl);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-xl);
+  }
+
+  &__input {
+  }
+
+  &__submit-button {
+  }
+}

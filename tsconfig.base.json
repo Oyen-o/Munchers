@@ -1,0 +1,30 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "bundler",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "strict": false,
+    "paths": {
+      "@/*": ["web/src/*"],
+      "@/atoms": ["web/src/atoms"],
+      "@/atoms/*": ["web/src/atoms/*"],
+      "@/components": ["web/src/components"],
+      "@/components/*": ["web/src/components/*"],
+      "@/lib/*": ["web/src/lib/*"],
+      "@/themes/*": ["web/src/themes/*"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

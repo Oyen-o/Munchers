@@ -1,0 +1,83 @@
+.groups-page {
+  &__container {
+    min-height: 100vh;
+    background-color: var(--color-light-background-1);
+    padding: var(--spacing-lg);
+  }
+
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+
+  &__header {
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-lg) 0;
+  }
+
+  &__groups-list {
+    margin-bottom: var(--spacing-lg);
+    background-color: var(--color-light-background-2);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
+
+  &__filters {
+    margin-bottom: var(--spacing-lg);
+    background-color: var(--color-light-background-2);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
+
+  &__events {
+    background-color: var(--color-light-background-2);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: var(--spacing-lg);
+  }
+
+  &__events-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+  }
+
+  &__events-list {
+    .MuiListItem-root {
+      padding: var(--spacing-sm) 0;
+    }
+  }
+
+  &__event-item {
+    width: 100%;
+  }
+
+  &__event-card {
+    width: 100%;
+    transition: var(--transition-base);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+  }
+
+  &__event-content {
+    width: 100%;
+  }
+
+  &__event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+
+  &__dialog-input {
+    margin-bottom: var(--spacing-md);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
