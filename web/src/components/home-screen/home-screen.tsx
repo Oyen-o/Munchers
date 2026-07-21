@@ -64,8 +64,8 @@ export function HomeScreen() {
           width: '100%', 
           maxWidth: 400, 
           position: 'relative',
-          alignitems: 'center',
-          justifycontent: 'center'
+          alignItems: 'center',
+          justifyContent: 'center'
         }}
       >
         {/* Logo Animation */}
@@ -78,7 +78,7 @@ export function HomeScreen() {
             scale: showLogin ? 0.5 : 1,
           }}
           transition={{
-            duration: 0.8,
+            duration: 0.5,
             ease: 'easeInOut',
           }}
         >
@@ -128,11 +128,11 @@ export function HomeScreen() {
               sx={{ alignItems: 'center' }}
             >
               <Typography 
-                variant="h4" 
+                variant="h3" 
                 component="h1" 
                 sx={{ 
                   fontWeight: 600,
-                  color: 'var(--color-text-primary)',
+                  color: 'var(--color-primary-main)',
                   textAlign: 'center'
                 }}
               >

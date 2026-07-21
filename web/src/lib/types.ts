@@ -33,9 +33,11 @@ export interface Event {
   id: string;
   title: string;
   description?: string;
+  imageUrl?: string;
   stage: EventStage;
   ownerId: string; // User ID
   ownerType: 'user' | 'group';
+  createdBy: string; // name
   groupId?: string; // If owned by group
   hostId?: string; // User hosting the event
   plannedDate?: Date;

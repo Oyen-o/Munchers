@@ -1,4 +1,6 @@
 // Color Palette
+@use './fonts.scss' as *;
+
 :root {
   // Primary Colors
   --color-primary-main: #6366f1;
@@ -13,8 +15,9 @@
   --color-secondary-contrast: #ffffff;
 
   // Background Colors
-  --color-light-background-1: #ffffff;
-  --color-light-background-2: #636363;
+  --color-light-background-1: #f8f8f8;
+  --color-light-background-2: #ebebeb;
+  --color-light-background-3: #dfddff;
   --color-background-dark: #1e293b;
 
   // Text Colors
@@ -42,16 +45,15 @@
   --spacing-xxl: 48px;
 
   // Border Radius
-  --border-radius-sm: 4px;
-  --border-radius-md: 8px;
-  --border-radius-lg: 12px;
-  --border-radius-xl: 16px;
+  --border-radius-sm: 2px;
+  --border-radius-md: 4px;
+  --border-radius-lg: 8px;
+  --border-radius-xl: 10px;
   --border-radius-round: 50%;
 
   // Typography - Font Families
-  --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-family-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-family-primary: 'lexendPeta-Black', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-heading: 'lexendPeta-Black', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   // Typography - Font Sizes
   --font-size-xs: 0.75rem;      // 12px

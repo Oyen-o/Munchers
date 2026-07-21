@@ -1,6 +1,7 @@
 .home-screen {
   &__container {
-    background: linear-gradient(135deg, var(--color-light-background-1) 0%, var(--color-light-background-2) 100%);
+    // background: linear-gradient(135deg, var(--color-light-background-1) 0%, var(--color-light-background-2) 100%);
+    background-color: var(--color-light-background-1);
     padding: var(--spacing-lg);
   }
 
@@ -14,11 +15,10 @@
   }
 
   &__logo-placeholder {
-    width: 200px;
-    height: 200px;
-    border-radius: var(--border-radius-xl);
-    background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary-main) 100%);
-    box-shadow: var(--shadow-xl);
+    width: 300px;
+    height: 300px;
+    border-radius: var(--border-radius-lg);
+    // background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary-main) 100%);
   }
 
   &__login {
@@ -29,8 +29,8 @@
   &__login-content {
     background-color: var(--color-light-background-2);
     padding: var(--spacing-xxl);
-    border-radius: var(--border-radius-xl);
-    box-shadow: var(--shadow-xl);
+    border-radius: var(--border-radius-lg);
+
   }
 
   &__input {

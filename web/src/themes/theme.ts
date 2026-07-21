@@ -92,6 +92,53 @@ const theme = createTheme({
         },
       },
     },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          borderRadius: 'var(--border-radius-md)',
+          width: '100px',
+        },
+      },
+    },
+    MuiTabs: {
+      styleOverrides: {
+        root: {
+          minHeight: 'unset',
+          padding: '4px',
+          '& .MuiTabs-indicator': {
+            display: 'none',
+          },
+        },
+        flexContainer: {
+          gap: '8px',
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          fontSize: 'var(--font-size-base)',
+          minHeight: 'unset',
+          borderRadius: 'var(--border-radius-md)',
+          color: 'var(--color-text-secondary)',
+          transition: 'all 0.2s ease',
+          '&:hover': {
+            backgroundColor: '#cbd5e1',
+          },
+          '&.Mui-selected': {
+            backgroundColor: 'var(--color-light-background-1)',
+            color: 'var(--color-text-primary)',
+            fontWeight: 600,
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          },
+          '& .MuiTab-iconWrapper': {
+        
+            marginBottom: '0 !important',
+          },
+        },
+      },
+    },
   },
 });
 

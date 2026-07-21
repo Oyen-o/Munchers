@@ -1,4 +1,4 @@
-import { GroupsPage } from '@/components/GroupsPage';
+import { GroupsPage } from './_components/groups-page';
 
 export default function GroupsRoute() {
   // TODO: Get userId from auth context
