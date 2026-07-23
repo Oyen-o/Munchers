@@ -33,7 +33,7 @@ import {
 } from '@mui/icons-material';
 import { Event, EventStage, Group } from '../../../../lib/types';
 import './groups-page.scss';
-import RatingStars from '../ratings/rating';
+
 import EventList from '../event-list.tsx/event-list';
 
 interface GroupsPageProps {
@@ -70,6 +70,7 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       ownerId: '1',
       ownerType: 'group',
       groupId: '1',
+      time: '5pm',
       comments: [{
         id: 'comment1',
         eventId: 'event1',
@@ -81,7 +82,7 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       ratings: [],
       createdAt: new Date(),
       updatedAt: new Date(),
-      plannedDate: new Date('2024-07-15'),
+      plannedDate: new Date('2024-07-15 '),
       location: '546 E Osborn Rd, Phoenix, AZ 85012',
     },
         {
@@ -93,6 +94,7 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       ownerId: '1',
       ownerType: 'group',
       groupId: '1',
+      time: '2pm',
       comments: [{
         id: 'comment2',
         eventId: 'event2',

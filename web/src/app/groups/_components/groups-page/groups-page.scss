@@ -2,70 +2,59 @@
   min-height: 100vh;
   background-color: var(--color-light-background-2);
   padding: var(--spacing-lg);
-    display: block;
+  display: block;
   max-width: 640px;
   margin: 0 auto;
 
+  .groups-page {
+    &__header {
+      padding: var(--spacing-lg) 0;
+    }
 
-.groups-page {
+    &__groups-list {
+    }
 
-  &__header {
-    padding: var(--spacing-lg) 0;
-  }
+    &__filters {
+    }
 
-  &__groups-list {
-  }
+    &__filter-tab-idea {
+      .MuiSvgIcon-root {
+        color: var(--color-stage-idea);
+      }
+    }
 
-  &__filters {
-  }
+    &__filter-tab-picked {
+      .MuiSvgIcon-root {
+        color: var(--color-stage-picked);
+      }
+    }
 
-  &__filter-tab-idea {
+    &__filter-tab-planned {
+      .MuiSvgIcon-root {
+        color: var(--color-stage-planned);
+      }
+    }
 
-  .MuiSvgIcon-root {
-      color: var(--color-stage-idea);
+    &__events {
+      background-color: transparent;
+      border-radius: var(--border-radius-lg);
+      margin-top: 0;
+      padding: 0;
+    }
+
+    &__events-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-md);
+    }
+
+    &__events-list {
+      .MuiListItem-root {
+        padding: var(--spacing-sm) 0;
+      }
     }
   }
-
-  &__filter-tab-picked {
-    .MuiSvgIcon-root {
-      color: var(--color-stage-picked);
-    }
-  }
-
-  &__filter-tab-planned {
-    .MuiSvgIcon-root {
-      color: var(--color-stage-planned);
-    }
-  }
-
-  &__events {
-    background-color: transparent;
-    border-radius: var(--border-radius-lg);
-    margin-top: 0;
-    padding: 0;
-  }
-
-  &__events-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-md);
-  }
-
-  &__events-list {
-    .MuiListItem-root {
-      padding: var(--spacing-sm) 0;
-    }
-  }
-
-
-
-
-
- 
- 
-  }
-
 
   .groups-page__event-header {
     display: flex;

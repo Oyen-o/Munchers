@@ -33,6 +33,7 @@ export interface Event {
   id: string;
   title: string;
   description?: string;
+  time?: string;
   imageUrl?: string;
   stage: EventStage;
   ownerId: string; // User ID

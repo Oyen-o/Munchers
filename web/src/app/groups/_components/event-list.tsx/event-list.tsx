@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+import { shortFormat } from '../../../../lib/utils';
 import {
   Typography,
   Box,
@@ -14,6 +16,7 @@ import {
   CircularProgress,
   Stack,
 } from '@mui/material';
+
 import {
   Add as AddIcon,
   FilterList as FilterIcon,
@@ -26,11 +29,11 @@ import {
   CalendarToday as CalendarIcon,
   LocationOn as LocationIcon,
   ArrowBack,
+  Face2,
 } from '@mui/icons-material';
 import { Event, EventStage, Group } from '../../../../lib/types';
 
 import RatingStars from '../ratings/rating';
-import { useState } from 'react';
 
 import '../groups-page/groups-page.scss';
 import './event-list.scss';
@@ -144,176 +147,189 @@ export default function EventList({
           events.map((event) => (
             <Box
               key={event.id}
-              className="groups-page__event-item"
+              className="groups-page__event-card"
               sx={{
-                minWidth: '300px',
-                maxWidth: '300px',
-                flexShrink: 0,
+                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'row',
+                height: '200px',
               }}
             >
+              {/* Event Image */}
               <Box
-                className="groups-page__event-card"
-                sx={{ cursor: 'pointer' }}
+                className="groups-page__event-image"
+                sx={{
+                  width: '38.2%',
+                  minWidth: '38.2%',
+                  position: 'relative',
+                  flexShrink: 0,
+                }}
               >
-                {/* Event Image */}
-                <Box className="groups-page__event-image">
-                  <Box className="groups-page__event-image-radius">
-                    <img
-                      src={
-                        event.imageUrl ||
-                        'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=200&fit=crop'
-                      }
-                      alt={event.title}
-                    />
-                  </Box>
-
-                  <Chip
-                    label={event.stage}
-                    size="small"
-                    className={`groups-page__event-stage-badge`}
-                    sx={{
-                      backgroundColor: getStageColor(event.stage),
-                      fontWeight: 600,
-                      fontSize: 'var(--font-size-xs)',
-                      right: '12px',
-                    }}
-                  />
-                                    <Box
-                                    className="groups-page__event-rating"
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      alignSelf: 'center',
-                    }}
-                  >
-                    <RatingStars rating={5}></RatingStars>
-                  </Box>
-                </Box>
-
-                {/* Event Content */}
-                <Stack
-                  className="groups-page__event-content"
-                  spacing={1}
+                <Box
+                  className="groups-page__event-image-radius"
                   sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-
+                    width: '100%',
                     height: '100%',
+                    position: 'relative',
                   }}
                 >
-                  <Typography variant="h6" className="groups-page__event-title">
-                    {event.title}
-                  </Typography>
+                  <img
+                    src={
+                      event.imageUrl ||
+                      'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=200&fit=crop'
+                    }
+                    alt={event.title}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                    }}
+                  />
+                </Box>
+
+                <Chip
+                  label={event.stage}
+                  size="small"
+                  className={`groups-page__event-stage-badge`}
+                  sx={{
+                    backgroundColor: getStageColor(event.stage),
+                  }}
+                />
+              </Box>
+
+              {/* Event Content */}
+              <Stack
+                className="groups-page__event-content"
+                spacing={1}
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  padding: '16px',
+                  flex: 1,
+                  height: '100%',
+                }}
+              >
+                <Box>
                   <Typography
-                    variant="h6"
+                    variant="body2"
                     className="groups-page__event-subtitle"
                     sx={{
                       color: 'var(--color-text-secondary)',
-                      fontSize: 'var(--font-size-sm)',
+                      fontSize: 'var(--font-size-xs)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 0.5,
                     }}
                   >
-                    <PersonIcon
+                    <Face2
                       sx={{
+                        fontSize: 14,
                         color: 'var(--color-text-secondary)',
                       }}
-                    />{' '}
-                    {event.hostName && `Hosted by: ${event.hostName}`}
+                    />
+                    {event.hostName && `${event.hostName}`}
                   </Typography>
+                  <Typography variant="h6" className="groups-page__event-title">
+                    {event.title}
+                  </Typography>
+                </Box>
 
-                  {/* Event Details */}
-                  {/* <Stack
-                    spacing={0.5}
-                    direction="column"
-                    className="groups-page__event-details"
+                { (
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: 'var(--color-text-secondary)',
+                      fontSize: '0.75rem',
+                    }}
                   >
-                    {event.hostId && (
-                      <Stack direction="row" spacing={1}>
-                       
-                        <Typography
-                          variant="caption"
-                          sx={{ color: 'var(--color-text-secondary)' }}
-                        >
-                          {event.hostId}
-                        </Typography>
-                      </Stack>
-                    )}
-                  </Stack> */}
+                    {event.time ?? 'Time not specified'}
+                  </Typography>
+                )}
                   <Stack
                     direction="row"
                     spacing={1}
                     sx={{ alignItems: 'center' }}
                   >
-                    <CalendarIcon
-                      sx={{
-                        fontSize: 16,
-                        color: 'var(--color-text-secondary)',
-                      }}
-                    />
                     <Typography
                       variant="caption"
-                      sx={{ color: 'var(--color-text-secondary)' }}
+                      sx={{
+                        color: 'var(--color-text-secondary)',
+                        fontSize: '0.75rem',
+                      }}
                     >
                       {event.plannedDate
-                        ? new Date(event.plannedDate).toLocaleDateString()
+                        ? shortFormat(new Date(event.plannedDate))
                         : 'Date not specified'}
                     </Typography>
                   </Stack>
 
-                  {/* Location indicator */}
-                  <Stack direction="row" spacing={1}>
+                  {/* <Stack
+                    direction="row"
+                    spacing={1}
+                    sx={{ alignItems: 'center' }}
+                  >
                     <LocationIcon
                       sx={{
-                        fontSize: 16,
+                        fontSize: 14,
                         color: 'var(--color-text-secondary)',
                       }}
                     />
                     <Typography
                       variant="caption"
-                      sx={{ color: 'var(--color-text-secondary)' }}
+                      sx={{
+                        color: 'var(--color-text-secondary)',
+                        fontSize: '0.75rem',
+                      }}
                     >
                       {event.location
                         ? event.location
                         : 'Location not specified'}
                     </Typography>
-                  </Stack>
+                  </Stack> */}
+         
 
-                  {/* Ratings indicator */}
-
-
-                  {/* Comments indicator */}
-                  {event.comments && event.comments.length > 0 && (
-                    <Stack
-                      direction="row"
-                      spacing={0.5}
-                      sx={{
-                        position: 'relative',
-                        bottom: '8px',
-                        alignItems: 'center',
-                      }}
-                    >
-                      {event.comments.slice(0, 3).map((comment, idx) => (
+                <Box
+                  className="groups-page__event-rating"
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <RatingStars rating={5} fontSize={36}></RatingStars>
+                </Box>
+                {/* Comments indicator */}
+                {event.comments && event.comments.length > 0 && (
+                  <Stack
+                    direction="row"
+                    spacing={0.5}
+                    sx={{
+                      alignItems: 'center',
+                    }}
+                  >
+                    {/* {event.comments.slice(0, 3).map((comment, idx) => (
                         <Box
                           key={idx}
                           className="groups-page__event-avatar"
                           sx={{
                             zIndex: 3 - idx,
                             backgroundColor: '#a8fec2',
+                            width: '24px',
+                            height: '24px',
                           }}
                         ></Box>
-                      ))}
+                      ))} */}
 
-                      <Typography
+                    {/* <Typography
                         variant="caption"
-                        sx={{ color: 'var(--color-text-secondary)', ml: 1 }}
+                        sx={{ color: 'var(--color-text-secondary)', ml: 0.5, fontSize: '0.7rem' }}
                       >
                         {event.comments.length}{' '}
                         {event.comments.length === 1 ? 'comment' : 'comments'}
-                      </Typography>
-                    </Stack>
-                  )}
-                </Stack>
-              </Box>
+                      </Typography> */}
+                  </Stack>
+                )}
+              </Stack>
             </Box>
           ))
         )}
