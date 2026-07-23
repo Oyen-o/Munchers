@@ -1,20 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { 
   Typography, 
   Box, 
   Tabs, 
   Tab, 
-  List, 
-  ListItem, 
   Chip,
   IconButton,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  Card,
   Button,
   TextField,
   CircularProgress,
@@ -31,15 +29,19 @@ import {
   Person as PersonIcon,
   CalendarToday as CalendarIcon,
   LocationOn as LocationIcon,
+  ArrowBack,
 } from '@mui/icons-material';
 import { Event, EventStage, Group } from '../../../../lib/types';
 import './groups-page.scss';
+import RatingStars from '../ratings/rating';
+import EventList from '../event-list.tsx/event-list';
 
 interface GroupsPageProps {
   userId: string;
 }
 
 export function GroupsPage({ userId }: GroupsPageProps) {
+  const router = useRouter();
   const [groups, setGroups] = useState<Group[]>([{
     id: '1',
     name: 'Muchers',
@@ -61,8 +63,9 @@ export function GroupsPage({ userId }: GroupsPageProps) {
     {
       id: 'event1',
       title: 'Taco Guild',
-      description: 'Taco Guild Hosted by Carina.',
+      description: 'Set in an old church, this gastropublike spot serves sustainable Mexican fare, craft beer & tequila.',
       createdBy: 'Carina',
+      hostName: 'Carina',
       stage: 'idea',
       ownerId: '1',
       ownerType: 'group',
@@ -78,6 +81,8 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       ratings: [],
       createdAt: new Date(),
       updatedAt: new Date(),
+      plannedDate: new Date('2024-07-15'),
+      location: '546 E Osborn Rd, Phoenix, AZ 85012',
     },
         {
       id: 'event2',
@@ -99,12 +104,32 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       ratings: [],
       createdAt: new Date(),
       updatedAt: new Date(),
+    },
+            {
+      id: 'event3',
+      title: 'Brunch',
+      description: 'Brunch Hosted by Alex.',
+      createdBy: 'Alex',
+      hostName: 'Alex ',
+      stage: 'picked',
+      ownerId: '1',
+      ownerType: 'group',
+      groupId: '1',
+      comments: [{
+        id: 'comment2',
+        eventId: 'event2',
+        userId: 'user1',
+        content: 'This is a comment on the event.',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }],
+      ratings: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
     }
   ]);
   const [stageFilter, setStageFilter] = useState<EventStage | 'all'>('all');
-  const [addEventOpen, setAddEventOpen] = useState(false);
-  const [newEventTitle, setNewEventTitle] = useState('');
-  const [newEventDescription, setNewEventDescription] = useState('');
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -145,48 +170,12 @@ export function GroupsPage({ userId }: GroupsPageProps) {
     }
   };
 
-  const handleAddEvent = async () => {
-    if (!newEventTitle.trim() || !selectedGroup) return;
-
-    try {
-      const response = await fetch('/api/events', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: newEventTitle,
-          description: newEventDescription,
-          stage: 'idea',
-          ownerId: selectedGroup.id,
-          ownerType: 'group',
-          groupId: selectedGroup.id,
-        }),
-      });
-
-      if (response.ok) {
-        setNewEventTitle('');
-        setNewEventDescription('');
-        setAddEventOpen(false);
-        fetchGroupEvents(selectedGroup.id);
-      }
-    } catch (error) {
-      console.error('Error creating event:', error);
-    }
-  };
-
-  const getStageColor = (stage: EventStage) => {
-    const colors = {
-      idea: 'var(--color-stage-idea)',
-      picked: 'var(--color-stage-picked)',
-      planned: 'var(--color-stage-planned)',
-    };
-    return colors[stage];
-  };
-
   if (loading) {
     return (
       <Box className="groups-page__container ">
-        <Stack justifycontent="center" alignitems="center" minheight="100vh">
+        <Stack sx={{alignItems:'center', justifyContent:'center'}} spacing={2}>
           <CircularProgress size={80} />
+          <Box></Box>
         </Stack> 
       </Box>
     );
@@ -209,10 +198,14 @@ export function GroupsPage({ userId }: GroupsPageProps) {
     <div className="groups-page__container">
       <Stack className="groups-page" spacing={1}>
         {/* Header */}
-        <Box className="groups-page__header">
-          <Typography variant="h4" sx={{ fontWeight: 600 }}>
-            {}
+        <Box className="groups-page__header" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <IconButton onClick={() => window.history.back()} className="groups-page__back-button">
+            <ArrowBack />
+          </IconButton>
+          <Typography variant="h3" >
+            Groups
           </Typography>
+          <Box sx={{ width: 40 }} /> {/* Spacer for centering */}
         </Box>
 
         {/* Groups List */}
@@ -236,6 +229,9 @@ export function GroupsPage({ userId }: GroupsPageProps) {
 
         {/* Filter Tabs */}
         <Box className="groups-page__filters">
+          <Typography variant="body1" sx={{ mb: 1,mt:2   }}>
+            Filter by Stage
+          </Typography>
           <Tabs
             value={stageFilter}
             onChange={(_, value) => setStageFilter(value)}
@@ -251,7 +247,7 @@ export function GroupsPage({ userId }: GroupsPageProps) {
             <Tab 
               label="Ideas" 
               value="idea" 
-              className="groups-page__filter-tab-idea"
+              className="groups-page__filter-tab-item groups-page__filter-tab-idea"
               icon={<LightbulbIcon />}
               iconPosition="start"
             />
@@ -260,180 +256,18 @@ export function GroupsPage({ userId }: GroupsPageProps) {
               value="picked" 
               icon={<CheckCircleIcon />}
               iconPosition="start"
-              className="groups-page__filter-tab-picked"
+              className="groups-page__filter-tab-item groups-page__filter-tab-picked"
             />
             <Tab 
               label="Planned" 
               value="planned" 
               icon={<EventIcon />}
               iconPosition="start"
-              className="groups-page__filter-tab-planned"
+              className="groups-page__filter-tab-item groups-page__filter-tab-planned"
             />
           </Tabs>
         </Box>
-
-        {/* Events Section */}
-        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h4">
-            Events
-          </Typography>
-          <IconButton 
-            color="primary" 
-            onClick={() => setAddEventOpen(true)}
-            size="small"
-          >
-            <AddIcon />
-          </IconButton>
-        </Box>
-
-        {/* Events List */}
-        <Box className="groups-page__events">
-          <Box className="groups-page__events-header">
-
- 
-          </Box>
-
-          <Stack className="groups-page__events-list" spacing={1}>
-            {events.length === 0 ? (
-              <Typography 
-                variant="body2" 
-                sx={{ textAlign: 'center', py: 4, color: 'var(--color-text-secondary)' }}
-              >
-                No events yet. Add one to get started!
-              </Typography>
-            ) : (
-              events.map((event) => (
-                
-                <Box key={event.id} className="groups-page__event-item">
-                  <Stack direction="row" className={`groups-page__event-header ${event.stage}`} >
-                  <Chip
-                        label={event.stage}
-                        size="small"
-                        className={`groups-page__event-stage-badge`}
-                        sx={{
-                          backgroundColor: getStageColor(event.stage),
-                        }}
-                      />
-                  </Stack>
-                   
-                  <Card className="groups-page__event-card">
-      
-                    {/* Event Image */}
-                    <Box className="groups-page__event-image">
-                      <img 
-                        src={event.imageUrl || 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=200&fit=crop'} 
-                        alt={event.title}
-                      />
-
-                    </Box>
-
-                    {/* Event Content */}
-                    <Box className="groups-page__event-content">
-                      <Typography variant="h6" className="groups-page__event-title">
-                        {event.title}
-                      </Typography>
-                      
-                      {event.description && (
-                        <Typography 
-                          variant="body2" 
-                          className="groups-page__event-description"
-                        >
-                          {event.description}
-                        </Typography>
-                      )}
-
-                      {/* Event Details */}
-                      <Stack spacing={0.5} className="groups-page__event-details">
-                        {event.hostId && (
-                          <Stack direction="row" spacing={1} alignItems="center">
-                            <PersonIcon sx={{ fontSize: 16, color: 'var(--color-text-secondary)' }} />
-                            <Typography variant="caption" sx={{ color: 'var(--color-text-secondary)' }}>
-                              {event.hostId}
-                            </Typography>
-                          </Stack>
-                        )}
-
-                        {event.plannedDate && (
-                          <Stack direction="row" spacing={1} alignItems="center">
-                            <CalendarIcon sx={{ fontSize: 16, color: 'var(--color-text-secondary)' }} />
-                            <Typography variant="caption" sx={{ color: 'var(--color-text-secondary)' }}>
-                              {new Date(event.plannedDate).toLocaleDateString()}
-                            </Typography>
-                          </Stack>
-                        )}
-
-                        {event.location && (
-                          <Stack direction="row" spacing={1} alignItems="center">
-                            <LocationIcon sx={{ fontSize: 16, color: 'var(--color-text-secondary)' }} />
-                            <Typography variant="caption" sx={{ color: 'var(--color-text-secondary)' }}>
-                              {event.location}
-                            </Typography>
-                          </Stack>
-                        )}
-                      </Stack>
-
-                      {/* Comments indicator */}
-                      {event.comments && event.comments.length > 0 && (
-                        <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mt: 1 }}>
-                          <Stack direction="row" spacing={-1}>
-                            {event.comments.slice(0, 3).map((comment, idx) => (
-                              <Box 
-                                key={idx}
-                                className="groups-page__event-avatar"
-                                sx={{ 
-                                  zIndex: 3 - idx,
-                                  backgroundColor: '#6366f1',
-                                }}
-                              >
-                                <PersonIcon sx={{ fontSize: 14, color: '#fff' }} />
-                              </Box>
-                            ))}
-                          </Stack>
-                          <Typography variant="caption" sx={{ color: 'var(--color-text-secondary)', ml: 1 }}>
-                            {event.comments.length} {event.comments.length === 1 ? 'comment' : 'comments'}
-                          </Typography>
-                        </Stack>
-                      )}
-                    </Box>
-                  </Card>
-                </Box>
-              ))
-            )}
-          </Stack>
-        </Box>
-
-        {/* Add Event Dialog */}
-        <Dialog open={addEventOpen} onClose={() => setAddEventOpen(false)} maxWidth="sm" fullWidth>
-          <DialogTitle>Add New Event</DialogTitle>
-          <DialogContent>
-            <Box sx={{ pt: 2 }}>
-              <TextField
-                label="Event Title"
-                value={newEventTitle}
-                onChange={(e) => setNewEventTitle(e.target.value)}
-                fullWidth
-                className="groups-page__dialog-input"
-              />
-              <TextField
-                label="Description (Optional)"
-                value={newEventDescription}
-                onChange={(e) => setNewEventDescription(e.target.value)}
-                fullWidth
-                multiline
-                rows={3}
-                className="groups-page__dialog-input"
-              />
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setAddEventOpen(false)} variant="outlined">
-              Cancel
-            </Button>
-            <Button onClick={handleAddEvent} variant="contained" color="primary">
-              Add Event
-            </Button>
-          </DialogActions>
-        </Dialog>
+          <EventList events={events} selectedGroup={selectedGroup} fetchGroupEvents={fetchGroupEvents} />
       </Stack>
     </div>
   );

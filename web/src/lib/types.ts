@@ -40,6 +40,7 @@ export interface Event {
   createdBy: string; // name
   groupId?: string; // If owned by group
   hostId?: string; // User hosting the event
+  hostName?: string; // Name of the host
   plannedDate?: Date;
   location?: string;
   comments: Comment[];
