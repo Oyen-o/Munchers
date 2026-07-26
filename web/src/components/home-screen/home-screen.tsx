@@ -14,7 +14,7 @@ export function HomeScreen() {
     // Trigger logo animation
     const timer = setTimeout(() => {
       setShowLogin(true);
-    }, 2000); // Logo fades and slides up after 2 seconds
+    }, 300); // Logo fades and slides up after 0.3 seconds
 
     return () => clearTimeout(timer);
   }, []);
@@ -69,7 +69,7 @@ export function HomeScreen() {
         }}
       >
         {/* Logo Animation */}
-        <motion.div
+        {/* <motion.div
           className="home-screen__logo"
           initial={{ opacity: 1, y: 0, scale: 1 }}
           animate={{
@@ -102,7 +102,7 @@ export function HomeScreen() {
               Munchers
             </Typography>
           </Stack>
-        </motion.div>
+        </motion.div> */}
 
         {/* Phone Number Entry */}
         <motion.div
@@ -113,8 +113,8 @@ export function HomeScreen() {
             y: showLogin ? 0 : 50,
           }}
           transition={{
-            duration: 0.6,
-            delay: 0.3,
+            duration: 0.3,
+            delay: 0,
             ease: 'easeOut',
           }}
         >
@@ -138,6 +138,11 @@ export function HomeScreen() {
               >
                 Welcome Back
               </Typography>
+              <img
+                src="images/home-splash.png"
+                alt="Munchers Logo"
+                style={{ width: '100%', maxWidth: 300, height: 'auto' }}
+              />
               
               <Typography 
                 variant="body2" 
@@ -159,6 +164,7 @@ export function HomeScreen() {
                   onChange={handlePhoneChange}
                   placeholder="(555)-555-5555"
                   className="home-screen__input"
+                  variant="standard"
                   fullWidth
                 />
 

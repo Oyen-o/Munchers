@@ -29,7 +29,28 @@ export interface GroupMember {
 // Event Types
 export type EventStage = 'idea' | 'picked' | 'planned';
 
+export enum EventType {
+  Foodie = 'foodie',
+  Hiking = 'adventure',
+  Sports = 'sports',
+  Movie = 'entertainment',
+  Gaming = 'gaming',
+  Running = 'running',
+  Other = 'other',
+}
+
+export const EventTypeLabels: Record<EventType, string> = {
+  [EventType.Foodie]: 'Foodie',
+  [EventType.Hiking]: 'Hiking',
+  [EventType.Sports]: 'Sports',
+  [EventType.Movie]: 'Movie',
+  [EventType.Gaming]: 'Gaming',
+  [EventType.Running]: 'Running',
+  [EventType.Other]: 'Other',
+};
+
 export interface Event {
+  hostAvatarUrl?: string;
   id: string;
   title: string;
   description?: string;

@@ -1,6 +1,7 @@
+
+
 .groups-page__container {
   min-height: 100vh;
-  background-color: var(--color-light-background-2);
   padding: var(--spacing-lg);
   display: block;
   max-width: 640px;
@@ -15,12 +16,18 @@
     }
 
     &__filters {
+      width: 50vw;
+      padding: var(--spacing-lg);
     }
 
     &__filter-tab-idea {
       .MuiSvgIcon-root {
         color: var(--color-stage-idea);
       }
+    }
+
+    &__filter-tabs {
+      background-color: var(--color-light-background-4);
     }
 
     &__filter-tab-picked {

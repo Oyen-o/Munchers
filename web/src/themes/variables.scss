@@ -2,30 +2,43 @@
 @use './fonts.scss' as *;
 
 :root {
+
+  
+  --color-warm-brown: #9C6A3D;
+  --color-light-tan: #EED8B0;
+  --color-light-tan-faded: #bfbebc;
+  --color-dark-brown: #433126;
+  --color-forest-green: #6FA85B;
+  --color-orange-scarf: #E88732;
+  --color-cream-highlights: #F8F3EA;
+
+
   // Primary Colors
-  --color-primary-main: #8B7FD6;
-  --color-primary-light: #A99EE6;
-  --color-primary-dark: #8070e8;
+  --color-primary-main: #333333;
+  --color-primary-light: #666666;
+  --color-primary-dark: #000000;
   --color-primary-contrast: #ffffff;
   
-  --color-primary-an-main: #709ce8;
+  --color-primary-an-main: #555555;
+
+  --color-accent-main: #A47337;
 
   // Secondary Colors
-  --color-secondary-main: #B794F6;
-  --color-secondary-light: #C8A9F9;
-  --color-secondary-dark: #5d23e4;
+  --color-secondary-main: #4a4a4a;
+  --color-secondary-light: #7a7a7a;
+  --color-secondary-dark: #1a1a1a;
   --color-secondary-contrast: #ffffff;
 
   // Background Colors
-  --color-light-background-2: #f9f8fe;
-  --color-light-background-1: #f1f0f6;
-  --color-light-background-3: #FFFFFF;
-  --color-background-dark: #2D2640;
+  --color-light-background-2: #ffffff;
+  --color-light-background-1: #f0f0f0;
+  --color-light-background-3:  #f0f0f0;
+  --color-background-dark: #1a1a1a;
 
   // Text Colors
-  --color-text-primary: #4a4065;
-  --color-text-secondary: #6B5F8F;
-  --color-text-disabled: #B8B0D0;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #666666;
+  --color-text-disabled: #999999;
 
   // Status Colors
   --color-success: #10b981;
@@ -83,10 +96,10 @@
   --line-height-relaxed: 1.75;
 
   // Shadows
-  --shadow-sm: 0 2px 4px 0 rgb(139 127 214 / 0.08);
-  --shadow-md: 0 4px 12px 0 rgb(139 127 214 / 0.12);
-  --shadow-lg: 0 8px 20px 0 rgb(139 127 214 / 0.15);
-  --shadow-xl: 0 12px 28px 0 rgb(139 127 214 / 0.18);
+  --shadow-sm: 0 2px 4px 0 rgb(0 0 0 / 0.08);
+  --shadow-md: 0 4px 12px 0 rgb(0 0 0 / 0.12);
+  --shadow-lg: 0 8px 20px 0 rgb(0 0 0 / 0.15);
+  --shadow-xl: 0 12px 28px 0 rgb(0 0 0 / 0.18);
 
   // Transitions
   --transition-fast: 150ms ease-in-out;
@@ -111,5 +124,5 @@
 
   --color-text-primary: #f8fafc;
   --color-text-secondary: #cbd5e1;
-  --color-text-disabled: #475569;
+  --color-text-disabled: #333333;
 }

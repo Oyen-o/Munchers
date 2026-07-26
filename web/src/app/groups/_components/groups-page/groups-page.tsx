@@ -9,14 +9,11 @@ import {
   Tab, 
   Chip,
   IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  TextField,
   CircularProgress,
   Stack,
+  Drawer,
+  ListItem,
+  Button,
 } from '@mui/material';
 import { 
   Add as AddIcon, 
@@ -30,11 +27,15 @@ import {
   CalendarToday as CalendarIcon,
   LocationOn as LocationIcon,
   ArrowBack,
+  Close as CloseIcon,
+  Tune
 } from '@mui/icons-material';
 import { Event, EventStage, Group } from '../../../../lib/types';
+
 import './groups-page.scss';
 
 import EventList from '../event-list.tsx/event-list';
+import { Avatar } from 'src/components/avatar/avatar';
 
 interface GroupsPageProps {
   userId: string;
@@ -66,6 +67,7 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       description: 'Set in an old church, this gastropublike spot serves sustainable Mexican fare, craft beer & tequila.',
       createdBy: 'Carina',
       hostName: 'Carina',
+      hostAvatarUrl: 'avatars/avatar_1.png',
       stage: 'idea',
       ownerId: '1',
       ownerType: 'group',
@@ -90,6 +92,7 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       title: 'Thai Food',
       description: 'Thai Food Hosted by Rene.',
       createdBy: 'Rene',
+            hostAvatarUrl: 'avatars/avatar_3.png',
       stage: 'planned',
       ownerId: '1',
       ownerType: 'group',
@@ -112,6 +115,7 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       title: 'Brunch',
       description: 'Brunch Hosted by Alex.',
       createdBy: 'Alex',
+      hostAvatarUrl: '/avatars/avatar_4.png',
       hostName: 'Alex ',
       stage: 'picked',
       ownerId: '1',
@@ -131,7 +135,7 @@ export function GroupsPage({ userId }: GroupsPageProps) {
     }
   ]);
   const [stageFilter, setStageFilter] = useState<EventStage | 'all'>('all');
-
+  const [drawerOpen, setDrawerOpen] = useState(true);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -175,15 +179,13 @@ export function GroupsPage({ userId }: GroupsPageProps) {
   if (loading) {
     return (
       <Box className="groups-page__container ">
-        <Stack sx={{alignItems:'center', justifyContent:'center'}} spacing={2}>
+        <Stack sx={{alignItems:'center', justifyContent:'center', height: '80vh' }} spacing={2}>
           <CircularProgress size={80} />
-          <Box></Box>
+          <img src="/images/loading-splash.png" width={600} height={400} alt="Logo" className="groups-page__loading-logo" />
         </Stack> 
       </Box>
     );
   }
-
-  
 
   if (groups.length === 0) {
     return (
@@ -197,6 +199,7 @@ export function GroupsPage({ userId }: GroupsPageProps) {
   }
 
   return (
+
     <div className="groups-page__container">
       <Stack className="groups-page" spacing={1}>
         {/* Header */}
@@ -207,14 +210,21 @@ export function GroupsPage({ userId }: GroupsPageProps) {
           <Typography variant="h3" >
             Groups
           </Typography>
-          <Box sx={{ width: 40 }} /> {/* Spacer for centering */}
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Button>
+          <Tune onClick={() => setDrawerOpen(true)}  />
+            </Button>
+          
+           <Avatar src="/images/avatar.png" alt="User Avatar" size='large'  />
+
+          </Stack> 
         </Box>
 
         {/* Groups List */}
         <Box className="groups-page__groups-list">
           <Tabs
             value={groups.findIndex((g) => g.id === selectedGroup?.id)}
-            onChange={(_, index) => setSelectedGroup(groups[index])}
+            // onChange={(_, index) => setSelectedGroup(groups[index])}
             variant="scrollable"
             scrollButtons="auto"
           >
@@ -229,23 +239,23 @@ export function GroupsPage({ userId }: GroupsPageProps) {
           </Tabs>
         </Box>
 
-        {/* Filter Tabs */}
+    <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} sx={{ width: '50%' }} variant="persistent">
+         {/* Filter Tabs */}
         <Box className="groups-page__filters">
-          <Typography variant="body1" sx={{ mb: 1,mt:2   }}>
-            Filter by Stage
-          </Typography>
+          <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
+            <Typography variant="h5" >
+              Filter by Stage
+            </Typography>
+            <IconButton onClick={() => setDrawerOpen(false)} size="small">
+              <CloseIcon />
+            </IconButton>
+          </Stack>
+
           <Tabs
             value={stageFilter}
             onChange={(_, value) => setStageFilter(value)}
             variant="fullWidth"
           >
-            <Tab 
-              label="All" 
-              value="all" 
-              icon={<ViewListIcon />}
-
-              iconPosition="start"
-            />
             <Tab 
               label="Ideas" 
               value="idea" 
@@ -269,7 +279,9 @@ export function GroupsPage({ userId }: GroupsPageProps) {
             />
           </Tabs>
         </Box>
-          <EventList events={events} selectedGroup={selectedGroup} fetchGroupEvents={fetchGroupEvents} />
+    </Drawer>
+    <EventList events={events} selectedGroup={selectedGroup} fetchGroupEvents={fetchGroupEvents} />
+
       </Stack>
     </div>
   );
