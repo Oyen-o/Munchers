@@ -27,11 +27,11 @@ export function EventItem({
   return (
     <Box
       key={event.id}
-      className={`event-item__event-card ${size === 'large' ? 'event-item__event-card--large' : ''}`}
+      className={`event-item__container ${size === 'large' ? 'event-item__container--large' : ''}`}
     >
       {/* Event Image */}
       <Box
-        className={`event-item__event-image${size === 'large' ? '--large' : ''}`}
+        className={`event-item__event-card${size === 'large' ? '--large' : ''}`}
       >
         <Stack className="event-item__event-header-layer" direction="column">
           <Stack className="event-item__event-header-row" direction="row">
@@ -65,6 +65,7 @@ export function EventItem({
         <Box className="event-item__event-image-radius">
           <Box className="event-item__event-image-gradient" />
           <img
+            className="event-item__event-image"
             src={
               event.imageUrl ||
               'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=200&fit=crop'

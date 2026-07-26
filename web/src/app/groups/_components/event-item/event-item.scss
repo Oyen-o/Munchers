@@ -1,29 +1,44 @@
-.event-item__event-card {
+.event-item__container {
+  min-width: 360px;
+  overflow: hidden;
+  border-radius: var(--border-radius-md);
+  background-color: var(--color-light-background-2);
+  border: 2px solid var(--color-light-background-3);
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+
+  &--large {
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    flex-direction: column;
+  }
+
   .event-item {
+    &__event-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: var(--border-radius-lg);
+      padding: 10px;
+    }
+
+    &:hover {
+      box-shadow: var(--shadow-lg);
+    }
+
     &__event-card {
-      min-width: 400px;
-      max-width: 400px;
+      position: relative;
       overflow: hidden;
       border-radius: var(--border-radius-md);
-      background-color: var(--color-light-background-2);
-      cursor: pointer;
-      display: flex;
-      flex-direction: row;
+      object-fit: cover;
+      width: 38.2%;
+      min-width: 38.2%;
+
+      flex-shrink: 0;
 
       &--large {
-        border-radius: var(--border-radius-md);
-        cursor: pointer;
-        flex-direction: column;
-      }
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      &:hover {
-        box-shadow: var(--shadow-lg);
+        position: relative;
       }
     }
 
@@ -52,8 +67,11 @@
     &__event-image-gradient {
       position: absolute;
       top: 10px;
+      left: 10px;
       height: 80%;
       width: calc(100% - 20px);
+
+      border-radius: var(--border-radius-lg);
       background: linear-gradient(
         180deg,
         rgba(0, 0, 0, 0.6) 0%,
@@ -100,28 +118,6 @@
 
     &__event-item {
       width: 100%;
-    }
-
-    &__event-image {
-      position: relative;
-      overflow: hidden;
-      border-radius: var(--border-radius-md);
-      object-fit: cover;
-      width: 38.2%;
-      min-width: 38.2%;
-
-      flex-shrink: 0;
-
-      &--large {
-        position: relative;
-      }
-    }
-
-    &__event-image-radius {
-      border-radius: var(--border-radius-md);
-      height: 100%;
-      width: 100%;
-      padding: 10px;
     }
 
     &__event-rating {

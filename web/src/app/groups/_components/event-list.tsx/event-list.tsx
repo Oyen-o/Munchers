@@ -86,7 +86,7 @@ export default function EventList({
       <Stack
         className="groups-page__events-list"
         direction="row"
-        spacing={2}
+        spacing={1}
         sx={{
           overflowX: 'auto',
           overflowY: 'hidden',
