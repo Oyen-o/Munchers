@@ -7,7 +7,7 @@ import RatingStars from '../ratings/rating';
 import { Avatar } from 'src/components/avatar/avatar';
 
 import './event-item.scss';
-
+type displayedStage = Exclude<EventStage, 'all'>;
 export function EventItem({
   event,
   size = 'large',
@@ -15,11 +15,12 @@ export function EventItem({
   event: Event;
   size?: 'small' | 'medium' | 'large';
 }) {
-  const getStageColor = (stage: EventStage) => {
+  const getStageColor = (stage: displayedStage) => {
     const colors = {
       idea: 'var(--color-stage-idea)',
       picked: 'var(--color-stage-picked)',
       planned: 'var(--color-stage-planned)',
+      all: 'var(--color-stage-all)',
     };
     return colors[stage];
   };
