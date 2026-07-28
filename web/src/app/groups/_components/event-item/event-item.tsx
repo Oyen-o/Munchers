@@ -32,6 +32,13 @@ export function EventItem({
       {/* Event Image */}
       <Box
         className={`event-item__event-card${size === 'large' ? '--large' : ''}`}
+        onClick={() => {
+          console.log(
+            'Navigating to event detail page for event ID:',
+            event.id,
+          );
+          window.location.href = `/event/${event.id}`;
+        }}
       >
         <Stack className="event-item__event-header-layer" direction="column">
           <Stack className="event-item__event-header-row" direction="row">

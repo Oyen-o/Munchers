@@ -27,7 +27,7 @@ export interface GroupMember {
 }
 
 // Event Types
-export type EventStage = 'idea' | 'picked' | 'planned';
+export type EventStage = 'idea' | 'picked' | 'planned' | 'all';
 
 export enum EventType {
   Foodie = 'foodie',

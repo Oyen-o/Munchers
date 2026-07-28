@@ -60,9 +60,8 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       updatedAt: new Date(),
     },
   ]);
-  console.log('GroupsPage userId:', userId);
 
-  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+  const [selectedGroup, setSelectedGroup] = useState<Group | null>();
   const [events, setEvents] = useState<Event[]>([
     {
       id: 'event1',
@@ -144,7 +143,7 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       updatedAt: new Date(),
     },
   ]);
-  const [stageFilter, setStageFilter] = useState<EventStage | 'all'>('all');
+  const [stageFilter, setStageFilter] = useState<EventStage>('all');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -254,7 +253,7 @@ export function GroupsPage({ userId }: GroupsPageProps) {
         {/* Groups List */}
         <Box className="groups-page__groups-list">
           <Tabs
-            value={groups.findIndex((g) => g.id === selectedGroup?.id)}
+            value={groups.findIndex((g) => g.id === selectedGroup?.id || 1)}
             // onChange={(_, index) => setSelectedGroup(groups[index])}
             variant="scrollable"
             scrollButtons="auto"
@@ -273,8 +272,12 @@ export function GroupsPage({ userId }: GroupsPageProps) {
         <Drawer
           open={drawerOpen}
           onClose={() => setDrawerOpen(false)}
-          sx={{ width: '50%' }}
-          variant="persistent"
+          variant="temporary"
+          slotProps={{
+            paper: {
+              sx: { minWidth: '300px', padding: '16px', borderRadius: '0' },
+            },
+          }}
         >
           {/* Filter Tabs */}
           <Box className="groups-page__filters">
@@ -295,8 +298,15 @@ export function GroupsPage({ userId }: GroupsPageProps) {
             <Tabs
               value={stageFilter}
               onChange={(_, value) => setStageFilter(value)}
-              variant="fullWidth"
+              scrollButtons="auto"
             >
+              <Tab
+                label="All"
+                value="all"
+                className="groups-page__filter-tab-item groups-page__filter-tab-all"
+                icon={<LightbulbIcon />}
+                iconPosition="start"
+              />
               <Tab
                 label="Ideas"
                 value="idea"
@@ -304,6 +314,7 @@ export function GroupsPage({ userId }: GroupsPageProps) {
                 icon={<LightbulbIcon />}
                 iconPosition="start"
               />
+
               <Tab
                 label="Picked"
                 value="picked"
