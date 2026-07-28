@@ -246,7 +246,11 @@ export function GroupsPage({ userId }: GroupsPageProps) {
               <Tune onClick={() => setDrawerOpen(true)} />
             </Button>
 
-            <Avatar src="/images/avatar.png" alt="User Avatar" size="large" />
+            <Avatar
+              src="/avatars/avatar_0.png"
+              alt="User Avatar"
+              size="large"
+            />
           </Stack>
         </Box>
 

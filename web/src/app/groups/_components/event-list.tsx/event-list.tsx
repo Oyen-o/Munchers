@@ -120,7 +120,7 @@ export default function EventList({
       </Stack>
 
       {Object.entries(EventTypeLabels).map(([type, label]) => (
-        <>
+        <React.Fragment key={type}>
           <Stack
             direction="row"
             spacing={1}
@@ -176,7 +176,7 @@ export default function EventList({
               //   events.map((event) => <EventItem key={event.id} event={event} />)
             )}
           </Stack>
-        </>
+        </React.Fragment>
       ))}
 
       {/* Add Event Dialog */}
