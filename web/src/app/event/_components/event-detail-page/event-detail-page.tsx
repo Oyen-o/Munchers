@@ -15,6 +15,7 @@ import {
   ListItemText,
   Card,
   TextField,
+  Divider,
 } from '@mui/material';
 import {
   ArrowBack as ArrowBackIcon,
@@ -24,6 +25,7 @@ import {
   Send as SendIcon,
 } from '@mui/icons-material';
 import { Event, Comment } from '../../../../lib/types';
+import { downloadCalendarEvent } from '../../../../lib/utils';
 import './event-detail-page.scss';
 
 interface EventDetailPageProps {
@@ -146,12 +148,32 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
     setNewComment('');
   };
 
+  const handleDownloadCalendar = () => {
+    if (!event.plannedDate) return;
+    downloadCalendarEvent(
+      event.title,
+      event.plannedDate,
+      event.description,
+      event.location,
+      event.id,
+    );
+  };
+
   const goingCount = attendees.filter((a) => a.attendance === 'Going').length;
   const maybeCount = attendees.filter((a) => a.attendance === 'Maybe').length;
 
   return (
     <Box className="event-detail-page__container">
-      <Stack className="event-detail-page__stack" spacing={2}>
+      <Stack className="event-detail-page__nav" direction="row">
+        <IconButton
+          onClick={() => window.history.back()}
+          className="event-detail-page__back-button"
+        >
+          <ArrowBackIcon sx={{ marginRight: '12px' }} />
+          Back To Feed
+        </IconButton>
+      </Stack>
+      <Stack className="event-detail-page__stack" spacing={3}>
         {/* Hero Info Card */}
         <Card className="event-detail-page__hero-card">
           <Stack
@@ -159,125 +181,157 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
             direction="row"
             spacing={2}
           >
-            <IconButton
-              onClick={() => window.history.back()}
-              className="event-detail-page__back-button"
-            >
-              <ArrowBackIcon sx={{ marginRight: '12px' }} />
-               Back to All Events
-            </IconButton>
-
             <Stack className="event-detail-page__card-top-right">
-
-                <CalendarIcon sx={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-md)' }} />
-                <Typography className='event-details-page__page' variant='body2' sx={{ color: 'var(--color-text-primary)'}}> 
-                    {event.plannedDate
-                      ? new Date(event.plannedDate)
-                          .toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-                      : ''}
-                </Typography>
+              <CalendarIcon
+                sx={{
+                  color: 'var(--color-text-primary)',
+                  fontSize: 'var(--font-size-md)',
+                }}
+              />
+              <Typography
+                className="event-detail-page__page"
+                variant="body2"
+                sx={{ color: 'var(--color-text-primary)' }}
+              >
+                {event.plannedDate
+                  ? new Date(event.plannedDate).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                    })
+                  : ''}
+              </Typography>
             </Stack>
           </Stack>
-          <Box className="event-detail-page__title" sx={{margin:'auto', maxWidth: '80%', textAlign: 'center' }} >
 
-            <Typography variant="h4">
-              {event.title}
-            </Typography>
-          </Box>
           <Stack
             direction="row"
             spacing={2}
-            sx={{ alignItems: 'center', height: '220px' }}
+            sx={{
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              height: '180px',
+              padding: '0 var(--spacing-md)',
+            }}
             divider={
-              <Box
+              <Divider
+                orientation="vertical"
+                flexItem
                 sx={{
-                  width: '2px',
-                  height: '100%',
-                  borderLeft: '1px solid red',
+                  height: '60%',
+                  borderColor: 'var(--border-color-1)',
+                  alignSelf: 'center',
                 }}
               />
             }
           >
             {/* Date Box */}
-            <Box className="event-detail-page__date-box">
-              <Typography variant="h1">
-                {event.plannedDate ? new Date(event.plannedDate).getDate() : ''}
-              </Typography>
+            <Box
+              className="event-detail-page__date-box"
+              onClick={handleDownloadCalendar}
+              sx={{ cursor: 'pointer', '&:hover': { opacity: 0.8 } }}
+            >
               <Typography
                 variant="caption"
                 sx={{ opacity: 0.9, fontSize: '0.7rem' }}
               >
-                {event.plannedDate
-                  ? new Date(event.plannedDate)
-                      .toLocaleDateString('en-US', { month: 'short' })
-                      .toUpperCase()
-                  : 'JUL'}
+                {event.plannedDate &&
+                  new Date(event.plannedDate)
+                    .toLocaleDateString('en-US', { month: 'short' })
+                    .toUpperCase()}
+              </Typography>
+              <Typography variant="h1">
+                {event.plannedDate ? new Date(event.plannedDate).getDate() : ''}
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{ fontSize: '.4rem', marginTop: '-16px' }}
+              >
+                download calendar
               </Typography>
             </Box>
 
             {/* Event Info */}
-            <Box sx={{ flex: 1 }}>
-              <Stack spacing={0.5}>
-                {event.plannedDate && (
-                  <Stack
-                    direction="row"
-                    spacing={1}
-                    sx={{ alignItems: 'center' }}
-                  >
-                    <CalendarIcon sx={{ fontSize: 16 }} />
-                    <Typography variant="caption" sx={{ opacity: 0.9 }}>
-                      {new Date(event.plannedDate).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </Typography>
-                  </Stack>
-                )}
 
-                {
-                  <Stack
-                    direction="row"
-                    spacing={1}
-                    sx={{ alignItems: 'center' }}
-                  >
-                    <LocationIcon sx={{ color: '#fff', fontSize: 16 }} />
-                    <Typography
-                      variant="caption"
-                      sx={{ color: '#fff', opacity: 0.9 }}
-                    >
-                      New Location
-                    </Typography>
-                  </Stack>
-                }
-
+            <Stack className="event-detail-page__event-info" spacing={2}>
+              {event.plannedDate && (
                 <Stack
                   direction="row"
                   spacing={1}
                   sx={{ alignItems: 'center' }}
                 >
-                  <PersonIcon sx={{ color: '#fff', fontSize: 16 }} />
+                  <CalendarIcon sx={{ fontSize: 16 }} />
+                  <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                    {new Date(event.plannedDate).toLocaleTimeString('en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </Typography>
+                </Stack>
+              )}
+
+              {
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  sx={{ alignItems: 'center' }}
+                >
+                  <LocationIcon sx={{ color: '#fff', fontSize: 16 }} />
                   <Typography
                     variant="caption"
                     sx={{ color: '#fff', opacity: 0.9 }}
                   >
-                    {attendees.length} invites
+                    {event.location ?? 'Location not specified'}
                   </Typography>
                 </Stack>
-              </Stack>
-            </Box>
-          </Stack>
+              }
 
-          {/* RSVP Button */}
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <PersonIcon sx={{ color: '#fff', fontSize: 16 }} />
+                <Typography
+                  variant="caption"
+                  sx={{ color: '#fff', opacity: 0.9 }}
+                >
+                  {attendees.length} Attendees
+                </Typography>
+              </Stack>
+            </Stack>
+          </Stack>
+          <Box className="event-detail-page__title">
+            <Typography variant="h3">{event.title}</Typography>
+          </Box>
+        </Card>
+
+        {/* Join Button - Overlapping */}
+        <Box
+          className="event-detail-page__rsvp-button-container"
+          sx={{
+            position: 'relative',
+            zIndex: 10,
+            marginTop: '-28px !important',
+            marginBottom: '-28px',
+            padding: '0 var(--spacing-lg)',
+          }}
+        >
           <Button
             variant="contained"
             fullWidth
             className="event-detail-page__rsvp-button"
           >
-            RSVP
+            Join
           </Button>
-        </Card>
+        </Box>
+
+        {/* Event Description */}
+        {event.description && (
+          <Card className="event-detail-page__description-card">
+            <Typography
+              variant="body1"
+              sx={{ color: 'var(--color-text-secondary)' }}
+            >
+              {event.description}
+            </Typography>
+          </Card>
+        )}
 
         {/* Event Image */}
         <Box className="event-detail-page__image">
@@ -291,36 +345,6 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
           />
         </Box>
 
-        {/* Event Description */}
-        {event.description && (
-          <Card className="event-detail-page__description-card">
-            <Typography
-              variant="body1"
-              sx={{ color: 'var(--color-text-secondary)' }}
-            >
-              {event.description}
-            </Typography>
-            {event.location && (
-              <Stack
-                direction="row"
-                spacing={1}
-                alignItems="center"
-                sx={{ mt: 2 }}
-              >
-                <LocationIcon
-                  sx={{ color: 'var(--color-primary-main)', fontSize: 18 }}
-                />
-                <Typography
-                  variant="body2"
-                  sx={{ color: 'var(--color-text-primary)', fontWeight: 500 }}
-                >
-                  {event.location}
-                </Typography>
-              </Stack>
-            )}
-          </Card>
-        )}
-
         {/* Attendees List */}
         <Card className="event-detail-page__attendees-card">
           <Typography
@@ -329,14 +353,14 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
           >
             Attendees of the meeting ({attendees.length} total)
           </Typography>
-          <List className="event-detail-page__attendees-list">
+          {/* <List className="event-detail-page__attendees-list">
             {attendees.map((attendee) => (
               <ListItem
                 key={attendee.id}
                 className="event-detail-page__attendee-item"
               >
                 <ListItemAvatar>
-                  <Avatar src={attendee.avatarUrl} alt={attendee.name}  />
+                  <Avatar src={attendee.avatarUrl} alt={attendee.name} />
                 </ListItemAvatar>
                 <ListItemText
                   primary={attendee.name}
@@ -352,7 +376,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
                 />
               </ListItem>
             ))}
-          </List>
+          </List> */}
         </Card>
 
         {/* Comments Section */}
@@ -397,7 +421,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
           </Stack>
 
           {/* Add Comment */}
-          <Stack direction="row" spacing={1} alignItems="center">
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             <TextField
               fullWidth
               placeholder="Add a comment..."

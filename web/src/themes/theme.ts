@@ -158,14 +158,6 @@ const theme = createTheme({
             display: 'none',
           },
         },
-        flexContainer: {
-          gap: '2px',
-        },
-      },
-    },
-    MuiTabList: {
-      styleOverrides: {
-        root: { },
       },
     },
     MuiStack: {
@@ -201,11 +193,21 @@ const theme = createTheme({
         },
       },
     },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: 'var(--border-radius-xl)',
+          backgroundColor: 'var(--color-light-background-1)',
+          border: '1px solid var(--color-light-background-4)',
+          margin: '0px',
+        }},
+    },
     MuiDialog: {
       styleOverrides: {
         paper: {
-          borderRadius: 'var(--border-radius-xl)',
-          boxShadow: 'var(--shadow-xl)',
+          borderRadius: 'var(--border-radius-lg)',
+          backgroundColor: 'var(--color-light-background-1)',
+          border: '1px solid var(--color-light-background-2)',
         },
       },
     },
