@@ -1,3 +1,6 @@
+export const dynamic = 'force-static';
+export const revalidate = false;
+
 const BFF_URL = process.env.NEXT_PUBLIC_BFF_URL || 'http://localhost:3001';
 
 async function fetchFromBFF(endpoint: string, options?: RequestInit) {
