@@ -143,7 +143,7 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       updatedAt: new Date(),
     },
   ]);
-  const [stageFilter, setStageFilter] = useState<EventStage>('all');
+  const [stageFilter, setStageFilter] = useState<EventStage | 'all'>('all');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -332,11 +332,7 @@ export function GroupsPage({ userId }: GroupsPageProps) {
             </Tabs>
           </Box>
         </Drawer>
-        <EventList
-          events={events}
-          selectedGroup={selectedGroup}
-          fetchGroupEvents={fetchGroupEvents}
-        />
+        <EventList events={events} fetchGroupEvents={fetchGroupEvents} />
       </Stack>
     </div>
   );

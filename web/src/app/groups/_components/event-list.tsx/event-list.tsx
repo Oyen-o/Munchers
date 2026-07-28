@@ -26,7 +26,7 @@ export default function EventList({
   fetchGroupEvents,
 }: {
   events: Event[];
-  selectedGroup: Group | null;
+  selectedGroup?: Group | null;
   fetchGroupEvents: (groupId: string) => void;
 }) {
   const [addEventOpen, setAddEventOpen] = useState(false);
