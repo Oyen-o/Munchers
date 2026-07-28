@@ -2,7 +2,17 @@
   "name": "@munchers-app/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "dev": "nx run-many --target=serve --projects=web,bff --parallel=2",
+    "dev:web": "nx serve web",
+    "dev:bff": "nx serve bff",
+    "build": "nx run-many --target=build --projects=web,bff",
+    "build:web": "nx build web",
+    "build:bff": "nx build bff",
+    "start:web": "nx start web",
+    "lint": "nx run-many --target=lint --all",
+    "test": "nx run-many --target=test --all"
+  },
   "private": true,
   "devDependencies": {
     "@nx/devkit": "23.1.0",
