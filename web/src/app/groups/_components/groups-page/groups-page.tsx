@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { 
-  Typography, 
-  Box, 
-  Tabs, 
-  Tab, 
+import {
+  Typography,
+  Box,
+  Tabs,
+  Tab,
   Chip,
   IconButton,
   CircularProgress,
@@ -15,8 +15,8 @@ import {
   ListItem,
   Button,
 } from '@mui/material';
-import { 
-  Add as AddIcon, 
+import {
+  Add as AddIcon,
   FilterList as FilterIcon,
   People as PeopleIcon,
   Lightbulb as LightbulbIcon,
@@ -28,7 +28,7 @@ import {
   LocationOn as LocationIcon,
   ArrowBack,
   Close as CloseIcon,
-  Tune
+  Tune,
 } from '@mui/icons-material';
 import { Event, EventStage, Group } from '../../../../lib/types';
 
@@ -43,20 +43,23 @@ interface GroupsPageProps {
 
 export function GroupsPage({ userId }: GroupsPageProps) {
   const router = useRouter();
-  const [groups, setGroups] = useState<Group[]>([{
-    id: '1',
-    name: 'Muchers',
-    description: 'This is a sample group for demonstration purposes.',
-    createdBy: userId,
-    members: [{
-      userId,
-      role: 'admin',
-      joinedAt: new Date(),
-    }],
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  }], 
-  );
+  const [groups, setGroups] = useState<Group[]>([
+    {
+      id: '1',
+      name: 'Muchers',
+      description: 'This is a sample group for demonstration purposes.',
+      createdBy: userId,
+      members: [
+        {
+          userId,
+          role: 'admin',
+          joinedAt: new Date(),
+        },
+      ],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  ]);
   console.log('GroupsPage userId:', userId);
 
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
@@ -64,7 +67,8 @@ export function GroupsPage({ userId }: GroupsPageProps) {
     {
       id: 'event1',
       title: 'Taco Guild',
-      description: 'Set in an old church, this gastropublike spot serves sustainable Mexican fare, craft beer & tequila.',
+      description:
+        'Set in an old church, this gastropublike spot serves sustainable Mexican fare, craft beer & tequila.',
       createdBy: 'Carina',
       hostName: 'Carina',
       hostAvatarUrl: 'avatars/avatar_1.png',
@@ -73,44 +77,48 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       ownerType: 'group',
       groupId: '1',
       time: '5pm',
-      comments: [{
-        id: 'comment1',
-        eventId: 'event1',
-        userId: 'user1',
-        content: 'This is a comment on the event.',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }],
+      comments: [
+        {
+          id: 'comment1',
+          eventId: 'event1',
+          userId: 'user1',
+          content: 'This is a comment on the event.',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
       ratings: [],
       createdAt: new Date(),
       updatedAt: new Date(),
       plannedDate: new Date('2024-07-15 '),
       location: '546 E Osborn Rd, Phoenix, AZ 85012',
     },
-        {
+    {
       id: 'event2',
       title: 'Thai Food',
       description: 'Thai Food Hosted by Rene.',
       createdBy: 'Rene',
-            hostAvatarUrl: 'avatars/avatar_3.png',
+      hostAvatarUrl: 'avatars/avatar_3.png',
       stage: 'planned',
       ownerId: '1',
       ownerType: 'group',
       groupId: '1',
       time: '2pm',
-      comments: [{
-        id: 'comment2',
-        eventId: 'event2',
-        userId: 'user1',
-        content: 'This is a comment on the event.',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }],
+      comments: [
+        {
+          id: 'comment2',
+          eventId: 'event2',
+          userId: 'user1',
+          content: 'This is a comment on the event.',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
       ratings: [],
       createdAt: new Date(),
       updatedAt: new Date(),
     },
-            {
+    {
       id: 'event3',
       title: 'Brunch',
       description: 'Brunch Hosted by Alex.',
@@ -121,21 +129,23 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       ownerId: '1',
       ownerType: 'group',
       groupId: '1',
-      comments: [{
-        id: 'comment2',
-        eventId: 'event2',
-        userId: 'user1',
-        content: 'This is a comment on the event.',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }],
+      comments: [
+        {
+          id: 'comment2',
+          eventId: 'event2',
+          userId: 'user1',
+          content: 'This is a comment on the event.',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
       ratings: [],
       createdAt: new Date(),
       updatedAt: new Date(),
-    }
+    },
   ]);
   const [stageFilter, setStageFilter] = useState<EventStage | 'all'>('all');
-  const [drawerOpen, setDrawerOpen] = useState(true);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -164,10 +174,11 @@ export function GroupsPage({ userId }: GroupsPageProps) {
 
   const fetchGroupEvents = async (groupId: string) => {
     try {
-      const url = stageFilter === 'all' 
-        ? `/api/events?groupId=${groupId}`
-        : `/api/events?groupId=${groupId}&stage=${stageFilter}`;
-      
+      const url =
+        stageFilter === 'all'
+          ? `/api/events?groupId=${groupId}`
+          : `/api/events?groupId=${groupId}&stage=${stageFilter}`;
+
       const response = await fetch(url);
       const data = await response.json();
       setEvents(data);
@@ -179,10 +190,23 @@ export function GroupsPage({ userId }: GroupsPageProps) {
   if (loading) {
     return (
       <Box className="groups-page__container ">
-        <Stack sx={{alignItems:'center', justifyContent:'center', height: '80vh' }} spacing={2}>
+        <Stack
+          sx={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '80vh',
+          }}
+          spacing={2}
+        >
           <CircularProgress size={80} />
-          <img src="/images/loading-splash.png" width={600} height={400} alt="Logo" className="groups-page__loading-logo" />
-        </Stack> 
+          <img
+            src="/images/loading-splash.png"
+            width={600}
+            height={400}
+            alt="Logo"
+            className="groups-page__loading-logo"
+          />
+        </Stack>
       </Box>
     );
   }
@@ -192,32 +216,39 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       <Box className="groups-page__container">
         <Typography variant="h5">No groups yet</Typography>
         <Typography variant="body2" sx={{ mt: 2 }}>
-          Create a group to start planning events with friends Or in an idea to your profile.
+          Create a group to start planning events with friends Or in an idea to
+          your profile.
         </Typography>
       </Box>
     );
   }
 
   return (
-
     <div className="groups-page__container">
       <Stack className="groups-page" spacing={1}>
         {/* Header */}
-        <Box className="groups-page__header" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <IconButton onClick={() => window.history.back()} className="groups-page__back-button">
+        <Box
+          className="groups-page__header"
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <IconButton
+            onClick={() => window.history.back()}
+            className="groups-page__back-button"
+          >
             <ArrowBack />
           </IconButton>
-          <Typography variant="h3" >
-            Groups
-          </Typography>
+          <Typography variant="h3">Groups</Typography>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             <Button>
-          <Tune onClick={() => setDrawerOpen(true)}  />
+              <Tune onClick={() => setDrawerOpen(true)} />
             </Button>
-          
-           <Avatar src="/images/avatar.png" alt="User Avatar" size='large'  />
 
-          </Stack> 
+            <Avatar src="/images/avatar.png" alt="User Avatar" size="large" />
+          </Stack>
         </Box>
 
         {/* Groups List */}
@@ -229,8 +260,8 @@ export function GroupsPage({ userId }: GroupsPageProps) {
             scrollButtons="auto"
           >
             {groups.map((group) => (
-              <Tab 
-                key={group.id} 
+              <Tab
+                key={group.id}
                 label={group.name}
                 icon={<PeopleIcon />}
                 iconPosition="start"
@@ -239,49 +270,62 @@ export function GroupsPage({ userId }: GroupsPageProps) {
           </Tabs>
         </Box>
 
-    <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} sx={{ width: '50%' }} variant="persistent">
-         {/* Filter Tabs */}
-        <Box className="groups-page__filters">
-          <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
-            <Typography variant="h5" >
-              Filter by Stage
-            </Typography>
-            <IconButton onClick={() => setDrawerOpen(false)} size="small">
-              <CloseIcon />
-            </IconButton>
-          </Stack>
+        <Drawer
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          sx={{ width: '50%' }}
+          variant="persistent"
+        >
+          {/* Filter Tabs */}
+          <Box className="groups-page__filters">
+            <Stack
+              direction="row"
+              sx={{
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: 2,
+              }}
+            >
+              <Typography variant="h5">Filter by Stage</Typography>
+              <IconButton onClick={() => setDrawerOpen(false)} size="small">
+                <CloseIcon />
+              </IconButton>
+            </Stack>
 
-          <Tabs
-            value={stageFilter}
-            onChange={(_, value) => setStageFilter(value)}
-            variant="fullWidth"
-          >
-            <Tab 
-              label="Ideas" 
-              value="idea" 
-              className="groups-page__filter-tab-item groups-page__filter-tab-idea"
-              icon={<LightbulbIcon />}
-              iconPosition="start"
-            />
-            <Tab 
-              label="Picked" 
-              value="picked" 
-              icon={<CheckCircleIcon />}
-              iconPosition="start"
-              className="groups-page__filter-tab-item groups-page__filter-tab-picked"
-            />
-            <Tab 
-              label="Planned" 
-              value="planned" 
-              icon={<EventIcon />}
-              iconPosition="start"
-              className="groups-page__filter-tab-item groups-page__filter-tab-planned"
-            />
-          </Tabs>
-        </Box>
-    </Drawer>
-    <EventList events={events} selectedGroup={selectedGroup} fetchGroupEvents={fetchGroupEvents} />
-
+            <Tabs
+              value={stageFilter}
+              onChange={(_, value) => setStageFilter(value)}
+              variant="fullWidth"
+            >
+              <Tab
+                label="Ideas"
+                value="idea"
+                className="groups-page__filter-tab-item groups-page__filter-tab-idea"
+                icon={<LightbulbIcon />}
+                iconPosition="start"
+              />
+              <Tab
+                label="Picked"
+                value="picked"
+                icon={<CheckCircleIcon />}
+                iconPosition="start"
+                className="groups-page__filter-tab-item groups-page__filter-tab-picked"
+              />
+              <Tab
+                label="Planned"
+                value="planned"
+                icon={<EventIcon />}
+                iconPosition="start"
+                className="groups-page__filter-tab-item groups-page__filter-tab-planned"
+              />
+            </Tabs>
+          </Box>
+        </Drawer>
+        <EventList
+          events={events}
+          selectedGroup={selectedGroup}
+          fetchGroupEvents={fetchGroupEvents}
+        />
       </Stack>
     </div>
   );
