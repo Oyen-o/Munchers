@@ -83,14 +83,16 @@ export default function EventList({
         </IconButton> */}
       </Box>
 
-      <Stack
+      <Box
         className="groups-page__events-list"
-        direction="row"
-        spacing={1}
         sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 1,
           overflowX: 'auto',
           overflowY: 'hidden',
           pb: 2,
+          WebkitOverflowScrolling: 'touch',
           '&::-webkit-scrollbar': {
             height: '8px',
           },
@@ -105,30 +107,30 @@ export default function EventList({
         }}
       >
         {events.length === 0 ? (
-          <Stack
+          <Box
             sx={{
+              display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
               width: '100%',
             }}
           >
             <img src="/images/empty.png" alt="No events" />
-          </Stack>
+          </Box>
         ) : (
           events.map((event) => <EventItem key={event.id} event={event} />)
         )}
-      </Stack>
+      </Box>
 
       {Object.entries(EventTypeLabels).map(([type, label]) => (
-        <React.Fragment key={type}>
-          <Stack
-            direction="row"
-            spacing={1}
+        <Box key={type} sx={{ width: '100%' }}>
+          <Box
             sx={{
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
+              mb: 1,
             }}
           >
             <IconButton
@@ -136,47 +138,13 @@ export default function EventList({
               onClick={() => setAddEventOpen(true)}
               size="small"
             >
-              <Stack direction="row" sx={{ alignItems: 'center' }}>
-                <Typography variant="h6">{label}</Typography> <ChevronRight />
-              </Stack>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography variant="h6">{label}</Typography>
+                <ChevronRight />
+              </Box>
             </IconButton>
-          </Stack>
-
-          <Stack
-            className="groups-page__events-list"
-            direction="row"
-            spacing={2}
-            sx={{
-              overflowX: 'auto',
-              overflowY: 'hidden',
-              pb: 2,
-              '&::-webkit-scrollbar': {
-                height: '8px',
-              },
-              '&::-webkit-scrollbar-track': {
-                backgroundColor: 'var(--color-light-background-4)',
-                borderRadius: 'var(--border-radius-md)',
-              },
-              '&::-webkit-scrollbar-thumb': {
-                backgroundColor: 'var(--color-primary-main)',
-                borderRadius: 'var(--border-radius-md)',
-              },
-            }}
-          >
-            {events.length === 0 ? (
-              <Stack
-                sx={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: '100%',
-                }}
-              ></Stack>
-            ) : (
-              <></>
-              //   events.map((event) => <EventItem key={event.id} event={event} />)
-            )}
-          </Stack>
-        </React.Fragment>
+          </Box>
+        </Box>
       ))}
 
       {/* Add Event Dialog */}

@@ -189,7 +189,15 @@ export function HomeScreen() {
             >
               This is only for login purposes
             </Typography>
-            <Typography variant="caption">Build #:0.0.1</Typography>
+            <Typography
+              sx={{
+                textAlign: 'center',
+                color: 'var(--color-text-secondary)',
+                fontSize: '0.5rem',
+              }}
+            >
+              V:0.0.4
+            </Typography>
           </Stack>
         </motion.div>
       </Stack>
