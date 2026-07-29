@@ -43,6 +43,7 @@ interface GroupsPageProps {
 
 export function GroupsPage({ userId }: GroupsPageProps) {
   const router = useRouter();
+  const initialDate = new Date('2024-01-01T12:00:00.000Z');
   const [groups, setGroups] = useState<Group[]>([
     {
       id: '1',
@@ -53,11 +54,11 @@ export function GroupsPage({ userId }: GroupsPageProps) {
         {
           userId,
           role: 'admin',
-          joinedAt: new Date(),
+          joinedAt: initialDate,
         },
       ],
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: initialDate,
+      updatedAt: initialDate,
     },
   ]);
 
@@ -82,13 +83,13 @@ export function GroupsPage({ userId }: GroupsPageProps) {
           eventId: 'event1',
           userId: 'user1',
           content: 'This is a comment on the event.',
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: initialDate,
+          updatedAt: initialDate,
         },
       ],
       ratings: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: initialDate,
+      updatedAt: initialDate,
       plannedDate: new Date('2024-07-15 '),
       location: '546 E Osborn Rd, Phoenix, AZ 85012',
     },
@@ -109,13 +110,13 @@ export function GroupsPage({ userId }: GroupsPageProps) {
           eventId: 'event2',
           userId: 'user1',
           content: 'This is a comment on the event.',
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: initialDate,
+          updatedAt: initialDate,
         },
       ],
       ratings: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: initialDate,
+      updatedAt: initialDate,
     },
     {
       id: 'event3',
@@ -134,13 +135,13 @@ export function GroupsPage({ userId }: GroupsPageProps) {
           eventId: 'event2',
           userId: 'user1',
           content: 'This is a comment on the event.',
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: initialDate,
+          updatedAt: initialDate,
         },
       ],
       ratings: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: initialDate,
+      updatedAt: initialDate,
     },
   ]);
   const [stageFilter, setStageFilter] = useState<EventStage | 'all'>('all');
