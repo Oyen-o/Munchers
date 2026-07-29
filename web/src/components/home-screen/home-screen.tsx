@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Typography, Stack, TextField,  Button } from '@mui/material';
+import { Typography, Stack, TextField, Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import './home-screen.scss';
@@ -22,10 +22,10 @@ export function HomeScreen() {
   const formatPhoneNumber = (value: string) => {
     // Remove all non-digits
     const digits = value.replace(/\D/g, '');
-    
+
     // Limit to 10 digits
     const limitedDigits = digits.slice(0, 10);
-    
+
     // Format as (###)-###-####
     if (limitedDigits.length <= 3) {
       return limitedDigits;
@@ -49,23 +49,23 @@ export function HomeScreen() {
   };
 
   return (
-    <Stack 
+    <Stack
       className="home-screen__container"
-      sx={{ 
+      sx={{
         minHeight: '100vh',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
       }}
     >
-      <Stack 
+      <Stack
         className="home-screen"
         spacing={0}
-        sx={{ 
-          width: '100%', 
-          maxWidth: 400, 
+        sx={{
+          width: '100%',
+          maxWidth: 400,
           position: 'relative',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
         }}
       >
         {/* Logo Animation */}
@@ -118,22 +118,19 @@ export function HomeScreen() {
             ease: 'easeOut',
           }}
         >
-          <Stack 
+          <Stack
             className="home-screen__login-content"
             spacing={3}
             sx={{ width: '100%' }}
           >
-            <Stack 
-              spacing={1} 
-              sx={{ alignItems: 'center' }}
-            >
-              <Typography 
-                variant="h3" 
-                component="h1" 
-                sx={{ 
+            <Stack spacing={1} sx={{ alignItems: 'center' }}>
+              <Typography
+                variant="h3"
+                component="h1"
+                sx={{
                   fontWeight: 600,
                   color: 'var(--color-primary-main)',
-                  textAlign: 'center'
+                  textAlign: 'center',
                 }}
               >
                 Welcome Back
@@ -143,12 +140,12 @@ export function HomeScreen() {
                 alt="Munchers Logo"
                 style={{ width: '100%', maxWidth: 300, height: 'auto' }}
               />
-              
-              <Typography 
-                variant="body2" 
-                sx={{ 
+
+              <Typography
+                variant="body2"
+                sx={{
                   color: 'var(--color-text-secondary)',
-                  textAlign: 'center'
+                  textAlign: 'center',
                 }}
               >
                 Enter your phone number to continue
@@ -183,15 +180,16 @@ export function HomeScreen() {
               </Stack>
             </form>
 
-            <Typography 
-              variant="caption" 
-              sx={{ 
+            <Typography
+              variant="caption"
+              sx={{
                 textAlign: 'center',
-                color: 'var(--color-text-secondary)'
+                color: 'var(--color-text-secondary)',
               }}
             >
               This is only for login purposes
             </Typography>
+            <Typography variant="caption">Build #:0.0.1</Typography>
           </Stack>
         </motion.div>
       </Stack>
