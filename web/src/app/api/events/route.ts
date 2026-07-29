@@ -1,7 +1,12 @@
 export const dynamic = 'force-static';
 export const revalidate = false;
-
+import { CosmosClient } from "@azure/cosmos";
 const BFF_URL = process.env.NEXT_PUBLIC_BFF_URL || 'http://localhost:3001';
+
+const client = new CosmosClient({
+  endpoint: "https://ch-newsletter.documents.azure.com:443/",
+  key: process.env.COSMOS_DB_PROD || "",
+});
 
 async function fetchFromBFF(endpoint: string, options?: RequestInit) {
   const response = await fetch(`${BFF_URL}${endpoint}`, {

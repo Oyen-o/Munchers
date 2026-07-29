@@ -47,7 +47,7 @@ export function GroupsPage({ userId }: GroupsPageProps) {
   const [groups, setGroups] = useState<Group[]>([
     {
       id: '1',
-      name: 'Muchers',
+      name: 'Munchers',
       description: 'This is a sample group for demonstration purposes.',
       createdBy: userId,
       members: [
@@ -99,7 +99,7 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       description: 'Thai Food Hosted by Rene.',
       createdBy: 'Rene',
       hostAvatarUrl: 'avatars/avatar_3.png',
-      stage: 'planned',
+      stage: 'picked',
       ownerId: '1',
       ownerType: 'group',
       groupId: '1',
@@ -121,11 +121,11 @@ export function GroupsPage({ userId }: GroupsPageProps) {
     {
       id: 'event3',
       title: 'Brunch',
-      description: 'Brunch Hosted by Alex.',
-      createdBy: 'Alex',
+      description: 'Brunch Hosted by Jinx.',
+      createdBy: 'Jinx',
       hostAvatarUrl: '/avatars/avatar_4.png',
-      hostName: 'Alex ',
-      stage: 'picked',
+      hostName: 'Jinx',
+      stage: 'idea',
       ownerId: '1',
       ownerType: 'group',
       groupId: '1',
@@ -178,26 +178,34 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       }
     } catch (error) {
       console.error('Error fetching groups:', error);
-      setGroups((prev) => (prev.length > 0 ? prev : [
-        {
-          id: '1',
-          name: 'Muchers',
-          description: 'This is a sample group for demonstration purposes.',
-          createdBy: userId,
-          members: [{ userId, role: 'admin', joinedAt: initialDate }],
-          createdAt: initialDate,
-          updatedAt: initialDate,
-        },
-      ]));
-      setSelectedGroup((prev) => prev ?? {
-        id: '1',
-        name: 'Muchers',
-        description: 'This is a sample group for demonstration purposes.',
-        createdBy: userId,
-        members: [{ userId, role: 'admin', joinedAt: initialDate }],
-        createdAt: initialDate,
-        updatedAt: initialDate,
-      });
+      setGroups((prev) =>
+        prev.length > 0
+          ? prev
+          : [
+              {
+                id: '1',
+                name: 'Munchers',
+                description:
+                  'This is a sample group for demonstration purposes.',
+                createdBy: userId,
+                members: [{ userId, role: 'admin', joinedAt: initialDate }],
+                createdAt: initialDate,
+                updatedAt: initialDate,
+              },
+            ],
+      );
+      setSelectedGroup(
+        (prev) =>
+          prev ?? {
+            id: '1',
+            name: 'Munchers',
+            description: 'This is a sample group for demonstration purposes.',
+            createdBy: userId,
+            members: [{ userId, role: 'admin', joinedAt: initialDate }],
+            createdAt: initialDate,
+            updatedAt: initialDate,
+          },
+      );
     } finally {
       setLoading(false);
     }
@@ -223,27 +231,32 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       }
     } catch (error) {
       console.error('Error fetching events:', error);
-      setEvents((prev) => prev.length > 0 ? prev : [
-        {
-          id: 'event1',
-          title: 'Taco Guild',
-          description: 'Fallback event data while the API is unavailable.',
-          createdBy: 'Carina',
-          hostName: 'Carina',
-          hostAvatarUrl: 'avatars/avatar_1.png',
-          stage: 'idea',
-          ownerId: groupId,
-          ownerType: 'group',
-          groupId,
-          time: '5pm',
-          comments: [],
-          ratings: [],
-          createdAt: initialDate,
-          updatedAt: initialDate,
-          plannedDate: new Date('2024-07-15'),
-          location: 'Fallback location',
-        },
-      ]);
+      setEvents((prev) =>
+        prev.length > 0
+          ? prev
+          : [
+              {
+                id: 'event1',
+                title: 'Taco Guild',
+                description:
+                  'Fallback event data while the API is unavailable.',
+                createdBy: 'Carina',
+                hostName: 'Carina',
+                hostAvatarUrl: 'avatars/avatar_1.png',
+                stage: 'idea',
+                ownerId: groupId,
+                ownerType: 'group',
+                groupId,
+                time: '5pm',
+                comments: [],
+                ratings: [],
+                createdAt: initialDate,
+                updatedAt: initialDate,
+                plannedDate: new Date('2024-07-15'),
+                location: 'Fallback location',
+              },
+            ],
+      );
     }
   };
 

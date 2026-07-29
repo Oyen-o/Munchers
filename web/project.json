@@ -8,10 +8,17 @@
   "targets": {
     "serve": {
       "continuous": true,
-      "executor": "nx:run-commands",
+      "executor": "@nx/next:server",
       "options": {
-        "cwd": "web",
-        "command": "next dev"
+        "buildTarget": "web:build",
+        "dev": true
+      }
+    },
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{workspaceRoot}/dist/web/.next"],
+      "options": {
+        "outputPath": "dist/web"
       }
     }
   }

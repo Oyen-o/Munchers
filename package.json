@@ -8,6 +8,7 @@
     "dev:bff": "npx nx run bff:serve",
     "build": "nx run-many --target=build --projects=web,bff",
     "build:web": "npx nx run web:build --skip-nx-cache",
+    "build:web:prod": "node --env-file=./web/.env.production run web:build --skip-nx-cache",
     "build:bff": "npx nx run bff:build --skip-nx-cache",
     "start:web": "npx nx run web:start",
     "lint": "nx run-many --target=lint --all",
@@ -40,7 +41,7 @@
     "typescript": "~6.0.3"
   },
   "dependencies": {
-    "@azure/cosmos": "^4.9.3",
+    "@azure/cosmos": "^4.10.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^6.1.11",
