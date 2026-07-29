@@ -162,6 +162,48 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
   const goingCount = attendees.filter((a) => a.attendance === 'Going').length;
   const maybeCount = attendees.filter((a) => a.attendance === 'Maybe').length;
 
+  const formatDateLabel = (value?: Date | string) => {
+    if (!value) return '';
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      timeZone: 'UTC',
+    }).format(new Date(value));
+  };
+
+  const formatMonthLabel = (value?: Date | string) => {
+    if (!value) return '';
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      timeZone: 'UTC',
+    })
+      .format(new Date(value))
+      .toUpperCase();
+  };
+
+  const formatDayNumber = (value?: Date | string) => {
+    if (!value) return '';
+    return new Date(value).getUTCDate();
+  };
+
+  const formatTimeLabel = (value?: Date | string) => {
+    if (!value) return '';
+    return new Intl.DateTimeFormat('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'UTC',
+    }).format(new Date(value));
+  };
+
+  const formatCommentTime = (value?: Date | string) => {
+    if (!value) return '';
+    return new Intl.DateTimeFormat('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'UTC',
+    }).format(new Date(value));
+  };
+
   return (
     <Box className="event-detail-page__container">
       <Stack className="event-detail-page__nav" direction="row">
@@ -193,12 +235,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
                 variant="body2"
                 sx={{ color: 'var(--color-text-primary)' }}
               >
-                {event.plannedDate
-                  ? new Date(event.plannedDate).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                    })
-                  : ''}
+                {formatDateLabel(event.plannedDate)}
               </Typography>
             </Stack>
           </Stack>
@@ -234,13 +271,10 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
                 variant="caption"
                 sx={{ opacity: 0.9, fontSize: '0.7rem' }}
               >
-                {event.plannedDate &&
-                  new Date(event.plannedDate)
-                    .toLocaleDateString('en-US', { month: 'short' })
-                    .toUpperCase()}
+                {formatMonthLabel(event.plannedDate)}
               </Typography>
               <Typography variant="h1">
-                {event.plannedDate ? new Date(event.plannedDate).getDate() : ''}
+                {formatDayNumber(event.plannedDate)}
               </Typography>
               <Typography
                 variant="body2"
@@ -261,10 +295,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
                 >
                   <CalendarIcon sx={{ fontSize: 16 }} />
                   <Typography variant="caption" sx={{ opacity: 0.9 }}>
-                    {new Date(event.plannedDate).toLocaleTimeString('en-US', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
+                    {formatTimeLabel(event.plannedDate)}
                   </Typography>
                 </Stack>
               )}
@@ -412,7 +443,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
                       variant="caption"
                       sx={{ color: 'var(--color-text-disabled)' }}
                     >
-                      {new Date(comment.createdAt).toLocaleTimeString()}
+                      {formatCommentTime(comment.createdAt)}
                     </Typography>
                   </Box>
                 </Stack>

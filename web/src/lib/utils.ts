@@ -4,7 +4,8 @@ export function shortFormat(date: Date): string {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
-    year: 'numeric'
+    year: 'numeric',
+    timeZone: 'UTC',
   }).format(date);
 }
 
