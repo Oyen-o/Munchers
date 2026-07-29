@@ -4,12 +4,12 @@
   "license": "MIT",
   "scripts": {
     "dev": "nx run-many --target=serve --projects=web,bff --parallel=2",
-    "dev:web": "nx serve web",
-    "dev:bff": "nx serve bff",
+    "dev:web": "npx nx run web:serve --verbose",
+    "dev:bff": "npx nx run bff:serve",
     "build": "nx run-many --target=build --projects=web,bff",
-    "build:web": "nx build web",
-    "build:bff": "nx build bff",
-    "start:web": "nx start web",
+    "build:web": "npx nx run web:build --skip-nx-cache",
+    "build:bff": "npx nx run bff:build --skip-nx-cache",
+    "start:web": "npx nx run web:start",
     "lint": "nx run-many --target=lint --all",
     "test": "nx run-many --target=test --all"
   },
