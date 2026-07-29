@@ -161,12 +161,43 @@ export function GroupsPage({ userId }: GroupsPageProps) {
   const fetchGroups = async () => {
     try {
       const response = await fetch(`/api/groups?userId=${userId}`);
+      const contentType = response.headers.get('content-type') || '';
+
+      if (!response.ok) {
+        throw new Error(`Groups API returned ${response.status}`);
+      }
+
+      if (!contentType.includes('application/json')) {
+        throw new Error('Groups API did not return JSON');
+      }
+
       const data = await response.json();
-      if (data.length > 0) {
+      if (Array.isArray(data) && data.length > 0) {
+        setGroups(data);
         setSelectedGroup(data[0]);
       }
     } catch (error) {
       console.error('Error fetching groups:', error);
+      setGroups((prev) => (prev.length > 0 ? prev : [
+        {
+          id: '1',
+          name: 'Muchers',
+          description: 'This is a sample group for demonstration purposes.',
+          createdBy: userId,
+          members: [{ userId, role: 'admin', joinedAt: initialDate }],
+          createdAt: initialDate,
+          updatedAt: initialDate,
+        },
+      ]));
+      setSelectedGroup((prev) => prev ?? {
+        id: '1',
+        name: 'Muchers',
+        description: 'This is a sample group for demonstration purposes.',
+        createdBy: userId,
+        members: [{ userId, role: 'admin', joinedAt: initialDate }],
+        createdAt: initialDate,
+        updatedAt: initialDate,
+      });
     } finally {
       setLoading(false);
     }
@@ -180,10 +211,39 @@ export function GroupsPage({ userId }: GroupsPageProps) {
           : `/api/events?groupId=${groupId}&stage=${stageFilter}`;
 
       const response = await fetch(url);
+      const contentType = response.headers.get('content-type') || '';
+
+      if (!response.ok || !contentType.includes('application/json')) {
+        throw new Error('Events API did not return JSON');
+      }
+
       const data = await response.json();
-      setEvents(data);
+      if (Array.isArray(data)) {
+        setEvents(data);
+      }
     } catch (error) {
       console.error('Error fetching events:', error);
+      setEvents((prev) => prev.length > 0 ? prev : [
+        {
+          id: 'event1',
+          title: 'Taco Guild',
+          description: 'Fallback event data while the API is unavailable.',
+          createdBy: 'Carina',
+          hostName: 'Carina',
+          hostAvatarUrl: 'avatars/avatar_1.png',
+          stage: 'idea',
+          ownerId: groupId,
+          ownerType: 'group',
+          groupId,
+          time: '5pm',
+          comments: [],
+          ratings: [],
+          createdAt: initialDate,
+          updatedAt: initialDate,
+          plannedDate: new Date('2024-07-15'),
+          location: 'Fallback location',
+        },
+      ]);
     }
   };
 

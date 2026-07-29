@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { shortFormat } from '../../../../lib/utils';
 import {
   Typography,
   Box,
