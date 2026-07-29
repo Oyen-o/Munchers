@@ -47,7 +47,7 @@ export function HomeScreen() {
     e.preventDefault();
     router.push(`/groups?phone=${encodeURIComponent(phoneNumber)}`);
   };
-
+  console.log('ENVIRONMENT:', process.env.ENV);
   return (
     <Stack
       className="home-screen__container"

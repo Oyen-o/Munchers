@@ -20,6 +20,13 @@
       "options": {
         "outputPath": "dist/web"
       }
+    },
+    "build:production": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{workspaceRoot}",
+        "command": "npm run build:web -- --configuration production"
+      }
     }
   }
 }
