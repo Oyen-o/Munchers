@@ -154,7 +154,9 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
       event.title,
       event.plannedDate,
       event.description,
-      event.location,
+      typeof event.location === 'string'
+        ? event.location
+        : event.location?.address,
       event.id,
     );
   };
@@ -316,7 +318,11 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
                     variant="caption"
                     sx={{ color: '#fff', opacity: 0.9 }}
                   >
-                    {event.location ?? 'Location not specified'}
+                    {event.location && event.location.valueOf() !== ''
+                      ? typeof event.location === 'string'
+                        ? event.location
+                        : event.location?.address
+                      : 'Location not specified'}
                   </Typography>
                 </Stack>
               }

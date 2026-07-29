@@ -90,7 +90,7 @@ export interface Event {
   startTime?: string;
   endTime?: string;
   imageUrl?: string;
-  stage?: EventStage;
+  stage: EventStage;
   ownerType?: 'user' | 'group';
   createdBy?: string; // name
   hostId?: string; // User hosting the event

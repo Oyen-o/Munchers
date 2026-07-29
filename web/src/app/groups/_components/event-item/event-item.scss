@@ -82,7 +82,9 @@
     }
     &__event-stage-badge {
       text-transform: uppercase;
-      width: 130px;
+      font-size: var(--font-size-xxs);
+      padding: var(--spacing-xm);
+      width: 80px;
     }
 
     &__event-content {

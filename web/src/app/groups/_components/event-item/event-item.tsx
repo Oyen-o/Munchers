@@ -1,4 +1,3 @@
-import { Face2 } from '@mui/icons-material';
 import type { Event, EventStage } from 'src/lib/types';
 import { Chip, Typography } from '@mui/material';
 import { Box, Stack } from '@mui/system';
