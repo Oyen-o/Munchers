@@ -1,12 +1,25 @@
+function isValidDate(value: unknown): value is Date {
+  return value instanceof Date && !Number.isNaN(value.getTime());
+}
+
+function toSafeDate(value: Date | string | undefined | null): Date | null {
+  if (!value) return null;
+  const parsed = value instanceof Date ? value : new Date(value);
+  return isValidDate(parsed) ? parsed : null;
+}
+
 // 2. Short Format (e.g., "Wed, Jul 22, 2026")
-export function shortFormat(date: Date): string {
+export function shortFormat(date: Date | string | undefined | null): string {
+  const safeDate = toSafeDate(date);
+  if (!safeDate) return 'Date not specified';
+
   return new Intl.DateTimeFormat('en-US', {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
     year: 'numeric',
     timeZone: 'UTC',
-  }).format(date);
+  }).format(safeDate);
 }
 
 // Generate and download ICS calendar file for an event

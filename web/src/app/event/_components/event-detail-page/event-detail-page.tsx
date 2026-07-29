@@ -163,45 +163,50 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
   const maybeCount = attendees.filter((a) => a.attendance === 'Maybe').length;
 
   const formatDateLabel = (value?: Date | string) => {
-    if (!value) return '';
+    const safeDate = value ? new Date(value) : null;
+    if (!safeDate || Number.isNaN(safeDate.getTime())) return '';
     return new Intl.DateTimeFormat('en-US', {
       month: 'short',
       day: 'numeric',
       timeZone: 'UTC',
-    }).format(new Date(value));
+    }).format(safeDate);
   };
 
   const formatMonthLabel = (value?: Date | string) => {
-    if (!value) return '';
+    const safeDate = value ? new Date(value) : null;
+    if (!safeDate || Number.isNaN(safeDate.getTime())) return '';
     return new Intl.DateTimeFormat('en-US', {
       month: 'short',
       timeZone: 'UTC',
     })
-      .format(new Date(value))
+      .format(safeDate)
       .toUpperCase();
   };
 
   const formatDayNumber = (value?: Date | string) => {
-    if (!value) return '';
-    return new Date(value).getUTCDate();
+    const safeDate = value ? new Date(value) : null;
+    if (!safeDate || Number.isNaN(safeDate.getTime())) return '';
+    return safeDate.getUTCDate();
   };
 
   const formatTimeLabel = (value?: Date | string) => {
-    if (!value) return '';
+    const safeDate = value ? new Date(value) : null;
+    if (!safeDate || Number.isNaN(safeDate.getTime())) return '';
     return new Intl.DateTimeFormat('en-US', {
       hour: '2-digit',
       minute: '2-digit',
       timeZone: 'UTC',
-    }).format(new Date(value));
+    }).format(safeDate);
   };
 
   const formatCommentTime = (value?: Date | string) => {
-    if (!value) return '';
+    const safeDate = value ? new Date(value) : null;
+    if (!safeDate || Number.isNaN(safeDate.getTime())) return '';
     return new Intl.DateTimeFormat('en-US', {
       hour: '2-digit',
       minute: '2-digit',
       timeZone: 'UTC',
-    }).format(new Date(value));
+    }).format(safeDate);
   };
 
   return (

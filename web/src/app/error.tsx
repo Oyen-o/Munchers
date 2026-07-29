@@ -15,8 +15,8 @@ export default function Error({
       sx={{ alignItems: 'center', justifyContent: 'center', height: '100vh' }}
     >
       <img src="/images/crash.png" alt="Error" width={400} height={400} />
-      <h4>Oops! Something went wrong.</h4>
-      <p>{error.message}</p>
+      <h4 style={{ textAlign: 'center' }}>Oops! Something went wrong.</h4>
+      <h5 style={{ textAlign: 'center' }}>{error.message}</h5>
     </Stack>
   );
 }
