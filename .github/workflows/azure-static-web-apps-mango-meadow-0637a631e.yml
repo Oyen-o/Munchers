@@ -36,6 +36,7 @@ jobs:
         shell: bash
         run: |
           cat > .env.production <<EOF
+          ENV=Production
           COSMOS_ENDPOINT=${{ secrets.COSMOS_ENDPOINT }}
           COSMOS_KEY=${{ secrets.COSMOS_KEY }}
           EOF

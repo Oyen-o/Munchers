@@ -29,32 +29,35 @@ import './groups-page.scss';
 import EventList from '../event-list.tsx/event-list';
 import { Avatar } from 'src/components/avatar/avatar';
 
-interface GroupsPageProps {
-  userId: string;
-}
+const fetchAllGroups = async (userId: string): Promise<Group[]> => {
+  try {
+    const response = await fetch(`/api/groups?userId=${userId}`);
+    if (!response.ok) {
+      throw new Error(`Groups API returned ${response.status}`);
+    }
+    const data = await response.json();
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error('Error fetching groups:', error);
+    return [];
+  }
+};
 
-export function GroupsPage({ userId }: GroupsPageProps) {
+export function GroupsPage() {
   const router = useRouter();
+  const [userId, setUserId] = useState<string | null>(null);
   const initialDate = new Date('2024-01-01T12:00:00.000Z');
-  const [groups, setGroups] = useState<Group[]>([
-    {
-      id: '1',
-      name: 'Munchers',
-      description: 'This is a sample group for demonstration purposes.',
-      createdBy: userId,
-      members: [
-        {
-          userId,
-          role: 'admin',
-          joinedAt: initialDate,
-        },
-      ],
-      createdAt: initialDate,
-      updatedAt: initialDate,
-    },
-  ]);
+  const [groups, setGroups] = useState<Group[]>([]);
 
-  const [selectedGroup, setSelectedGroup] = useState<Group | null>();
+  useEffect(() => {
+    const phoneNumber = window.localStorage.getItem('phoneNumber');
+    if (!phoneNumber) {
+      router.push('/');
+    }
+    setUserId(phoneNumber);
+  }, [router]);
+
+  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
   const [events, setEvents] = useState<Event[]>([
     {
       id: 'event1',
@@ -142,14 +145,8 @@ export function GroupsPage({ userId }: GroupsPageProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchGroups();
+    if (userId) fetchGroups();
   }, [userId]);
-
-  useEffect(() => {
-    if (selectedGroup) {
-      fetchGroupEvents(selectedGroup.id);
-    }
-  }, [selectedGroup, stageFilter]);
 
   const fetchGroups = async () => {
     try {
@@ -171,34 +168,6 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       }
     } catch (error) {
       console.error('Error fetching groups:', error);
-      setGroups((prev) =>
-        prev.length > 0
-          ? prev
-          : [
-              {
-                id: '1',
-                name: 'Munchers',
-                description:
-                  'This is a sample group for demonstration purposes.',
-                createdBy: userId,
-                members: [{ userId, role: 'admin', joinedAt: initialDate }],
-                createdAt: initialDate,
-                updatedAt: initialDate,
-              },
-            ],
-      );
-      setSelectedGroup(
-        (prev) =>
-          prev ?? {
-            id: '1',
-            name: 'Munchers',
-            description: 'This is a sample group for demonstration purposes.',
-            createdBy: userId,
-            members: [{ userId, role: 'admin', joinedAt: initialDate }],
-            createdAt: initialDate,
-            updatedAt: initialDate,
-          },
-      );
     } finally {
       setLoading(false);
     }
@@ -224,32 +193,6 @@ export function GroupsPage({ userId }: GroupsPageProps) {
       }
     } catch (error) {
       console.error('Error fetching events:', error);
-      setEvents((prev) =>
-        prev.length > 0
-          ? prev
-          : [
-              {
-                id: 'event1',
-                title: 'Taco Guild',
-                description:
-                  'Fallback event data while the API is unavailable.',
-                createdBy: 'Carina',
-                hostName: 'Carina',
-                hostAvatarUrl: 'avatars/avatar_1.png',
-                stage: 'idea',
-                ownerId: groupId,
-                ownerType: 'group',
-                groupId,
-                time: '5pm',
-                comments: [],
-                ratings: [],
-                createdAt: initialDate,
-                updatedAt: initialDate,
-                plannedDate: new Date('2024-07-15'),
-                location: 'Fallback location',
-              },
-            ],
-      );
     }
   };
 
