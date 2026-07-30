@@ -30,10 +30,12 @@
       }
     },
     "build:production": {
-      "executor": "nx:run-commands",
+      "executor": "@nx/next:build",
       "options": {
         "cwd": "{workspaceRoot}",
-        "command": "npm run build:web --configuration=production"
+        "dev": false,
+        "configuration": "production",
+        "outputPath": "web/out"
       }
     }
   }

@@ -40,6 +40,8 @@ jobs:
           COSMOS_KEY=${{ secrets.COSMOS_KEY }}
           EOF
           cp .env.production web/.env.production
+          echo "Contents of .env.production:"
+          cat .env.production
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
