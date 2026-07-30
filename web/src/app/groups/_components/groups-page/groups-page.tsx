@@ -28,6 +28,7 @@ import './groups-page.scss';
 
 import EventList from '../event-list.tsx/event-list';
 import { Avatar } from 'src/components/avatar/avatar';
+import { setgroups } from 'process';
 
 const fetchAllGroups = async (userId: string): Promise<Group[]> => {
   try {
@@ -200,6 +201,13 @@ export function GroupsPage() {
     } catch (error) {
       console.error('Error fetching groups:', error);
     } finally {
+      setGroups([
+        {
+          id: '1',
+          name: 'Munchers',
+          description: 'A group for food lovers.',
+        },
+      ]);
       setLoading(false);
     }
   };
