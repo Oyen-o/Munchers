@@ -197,7 +197,7 @@ export function HomeScreen() {
                 fontSize: '0.5rem',
               }}
             >
-              V:0.0.7
+              V:0.0.9
             </Typography>
           </Stack>
         </motion.div>
