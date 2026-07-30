@@ -28,7 +28,6 @@ import './groups-page.scss';
 
 import EventList from '../event-list.tsx/event-list';
 import { Avatar } from 'src/components/avatar/avatar';
-import { setgroups } from 'process';
 
 const fetchAllGroups = async (userId: string): Promise<Group[]> => {
   try {
@@ -328,7 +327,11 @@ export function GroupsPage() {
           variant="temporary"
           slotProps={{
             paper: {
-              sx: { minWidth: '300px', padding: '16px', borderRadius: '0' },
+              sx: {
+                maxWidth: '95%',
+                padding: '16px',
+                borderRadius: '0',
+              },
             },
           }}
         >
@@ -351,7 +354,8 @@ export function GroupsPage() {
             <Tabs
               value={stageFilter}
               onChange={(_, value) => setStageFilter(value)}
-              scrollButtons="auto"
+              variant="scrollable"
+              className="groups-page__filter-tabs"
             >
               <Tab
                 label="All"
