@@ -48,7 +48,7 @@ export function HomeScreen() {
     localStorage.setItem('phoneNumber', phoneNumber.replace(/[-() ]/g, ''));
     router.push('/groups');
   };
-  console.log('ENVIRONMENT:', process.env.ENV);
+  console.log('ENVIRONMENT:', process.env.NEXT_PUBLIC_ENV);
   return (
     <Stack
       className="home-screen__container"
