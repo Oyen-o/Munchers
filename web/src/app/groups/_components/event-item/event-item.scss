@@ -4,13 +4,12 @@
   border-radius: var(--border-radius-md);
   background-color: var(--color-light-background-2);
   border: 2px solid var(--color-light-background-3);
-  cursor: pointer;
+
   display: flex;
   flex-direction: row;
 
   &--large {
-    border-radius: var(--border-radius-md);
-    cursor: pointer;
+    border-radius: var(--border-radius-lg);
     flex-direction: column;
   }
 
@@ -21,6 +20,7 @@
       object-fit: cover;
       border-radius: var(--border-radius-lg);
       padding: 10px;
+      cursor: pointer;
     }
 
     &:hover {
@@ -29,16 +29,12 @@
 
     &__event-card {
       position: relative;
-      overflow: hidden;
-      border-radius: var(--border-radius-md);
-      object-fit: cover;
-      width: 38.2%;
-      min-width: 38.2%;
-
+      border-radius: var(--border-radius-lg);
       flex-shrink: 0;
 
       &--large {
         position: relative;
+        height: 190px;
       }
     }
 

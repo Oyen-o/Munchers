@@ -30,7 +30,7 @@ export function EventItem({
     >
       {/* Event Image */}
       <Box
-        className={`event-item__event-card${size === 'large' ? '--large' : ''}`}
+        className={`event-item__event-card ${size === 'large' ? 'event-item__event-card--large' : ''}`}
         onClick={() => {
           console.log(
             'Navigating to event detail page for event ID:',
@@ -68,17 +68,15 @@ export function EventItem({
           </Typography>
         </Stack>
 
-        <Box className="event-item__event-image-radius">
-          <Box className="event-item__event-image-gradient" />
-          <img
-            className="event-item__event-image"
-            src={
-              event.imageUrl ||
-              'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=200&fit=crop'
-            }
-            alt={event.title}
-          />
-        </Box>
+        <Box className="event-item__event-image-gradient" />
+        <img
+          className="event-item__event-image"
+          src={
+            event.imageUrl ||
+            'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=200&fit=crop'
+          }
+          alt={event.title}
+        />
       </Box>
 
       {/* Event Content */}

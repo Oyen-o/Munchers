@@ -95,6 +95,8 @@ export function GroupsPage() {
       hostName: 'Rene',
       createdBy: 'Rene',
       hostAvatarUrl: 'avatars/avatar_3.png',
+      imageUrl:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmdwi2GWUL2-LrrslXqbf8ZsLyZo_cCL_SscWvrdEaBQqZIxOXFfAcOzO-&s=10',
       stage: 'picked',
       ownerId: '1',
       ownerType: 'group',
@@ -122,6 +124,8 @@ export function GroupsPage() {
       hostAvatarUrl: '/avatars/avatar_4.png',
       hostName: 'Jinx',
       stage: 'idea',
+      imageUrl:
+        'https://invitingeats.com/wp-content/uploads/2021/08/brunch-bowl-banner.jpg',
       ownerId: '1',
       ownerType: 'group',
       groupId: '1',
@@ -129,6 +133,33 @@ export function GroupsPage() {
         {
           id: 'comment2',
           eventId: 'event2',
+          userId: 'user1',
+          content: 'This is a comment on the event.',
+          createdAt: initialDate,
+          updatedAt: initialDate,
+        },
+      ],
+      ratings: [],
+      createdAt: initialDate,
+      updatedAt: initialDate,
+    },
+    {
+      id: 'event4',
+      title: 'Burgers',
+      description: 'Burgers Hosted by Jinx.',
+      createdBy: 'Francis',
+      hostAvatarUrl: '/avatars/avatar_2.png',
+      hostName: 'Francis',
+      imageUrl:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScQ5rLAGJf1bH_n8DZgDYENtrklTouw-Q1i-KXayp4gw&s=10',
+      stage: 'idea',
+      ownerId: '1',
+      ownerType: 'group',
+      groupId: '1',
+      comments: [
+        {
+          id: 'comment3',
+          eventId: 'event4',
           userId: 'user1',
           content: 'This is a comment on the event.',
           createdAt: initialDate,
