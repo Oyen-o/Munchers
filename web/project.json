@@ -37,6 +37,13 @@
         "configuration": "production",
         "outputPath": "dist/web"
       }
+    },
+    "build:production:static": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{workspaceRoot}",
+        "command": "npm run build:web --configuration=production"
+      }
     }
   }
 }
