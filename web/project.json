@@ -31,11 +31,11 @@
     },
     "build:production": {
       "executor": "@nx/next:build",
+      "outputs": ["{workspaceRoot}/dist/web/.next"],
       "options": {
-        "cwd": "{workspaceRoot}",
         "dev": false,
         "configuration": "production",
-        "outputPath": "web/out"
+        "outputPath": "dist/web"
       }
     }
   }

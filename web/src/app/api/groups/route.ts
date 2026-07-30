@@ -1,12 +1,11 @@
-export const dynamic = 'force-static';
-export const revalidate = false;
+
 
 import { getGroupsContainer, getMembershipsContainer } from '../../../lib/cosmos/cosmos';
 import type { GroupDocument, MembershipDocument } from '../../../lib/cosmos/cosmos.types';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const userId = searchParams.get('userId');
+  const userId = searchParams.get('userId');  
 
   if (!userId) {
     return Response.json({ error: 'userId is required' }, { status: 400 });
