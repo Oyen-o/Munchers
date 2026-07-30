@@ -36,8 +36,8 @@ jobs:
         shell: bash
         run: |
           cat > .env.production <<EOF
-          NEXT_PUBLIC_BFF_URL=${{ secrets.NEXT_PUBLIC_BFF_URL }}
-          COSMOS_DB_PROD=${{ secrets.COSMOS_DB_PROD }}
+          COSMOS_ENDPOINT=${{ secrets.COSMOS_ENDPOINT }}
+          COSMOS_KEY=${{ secrets.COSMOS_KEY }}
           EOF
           cp .env.production web/.env.production
       - name: Build And Deploy

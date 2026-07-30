@@ -45,7 +45,8 @@ export function HomeScreen() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    router.push(`/groups?phone=${encodeURIComponent(phoneNumber)}`);
+    localStorage.setItem('phoneNumber', phoneNumber.replace(/[-() ]/g, ''));
+    router.push('/groups');
   };
   console.log('ENVIRONMENT:', process.env.ENV);
   return (

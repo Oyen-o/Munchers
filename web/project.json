@@ -12,6 +12,14 @@
       "options": {
         "buildTarget": "web:build",
         "dev": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "web:build:dev"
+        },
+        "production": {
+          "buildTarget": "web:build:production"
+        }
       }
     },
     "build": {
@@ -25,7 +33,7 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": "{workspaceRoot}",
-        "command": "npm run build:web -- --configuration production"
+        "command": "npm run build:web --configuration=production"
       }
     }
   }
