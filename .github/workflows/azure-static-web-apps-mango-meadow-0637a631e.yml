@@ -48,6 +48,7 @@ jobs:
           NEXT_PUBLIC_ENV: production
           COSMOS_ENDPOINT: ${{ secrets.COSMOS_ENDPOINT }}
           COSMOS_KEY: ${{ secrets.COSMOS_KEY }}
+          IS_STATIC_EXPORT: true
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_MEADOW_0637A631E }}
           action: 'upload'
@@ -55,7 +56,7 @@ jobs:
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: '/' # App source code path
           api_location: '' # Api source code path - optional
-          output_location: '/' # Built app content directory - optional
+          output_location: 'web/out' # Built app content directory - optional
           github_id_token: ${{ steps.idtoken.outputs.result }}
           app_build_command: 'npm i && npm run build:web:prod'
           ###### End of Repository/Build Configurations ######
