@@ -68,7 +68,7 @@ jobs:
         with:
           app-name: 'Munchers'
           slot-name: 'Production'
-          package: .
+          package: '.'
 
       - name: Set App Service startup command
         run: |
@@ -81,4 +81,4 @@ jobs:
           az webapp config set \
             --resource-group "$resource_group" \
             --name Munchers \
-            --startup-file "npm run start:web -- --hostname 0.0.0.0 --port ${PORT:-8080}"
+            --startup-file "node node_modules/next/dist/bin/next start web -H 0.0.0.0 -p 8080"
