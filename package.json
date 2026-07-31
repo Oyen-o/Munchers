@@ -10,7 +10,7 @@
     "build:web": "npx nx run web:build:dev --skip-nx-cache",
     "build:web:prod": "npx nx run web:build:production --skip-nx-cache",
     "build:bff": "npx nx run bff:build --skip-nx-cache",
-    "start:web": "npx nx run web:start",
+    "start:web": "npx nx start web",
     "lint": "nx run-many --target=lint --all",
     "test": "nx run-many --target=test --all"
   },
