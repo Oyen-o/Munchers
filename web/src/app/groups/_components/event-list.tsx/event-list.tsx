@@ -109,12 +109,18 @@ export default function EventList({
           <Box
             sx={{
               display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
+              flexDirection: 'column',
               width: '100%',
+              alignItems: 'center',
             }}
           >
-            <img src="/images/empty.png" alt="No events" />
+            <img
+              src="/images/empty.png"
+              alt="No events"
+              width={500}
+              height={350}
+            />
+            <Typography variant="subtitle1">No events found.</Typography>
           </Box>
         ) : (
           events.map((event) => <EventItem key={event.id} event={event} />)

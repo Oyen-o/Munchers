@@ -3,6 +3,34 @@ import { getContainers } from '../db/cosmos';
 
 const router = Router();
 
+// Get ratings made by a user (optionally for a specific event)
+router.get('/user/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const eventId = typeof req.query.eventId === 'string' ? req.query.eventId : undefined;
+    const { ratings } = getContainers();
+
+    let query = 'SELECT * FROM c WHERE c.userId = @userId';
+    const parameters: { name: string; value: string }[] = [{ name: '@userId', value: userId }];
+
+    if (eventId) {
+      query += ' AND c.eventId = @eventId';
+      parameters.push({ name: '@eventId', value: eventId });
+    }
+
+    query += ' ORDER BY c.createdAt DESC';
+
+    const { resources } = await ratings.items
+      .query({ query, parameters })
+      .fetchAll();
+
+    res.json(resources);
+  } catch (error) {
+    console.error('Error fetching user ratings:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Get ratings for an event
 router.get('/event/:eventId', async (req, res) => {
   try {
@@ -72,7 +100,11 @@ router.post('/', async (req, res) => {
     const { eventId, userId, value } = req.body;
     const { ratings } = getContainers();
 
-    if (value < 1 || value > 5) {
+    if (!eventId || !userId) {
+      return res.status(400).json({ error: 'eventId and userId are required' });
+    }
+
+    if (typeof value !== 'number' || value < 1 || value > 5) {
       return res.status(400).json({ error: 'Rating value must be between 1 and 5' });
     }
 

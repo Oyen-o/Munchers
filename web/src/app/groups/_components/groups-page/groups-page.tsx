@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import {
   Typography,
@@ -23,31 +24,101 @@ import {
   Tune,
 } from '@mui/icons-material';
 import { Event, EventStage, Group } from '../../../../lib/types';
+import type { EventDocument } from '../../../../lib/cosmos/cosmos.types';
 
 import './groups-page.scss';
 
 import EventList from '../event-list.tsx/event-list';
 import { Avatar } from 'src/components/avatar/avatar';
-
-const fetchAllGroups = async (userId: string): Promise<Group[]> => {
-  try {
-    const response = await fetch(`/api/groups?userId=${userId}`);
-    if (!response.ok) {
-      throw new Error(`Groups API returned ${response.status}`);
-    }
-    const data = await response.json();
-    return Array.isArray(data) ? data : [];
-  } catch (error) {
-    console.error('Error fetching groups:', error);
-    return [];
-  }
-};
+export const mockEventDocuments: EventDocument[] = [
+  {
+    id: 'event1',
+    type: 'event',
+    partitionKey: 'owner_group1',
+    ownerId: 'group1',
+    ownerType: 'group',
+    groupId: 'group1',
+    stage: 'idea',
+    title: 'Taco Guild',
+    description:
+      'Set in an old church, this gastropublike spot serves sustainable Mexican fare, craft beer & tequila.',
+    location: '546 E Osborn Rd, Phoenix, AZ 85012',
+    time: '5pm',
+    createdBy: 'Carina',
+    hostName: 'Carina',
+    plannedDate: '2024-07-15T00:00:00.000Z',
+    createdAt: '2024-01-01T12:00:00.000Z',
+    updatedAt: '2024-01-01T12:00:00.000Z',
+    metadata: {
+      hostAvatarUrl: 'avatars/avatar_1.png',
+    },
+  },
+  {
+    id: 'event2',
+    type: 'event',
+    partitionKey: 'owner_group1',
+    ownerId: 'group1',
+    ownerType: 'group',
+    groupId: 'group1',
+    stage: 'picked',
+    title: 'Thai Food',
+    description: 'Thai Food Hosted by Rene.',
+    time: '2pm',
+    createdBy: 'Rene',
+    hostName: 'Rene',
+    coverImageUrl:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmdwi2GWUL2-LrrslXqbf8ZsLyZo_cCL_SscWvrdEaBQqZIxOXFfAcOzO-&s=10',
+    createdAt: '2024-01-01T12:00:00.000Z',
+    updatedAt: '2024-01-01T12:00:00.000Z',
+    metadata: {
+      hostAvatarUrl: 'avatars/avatar_3.png',
+    },
+  },
+  {
+    id: 'event3',
+    type: 'event',
+    partitionKey: 'owner_group1',
+    ownerId: 'group1',
+    ownerType: 'group',
+    groupId: 'group1',
+    stage: 'idea',
+    title: 'Brunch',
+    description: 'Brunch Hosted by Jinx.',
+    createdBy: 'Jinx',
+    hostName: 'Jinx',
+    coverImageUrl:
+      'https://invitingeats.com/wp-content/uploads/2021/08/brunch-bowl-banner.jpg',
+    createdAt: '2024-01-01T12:00:00.000Z',
+    updatedAt: '2024-01-01T12:00:00.000Z',
+    metadata: {
+      hostAvatarUrl: '/avatars/avatar_4.png',
+    },
+  },
+  {
+    id: 'event4',
+    type: 'event',
+    partitionKey: 'owner_group1',
+    ownerId: 'group1',
+    ownerType: 'group',
+    groupId: 'group1',
+    stage: 'idea',
+    title: 'Burgers',
+    description: 'Burgers Hosted by Jinx.',
+    createdBy: 'Francis',
+    hostName: 'Francis',
+    coverImageUrl:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScQ5rLAGJf1bH_n8DZgDYENtrklTouw-Q1i-KXayp4gw&s=10',
+    createdAt: '2024-01-01T12:00:00.000Z',
+    updatedAt: '2024-01-01T12:00:00.000Z',
+    metadata: {
+      hostAvatarUrl: '/avatars/avatar_2.png',
+    },
+  },
+];
 
 export function GroupsPage() {
   const router = useRouter();
   const [userId, setUserId] = useState<string | null>(null);
-  const initialDate = new Date('2024-01-01T12:00:00.000Z');
-  const [groups, setGroups] = useState<Group[]>([]);
 
   useEffect(() => {
     const phoneNumber = window.localStorage.getItem('phoneNumber');
@@ -58,129 +129,27 @@ export function GroupsPage() {
   }, [router]);
 
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
-  const [events, setEvents] = useState<Event[]>([
-    {
-      id: 'event1',
-      title: 'Taco Guild',
-      description:
-        'Set in an old church, this gastropublike spot serves sustainable Mexican fare, craft beer & tequila.',
-      createdBy: 'Carina',
-      hostName: 'Carina',
-      hostAvatarUrl: 'avatars/avatar_1.png',
-      stage: 'idea',
-      ownerId: '1',
-      ownerType: 'group',
-      groupId: '1',
-      time: '5pm',
-      comments: [
-        {
-          id: 'comment1',
-          eventId: 'event1',
-          userId: 'user1',
-          content: 'This is a comment on the event.',
-          createdAt: initialDate,
-          updatedAt: initialDate,
-        },
-      ],
-      ratings: [],
-      createdAt: initialDate,
-      updatedAt: initialDate,
-      plannedDate: new Date('2024-07-15 '),
-      location: '546 E Osborn Rd, Phoenix, AZ 85012',
-    },
-    {
-      id: 'event2',
-      title: 'Thai Food',
-      description: 'Thai Food Hosted by Rene.',
-      hostName: 'Rene',
-      createdBy: 'Rene',
-      hostAvatarUrl: 'avatars/avatar_3.png',
-      imageUrl:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmdwi2GWUL2-LrrslXqbf8ZsLyZo_cCL_SscWvrdEaBQqZIxOXFfAcOzO-&s=10',
-      stage: 'picked',
-      ownerId: '1',
-      ownerType: 'group',
-      groupId: '1',
-      time: '2pm',
-      comments: [
-        {
-          id: 'comment2',
-          eventId: 'event2',
-          userId: 'user1',
-          content: 'This is a comment on the event.',
-          createdAt: initialDate,
-          updatedAt: initialDate,
-        },
-      ],
-      ratings: [],
-      createdAt: initialDate,
-      updatedAt: initialDate,
-    },
-    {
-      id: 'event3',
-      title: 'Brunch',
-      description: 'Brunch Hosted by Jinx.',
-      createdBy: 'Jinx',
-      hostAvatarUrl: '/avatars/avatar_4.png',
-      hostName: 'Jinx',
-      stage: 'idea',
-      imageUrl:
-        'https://invitingeats.com/wp-content/uploads/2021/08/brunch-bowl-banner.jpg',
-      ownerId: '1',
-      ownerType: 'group',
-      groupId: '1',
-      comments: [
-        {
-          id: 'comment2',
-          eventId: 'event2',
-          userId: 'user1',
-          content: 'This is a comment on the event.',
-          createdAt: initialDate,
-          updatedAt: initialDate,
-        },
-      ],
-      ratings: [],
-      createdAt: initialDate,
-      updatedAt: initialDate,
-    },
-    {
-      id: 'event4',
-      title: 'Burgers',
-      description: 'Burgers Hosted by Jinx.',
-      createdBy: 'Francis',
-      hostAvatarUrl: '/avatars/avatar_2.png',
-      hostName: 'Francis',
-      imageUrl:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScQ5rLAGJf1bH_n8DZgDYENtrklTouw-Q1i-KXayp4gw&s=10',
-      stage: 'idea',
-      ownerId: '1',
-      ownerType: 'group',
-      groupId: '1',
-      comments: [
-        {
-          id: 'comment3',
-          eventId: 'event4',
-          userId: 'user1',
-          content: 'This is a comment on the event.',
-          createdAt: initialDate,
-          updatedAt: initialDate,
-        },
-      ],
-      ratings: [],
-      createdAt: initialDate,
-      updatedAt: initialDate,
-    },
-  ]);
   const [stageFilter, setStageFilter] = useState<EventStage | 'all'>('all');
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (userId) fetchGroups();
-  }, [userId]);
+  const groupsFallback: Group[] = [
+    {
+      id: 'group1',
+      name: 'Munchers',
+      description: 'A group for food lovers.',
+    },
+  ];
 
-  const fetchGroups = async () => {
-    try {
+  const groupsQuery = useQuery<Group[], Error>({
+    queryKey: ['groups', userId],
+    enabled: Boolean(userId),
+    retry: false,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 60,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    queryFn: async () => {
       const response = await fetch(`/api/groups?userId=${userId}`);
       const contentType = response.headers.get('content-type') || '';
 
@@ -192,31 +161,50 @@ export function GroupsPage() {
         throw new Error('Groups API did not return JSON');
       }
 
-      const data = await response.json();
-      if (Array.isArray(data) && data.length > 0) {
-        setGroups(data);
-        setSelectedGroup(data[0]);
-      }
-    } catch (error) {
-      console.error('Error fetching groups:', error);
-    } finally {
-      setGroups([
-        {
-          id: '1',
-          name: 'Munchers',
-          description: 'A group for food lovers.',
-        },
-      ]);
-      setLoading(false);
-    }
-  };
+      const data: unknown = await response.json();
+      return Array.isArray(data) ? (data as Group[]) : [];
+    },
+  });
 
-  const fetchGroupEvents = async (groupId: string) => {
-    try {
-      const url =
-        stageFilter === 'all'
-          ? `/api/events?groupId=${groupId}`
-          : `/api/events?groupId=${groupId}&stage=${stageFilter}`;
+  const groups =
+    groupsQuery.data && groupsQuery.data.length > 0
+      ? groupsQuery.data
+      : groupsQuery.isError
+        ? groupsFallback
+        : [];
+
+  useEffect(() => {
+    if (groupsQuery.isError) {
+      console.error('Error fetching groups:', groupsQuery.error);
+    }
+  }, [groupsQuery.error, groupsQuery.isError]);
+
+  useEffect(() => {
+    if (groups.length === 0) {
+      setSelectedGroup(null);
+      return;
+    }
+
+    if (
+      !selectedGroup ||
+      !groups.some((group) => group.id === selectedGroup.id)
+    ) {
+      setSelectedGroup(groups[0]);
+    }
+  }, [groups, selectedGroup]);
+
+  const eventsQuery = useQuery<Event[], Error>({
+    queryKey: ['events', selectedGroup?.id, stageFilter],
+    enabled: Boolean(selectedGroup?.id),
+    retry: false,
+    queryFn: async () => {
+      const groupId = selectedGroup?.id;
+
+      if (!groupId) {
+        return [];
+      }
+
+      const url = `/api/events?groupId=${groupId}`;
 
       const response = await fetch(url);
       const contentType = response.headers.get('content-type') || '';
@@ -225,14 +213,31 @@ export function GroupsPage() {
         throw new Error('Events API did not return JSON');
       }
 
-      const data = await response.json();
-      if (Array.isArray(data)) {
-        setEvents(data);
-      }
-    } catch (error) {
-      console.error('Error fetching events:', error);
+      const data: unknown = await response.json();
+      return Array.isArray(data) ? (data as Event[]) : [];
+    },
+  });
+
+  useEffect(() => {
+    if (eventsQuery.isError) {
+      console.error('Error fetching events:', eventsQuery.error);
     }
+  }, [eventsQuery.error, eventsQuery.isError]);
+
+  const fetchGroupEvents = async (groupId: string) => {
+    if (groupId !== selectedGroup?.id) {
+      const groupToSelect = groups.find((group) => group.id === groupId);
+      if (groupToSelect) {
+        setSelectedGroup(groupToSelect);
+      }
+      return;
+    }
+
+    await eventsQuery.refetch();
   };
+
+  const loading = !userId || groupsQuery.isLoading;
+  const events = eventsQuery.data ?? [];
 
   if (loading) {
     return (
@@ -248,8 +253,8 @@ export function GroupsPage() {
           <CircularProgress size={80} />
           <img
             src="/images/loading-splash.png"
-            width={600}
-            height={400}
+            width={500}
+            height={350}
             alt="Logo"
             className="groups-page__loading-logo"
           />
@@ -389,7 +394,7 @@ export function GroupsPage() {
             </Tabs>
           </Box>
         </Drawer>
-        <EventList events={events} fetchGroupEvents={fetchGroupEvents} />
+        <EventList events={events ?? []} fetchGroupEvents={fetchGroupEvents} />
       </Stack>
     </div>
   );

@@ -89,7 +89,7 @@ export interface Event {
   time?: string;
   startTime?: string;
   endTime?: string;
-  imageUrl?: string;
+  coverImageUrl?: string;
   stage: EventStage;
   ownerType?: 'user' | 'group';
   createdBy?: string; // name

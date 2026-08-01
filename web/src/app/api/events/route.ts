@@ -1,6 +1,3 @@
-export const dynamic = 'force-static';
-export const revalidate = false;
-
 import { getEventsContainer } from '../../../lib/cosmos/cosmos';
 import type { EventDocument, EventStageDocument } from '../../../lib/cosmos/cosmos.types';
 
@@ -16,9 +13,6 @@ export async function GET(request: Request) {
   const groupId = searchParams.get('groupId');
   const stage = searchParams.get('stage');
 
-  if (!userId && !groupId) {
-    return Response.json({ error: 'userId or groupId is required' }, { status: 400 });
-  }
 
   if (stage && !isEventStage(stage)) {
     return Response.json({ error: 'Invalid stage value' }, { status: 400 });
@@ -30,12 +24,12 @@ export async function GET(request: Request) {
     let query = 'SELECT * FROM c WHERE c.type = "event"';
     const parameters: { name: string; value: string }[] = [];
 
-    if (userId) {
+    // If only userId is provided, return events owned by that user.
+    // If groupId is provided (with or without userId), return events in that group.
+    if (userId && !groupId) {
       query += ' AND c.ownerId = @userId AND (NOT IS_DEFINED(c.ownerType) OR c.ownerType = "user")';
       parameters.push({ name: '@userId', value: userId });
-    }
-
-    if (groupId) {
+    } else if (groupId) {
       query += ' AND c.groupId = @groupId';
       parameters.push({ name: '@groupId', value: groupId });
     }
@@ -92,7 +86,7 @@ export async function POST(request: Request) {
       time: body.time,
       startTime: body.startTime,
       endTime: body.endTime,
-      imageUrl: body.imageUrl,
+      coverImageUrl: body.coverImageUrl,
       createdBy: body.createdBy,
       hostId: body.hostId,
       hostName: body.hostName,

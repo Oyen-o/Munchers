@@ -72,7 +72,7 @@ export interface EventDocument extends BaseDocument {
 	time?: string;
 	startTime?: string;
 	endTime?: string;
-	imageUrl?: string;
+	coverImageUrl?: string;
 	createdBy?: string;
 	hostId?: string;
 	hostName?: string;

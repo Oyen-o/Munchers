@@ -91,7 +91,7 @@ const mockEvent: Event = {
   title: 'Taco Guild Meetup',
   description:
     'Join us for delicious tacos and great conversation at Taco Guild! This is a casual gathering for our group to catch up and enjoy some amazing food together.',
-  imageUrl:
+  coverImageUrl:
     'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&h=400&fit=crop',
   stage: 'planned',
   ownerId: '1',
@@ -377,7 +377,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
 
         {/* Event Image */}
         <Box className="event-detail-page__image">
-          <img src={event.imageUrl} alt={event.title} />
+          <img src={event.coverImageUrl} alt={event.title} />
           <Chip
             label={event.stage}
             className="event-detail-page__stage-badge"

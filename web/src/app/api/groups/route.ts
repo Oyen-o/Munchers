@@ -1,5 +1,3 @@
-export const dynamic = 'force-static';
-export const revalidate = false;
 
 import { getGroupsContainer, getMembershipsContainer } from '../../../lib/cosmos/cosmos';
 import type { GroupDocument, MembershipDocument } from '../../../lib/cosmos/cosmos.types';

@@ -72,7 +72,7 @@ export function EventItem({
         <img
           className="event-item__event-image"
           src={
-            event.imageUrl ||
+            event.coverImageUrl ||
             'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=200&fit=crop'
           }
           alt={event.title}
