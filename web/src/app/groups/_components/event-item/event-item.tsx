@@ -1,8 +1,14 @@
+'use client';
+
+import { useMemo } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Event, EventStage } from 'src/lib/types';
+import type { RatingDocument } from 'src/lib/cosmos/cosmos.types';
 import { Chip, Typography } from '@mui/material';
 import { Box, Stack } from '@mui/system';
 import { shortFormat } from 'src/lib/utils';
 import RatingStars from '../ratings/rating';
+import { RatingSkeleton } from '../ratings/rating.skeleton';
 import { Avatar } from 'src/components/avatar/avatar';
 
 import './event-item.scss';
@@ -14,6 +20,75 @@ export function EventItem({
   event: Event;
   size?: 'small' | 'medium' | 'large';
 }) {
+  const queryClient = useQueryClient();
+  const currentUserId = useMemo(() => {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+
+    return window.localStorage.getItem('phoneNumber');
+  }, []);
+
+  const ratingQueryKey = ['event-rating', event.id, currentUserId] as const;
+
+  // Fetch the user's rating for this event
+  const ratingQuery = useQuery<RatingDocument | null, Error>({
+    queryKey: ratingQueryKey,
+    enabled: Boolean(currentUserId && event.id),
+    retry: false,
+    staleTime: Infinity,
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/ratings?userId=${currentUserId}&eventId=${event.id}`,
+      );
+
+      if (!response.ok) {
+        throw new Error(`Ratings API returned ${response.status}`);
+      }
+
+      const data: unknown = await response.json();
+      if (!Array.isArray(data) || data.length === 0) {
+        return null;
+      }
+
+      return data[0] as RatingDocument;
+    },
+  });
+
+  // Mutation to add or update the user's rating for this event
+  const ratingMutation = useMutation<RatingDocument, Error, number>({
+    mutationFn: async (rating) => {
+      if (!currentUserId) {
+        throw new Error('Missing current user id');
+      }
+
+      const response = await fetch('/api/ratings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: currentUserId,
+          eventId: event.id,
+          rating,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Ratings API returned ${response.status}`);
+      }
+
+      return (await response.json()) as RatingDocument;
+    },
+    onSuccess: (updatedRating) => {
+      queryClient.setQueryData(ratingQueryKey, updatedRating);
+    },
+  });
+
+  const userRating = ratingMutation.isPending
+    ? ratingMutation.variables
+    : (ratingQuery.data?.rating ?? 0);
+
   const getStageColor = (stage: EventStage) => {
     const colors = {
       idea: 'var(--color-stage-idea)',
@@ -43,7 +118,7 @@ export function EventItem({
           <Stack className="event-item__event-header-row" direction="row">
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
               <Avatar
-                src={event.hostAvatarUrl || '/images/avatar.png'}
+                src={event.metadata?.hostAvatarUrl || '/images/avatar.png'}
                 alt={event.hostName || 'Host Avatar'}
                 size="medium"
               />
@@ -95,7 +170,7 @@ export function EventItem({
               }}
             >
               <Avatar
-                src={event.hostAvatarUrl || '/images/avatar.png'}
+                src={event.metadata?.hostAvatarUrl || '/images/avatar.png'}
                 alt={event.hostName || 'Host Avatar'}
                 size="medium"
               />
@@ -163,7 +238,21 @@ export function EventItem({
             alignItems: 'center',
           }}
         >
-          <RatingStars rating={5} fontSize={36}></RatingStars>
+          {ratingQuery.isPending ? (
+            <RatingSkeleton />
+          ) : (
+            <RatingStars
+              rating={userRating}
+              fontSize={36}
+              onRatingChange={(rating) => {
+                if (!currentUserId) {
+                  return;
+                }
+
+                ratingMutation.mutate(rating);
+              }}
+            ></RatingStars>
+          )}
         </Box>
         {/* Comments indicator */}
         {event.comments && event.comments.length > 0 && (

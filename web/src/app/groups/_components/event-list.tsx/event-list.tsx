@@ -14,6 +14,7 @@ import {
 
 import { Event, EventTypeLabels, Group } from '../../../../lib/types';
 import { EventItem } from '../event-item/event-item';
+import { EventItemSkeleton } from '../event-item/event-item.skeleton';
 import { ChevronRight } from '@mui/icons-material';
 
 import './event-list.scss';
@@ -22,10 +23,12 @@ import '../groups-page/groups-page.scss';
 export default function EventList({
   events,
   selectedGroup,
+  eventsLoading,
   fetchGroupEvents,
 }: {
   events: Event[];
   selectedGroup?: Group | null;
+  eventsLoading?: boolean;
   fetchGroupEvents: (groupId: string) => void;
 }) {
   const [addEventOpen, setAddEventOpen] = useState(false);
@@ -105,7 +108,13 @@ export default function EventList({
           },
         }}
       >
-        {events.length === 0 ? (
+        {eventsLoading ? (
+          <>
+            <EventItemSkeleton size="large" />
+            <EventItemSkeleton size="large" />
+            <EventItemSkeleton size="large" />
+          </>
+        ) : events.length === 0 ? (
           <Box
             sx={{
               display: 'flex',

@@ -238,6 +238,7 @@ export function GroupsPage() {
 
   const loading = !userId || groupsQuery.isLoading;
   const events = eventsQuery.data ?? [];
+  const eventsLoading = eventsQuery.isLoading || eventsQuery.isFetching;
 
   if (loading) {
     return (
@@ -394,7 +395,12 @@ export function GroupsPage() {
             </Tabs>
           </Box>
         </Drawer>
-        <EventList events={events ?? []} fetchGroupEvents={fetchGroupEvents} />
+        <EventList
+          events={events ?? []}
+          selectedGroup={selectedGroup}
+          eventsLoading={eventsLoading}
+          fetchGroupEvents={fetchGroupEvents}
+        />
       </Stack>
     </div>
   );

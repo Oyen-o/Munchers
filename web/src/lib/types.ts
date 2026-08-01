@@ -79,6 +79,9 @@ export interface Event {
   eventStyle?: string;
   title: string;
   description?: string;
+  metadata?: {
+    hostAvatarUrl?: string;
+  };
   images?: string[];
   location?: {
     type?: string;
