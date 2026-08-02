@@ -39,6 +39,10 @@ export function getRatingsContainer(): Container {
   return getContainer(process.env.COSMOS_RATINGS_CONTAINER_ID ?? 'Ratings');
 }
 
+export function getCommentsContainer(): Container {
+  return getContainer(process.env.COSMOS_COMMENTS_CONTAINER_ID ?? 'Comments');
+}
+
 export function getUsersContainer(): Container {
   return getContainer(process.env.COSMOS_USERS_CONTAINER_ID ?? 'Users');
 }

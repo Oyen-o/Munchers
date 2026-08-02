@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Typography,
   Box,
@@ -20,8 +20,13 @@ import {
   Person as PersonIcon,
   Send as SendIcon,
 } from '@mui/icons-material';
-import { Event, Comment } from '../../../../lib/types';
+import { Event } from '../../../../lib/types';
 import { downloadCalendarEvent } from '../../../../lib/utils';
+import {
+  useAddEventCommentMutation,
+  useEventCommentsQuery,
+  useUpdateEventMutation,
+} from '../../_hooks';
 import './event-detail-page.scss';
 
 interface EventDetailPageProps {
@@ -124,6 +129,31 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
   const [event, setEvent] = useState<Event>(mockEvent);
   const [attendees, setAttendees] = useState(mockAttendees);
   const [newComment, setNewComment] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState(mockEvent.title);
+  const [editDescription, setEditDescription] = useState(
+    mockEvent.description ?? '',
+  );
+  const [editLocation, setEditLocation] = useState(
+    typeof mockEvent.location === 'string'
+      ? mockEvent.location
+      : (mockEvent.location?.address ?? ''),
+  );
+  const [editTime, setEditTime] = useState(mockEvent.time ?? '');
+  const [editDate, setEditDate] = useState('');
+
+  const currentUserId = useMemo(() => {
+    if (typeof window === 'undefined') {
+      return 'currentUser';
+    }
+
+    return window.localStorage.getItem('phoneNumber') || 'currentUser';
+  }, []);
+
+  const commentsQuery = useEventCommentsQuery(eventId);
+  const addCommentMutation = useAddEventCommentMutation();
+  const updateEventMutation = useUpdateEventMutation();
+  const targetEventId = eventId ?? event.id;
 
   useEffect(() => {
     if (!eventId) {
@@ -155,12 +185,27 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
         const fetchedEvent = data[0] as Partial<Event>;
 
         if (!isCancelled) {
-          setEvent({
+          const nextEvent = {
             ...mockEvent,
             ...fetchedEvent,
             comments: fetchedEvent.comments ?? [],
             ratings: fetchedEvent.ratings ?? [],
-          });
+          };
+
+          setEvent(nextEvent);
+          setEditTitle(nextEvent.title);
+          setEditDescription(nextEvent.description ?? '');
+          setEditLocation(
+            typeof nextEvent.location === 'string'
+              ? nextEvent.location
+              : (nextEvent.location?.address ?? ''),
+          );
+          setEditTime(nextEvent.time ?? '');
+          setEditDate(
+            nextEvent.plannedDate
+              ? new Date(nextEvent.plannedDate).toISOString().slice(0, 10)
+              : '',
+          );
         }
       } catch (error) {
         console.error('Error fetching event details:', error);
@@ -177,23 +222,91 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
     };
   }, [eventId]);
 
-  const handleAddComment = () => {
-    if (!newComment.trim()) return;
+  useEffect(() => {
+    setEditDate(
+      event.plannedDate
+        ? new Date(event.plannedDate).toISOString().slice(0, 10)
+        : '',
+    );
+  }, [event.plannedDate]);
 
-    const comment: Comment = {
-      id: `c${event.comments.length + 1}`,
-      eventId: event.id,
-      userId: 'currentUser',
-      content: newComment,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+  const comments =
+    commentsQuery.data && commentsQuery.data.length > 0
+      ? commentsQuery.data
+      : event.comments;
 
-    setEvent({
-      ...event,
-      comments: [...event.comments, comment],
-    });
-    setNewComment('');
+  const handleAddComment = async () => {
+    const content = newComment.trim();
+
+    if (!content) {
+      return;
+    }
+
+    try {
+      await addCommentMutation.mutateAsync({
+        eventId: targetEventId,
+        userId: currentUserId,
+        content,
+      });
+      setNewComment('');
+    } catch (error) {
+      console.error('Error creating comment:', error);
+    }
+  };
+
+  const handleSaveEvent = async () => {
+    const title = editTitle.trim();
+
+    if (!title) {
+      return;
+    }
+
+    try {
+      const parsedPlannedDate = editDate
+        ? new Date(`${editDate}T00:00:00.000Z`)
+        : undefined;
+
+      const plannedDate =
+        parsedPlannedDate && !Number.isNaN(parsedPlannedDate.getTime())
+          ? parsedPlannedDate
+          : undefined;
+
+      const updatedEvent = await updateEventMutation.mutateAsync({
+        id: targetEventId,
+        title,
+        description: editDescription.trim(),
+        location: editLocation.trim(),
+        time: editTime.trim(),
+        plannedDate,
+      });
+
+      setEvent((previousEvent) => ({
+        ...previousEvent,
+        ...updatedEvent,
+        comments: previousEvent.comments,
+        ratings: previousEvent.ratings,
+      }));
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error updating event:', error);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditTitle(event.title);
+    setEditDescription(event.description ?? '');
+    setEditLocation(
+      typeof event.location === 'string'
+        ? event.location
+        : (event.location?.address ?? ''),
+    );
+    setEditTime(event.time ?? '');
+    setEditDate(
+      event.plannedDate
+        ? new Date(event.plannedDate).toISOString().slice(0, 10)
+        : '',
+    );
+    setIsEditing(false);
   };
 
   const handleDownloadCalendar = () => {
@@ -412,16 +525,83 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
         </Box>
 
         {/* Event Description */}
-        {event.description && (
-          <Card className="event-detail-page__description-card">
+        <Card className="event-detail-page__description-card">
+          <Stack
+            direction="row"
+            className="event-detail-page__description-header"
+            spacing={2}
+            sx={{ justifyContent: 'space-between' }}
+          >
+            <Typography variant="h6">Event Details</Typography>
+            {!isEditing ? (
+              <Button size="small" onClick={() => setIsEditing(true)}>
+                Edit
+              </Button>
+            ) : (
+              <Stack direction="row" spacing={1}>
+                <Button size="small" onClick={handleCancelEdit}>
+                  Cancel
+                </Button>
+                <Button
+                  size="small"
+                  variant="contained"
+                  onClick={() => void handleSaveEvent()}
+                  disabled={!editTitle.trim() || updateEventMutation.isPending}
+                >
+                  Save
+                </Button>
+              </Stack>
+            )}
+          </Stack>
+
+          {isEditing ? (
+            <Stack spacing={2}>
+              <TextField
+                label="Title"
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                size="small"
+              />
+              <TextField
+                label="Description"
+                value={editDescription}
+                onChange={(e) => setEditDescription(e.target.value)}
+                size="small"
+                multiline
+                minRows={2}
+              />
+              <TextField
+                label="Location"
+                value={editLocation}
+                onChange={(e) => setEditLocation(e.target.value)}
+                size="small"
+              />
+              <TextField
+                label="Time"
+                value={editTime}
+                onChange={(e) => setEditTime(e.target.value)}
+                size="small"
+              />
+              <TextField
+                label="Date"
+                type="date"
+                value={editDate}
+                onChange={(e) => setEditDate(e.target.value)}
+                size="small"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Stack>
+          ) : (
             <Typography
               variant="body1"
               sx={{ color: 'var(--color-text-secondary)' }}
             >
-              {event.description}
+              {event.description || 'No description yet.'}
             </Typography>
-          </Card>
-        )}
+          )}
+        </Card>
 
         {/* Event Image */}
         <Box className="event-detail-page__image">
@@ -472,11 +652,11 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
         {/* Comments Section */}
         <Card className="event-detail-page__comments-card">
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-            Comments ({event.comments.length})
+            Comments ({comments.length})
           </Typography>
 
           <Stack spacing={2} sx={{ mb: 2 }}>
-            {event.comments.map((comment) => (
+            {comments.map((comment) => (
               <Box key={comment.id} className="event-detail-page__comment">
                 <Stack direction="row" spacing={1.5}>
                   <Avatar
@@ -517,12 +697,12 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
               placeholder="Add a comment..."
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleAddComment()}
+              onKeyDown={(e) => e.key === 'Enter' && void handleAddComment()}
               size="small"
             />
             <IconButton
-              onClick={handleAddComment}
-              disabled={!newComment.trim()}
+              onClick={() => void handleAddComment()}
+              disabled={!newComment.trim() || addCommentMutation.isPending}
               sx={{
                 backgroundColor: 'var(--color-primary-main)',
                 color: '#fff',

@@ -143,6 +143,16 @@ export interface RatingDocument extends BaseDocument {
 	updatedAt?: string;
 }
 
+export interface CommentDocument extends BaseDocument {
+	type: 'comment';
+	eventId?: string;
+	groupId?: string;
+	userId: string;
+	content: string;
+	createdAt: string;
+	updatedAt?: string;
+}
+
 export interface NotificationDocument extends BaseDocument {
 	type: 'notification';
 	ownerId: string;
@@ -171,6 +181,7 @@ export interface CosmosContainerPartitionKeyDocument {
 	groups: '/id';
 	memberships: '/groupId';
 	attendances: '/eventId';
+	comments: '/eventId';
 	ratings: '/eventId';
 	friendships: '/userId';
 	activityFeed: '/ownerId';
