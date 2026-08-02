@@ -153,6 +153,14 @@ export interface CommentDocument extends BaseDocument {
 	updatedAt?: string;
 }
 
+export interface EventAvailabilityDocument extends BaseDocument {
+	type: 'eventAvailability';
+	eventId: string;
+	userId: string;
+	updatedAt: string;
+	slots: string[];
+}
+
 export interface NotificationDocument extends BaseDocument {
 	type: 'notification';
 	ownerId: string;
@@ -182,6 +190,7 @@ export interface CosmosContainerPartitionKeyDocument {
 	memberships: '/groupId';
 	attendances: '/eventId';
 	comments: '/eventId';
+	eventAvailability: '/eventId';
 	ratings: '/eventId';
 	friendships: '/userId';
 	activityFeed: '/ownerId';

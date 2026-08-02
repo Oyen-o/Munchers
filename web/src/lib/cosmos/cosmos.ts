@@ -43,6 +43,12 @@ export function getCommentsContainer(): Container {
   return getContainer(process.env.COSMOS_COMMENTS_CONTAINER_ID ?? 'Comments');
 }
 
+export function getEventAvailabilityContainer(): Container {
+  return getContainer(
+    process.env.COSMOS_EVENT_AVAILABILITY_CONTAINER_ID ?? 'EventAvailability',
+  );
+}
+
 export function getUsersContainer(): Container {
   return getContainer(process.env.COSMOS_USERS_CONTAINER_ID ?? 'Users');
 }

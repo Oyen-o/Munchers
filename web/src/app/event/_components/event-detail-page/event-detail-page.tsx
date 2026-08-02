@@ -6,6 +6,7 @@ import {
   Box,
   Stack,
   Avatar,
+  AvatarGroup,
   Chip,
   IconButton,
   Button,
@@ -23,10 +24,18 @@ import {
 import { Event } from '../../../../lib/types';
 import { downloadCalendarEvent } from '../../../../lib/utils';
 import {
+  WHEN_TO_MEET_DEFAULT_DAYS,
+  isWhenToMeetWeekendDay,
+  toEmptyWhenToMeetCounts,
+  type WhenToMeetDay,
+} from '../../../../lib/availability/when-to-meet-slots';
+import {
   useAddEventCommentMutation,
+  useEventAvailability,
   useEventCommentsQuery,
   useUpdateEventMutation,
 } from '../../_hooks';
+import { WhenToMeetGrid, WhenToMeetGridSkeleton } from '../when-to-meet-grid';
 import './event-detail-page.scss';
 
 interface EventDetailPageProps {
@@ -141,6 +150,9 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
   );
   const [editTime, setEditTime] = useState(mockEvent.time ?? '');
   const [editDate, setEditDate] = useState('');
+  const [visibleAvailabilityDays, setVisibleAvailabilityDays] = useState<
+    WhenToMeetDay[]
+  >([...WHEN_TO_MEET_DEFAULT_DAYS]);
 
   const currentUserId = useMemo(() => {
     if (typeof window === 'undefined') {
@@ -154,6 +166,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
   const addCommentMutation = useAddEventCommentMutation();
   const updateEventMutation = useUpdateEventMutation();
   const targetEventId = eventId ?? event.id;
+  const eventAvailability = useEventAvailability(targetEventId, currentUserId);
 
   useEffect(() => {
     if (!eventId) {
@@ -252,6 +265,37 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
     } catch (error) {
       console.error('Error creating comment:', error);
     }
+  };
+
+  const handleToggleAvailabilitySlot = async (
+    slot: Parameters<typeof eventAvailability.toggleAvailabilitySlot>[0],
+  ) => {
+    try {
+      await eventAvailability.toggleAvailabilitySlot(slot);
+      await eventAvailability.refetchSummary();
+    } catch (error) {
+      console.error('Error saving availability:', error);
+    }
+  };
+
+  const handleAddAvailabilityDay = (day: WhenToMeetDay) => {
+    setVisibleAvailabilityDays((existing) => {
+      if (existing.includes(day)) {
+        return existing;
+      }
+
+      return [...existing, day];
+    });
+  };
+
+  const handleRemoveAvailabilityDay = (day: WhenToMeetDay) => {
+    if (isWhenToMeetWeekendDay(day)) {
+      return;
+    }
+
+    setVisibleAvailabilityDays((existing) =>
+      existing.filter((existingDay) => existingDay !== day),
+    );
   };
 
   const handleSaveEvent = async () => {
@@ -383,149 +427,155 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
           Back To Feed
         </IconButton>
       </Stack>
-      <Stack className="event-detail-page__stack" spacing={3}>
-        {/* Hero Info Card */}
-        <Card className="event-detail-page__hero-card">
-          <Stack
-            className="event-detail-page__card-top"
-            direction="row"
-            spacing={2}
-          >
-            <Stack className="event-detail-page__card-top-right">
-              <CalendarIcon
-                sx={{
-                  color: 'var(--color-text-primary)',
-                  fontSize: 'var(--font-size-md)',
-                }}
-              />
-              <Typography
-                className="event-detail-page__page"
-                variant="body2"
-                sx={{ color: 'var(--color-text-primary)' }}
-              >
-                {formatDateLabel(event.plannedDate)}
-              </Typography>
-            </Stack>
-          </Stack>
-
-          <Stack
-            direction="row"
-            spacing={2}
-            sx={{
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              height: '180px',
-              padding: '0 var(--spacing-md)',
-            }}
-            divider={
-              <Divider
-                orientation="vertical"
-                flexItem
-                sx={{
-                  height: '60%',
-                  borderColor: 'var(--border-color-1)',
-                  alignSelf: 'center',
-                }}
-              />
-            }
-          >
-            {/* Date Box */}
-            <Box
-              className="event-detail-page__date-box"
-              onClick={handleDownloadCalendar}
-              sx={{ cursor: 'pointer', '&:hover': { opacity: 0.8 } }}
+      <Stack className="event-detail-page__stack" gap={3}>
+        <Box className="event-detail-page__hero-section">
+          {/* Hero Info Card */}
+          <Card className="event-detail-page__hero-card">
+            <Stack
+              className="event-detail-page__card-top"
+              direction="row"
+              spacing={2}
             >
-              <Typography
-                variant="caption"
-                sx={{ opacity: 0.9, fontSize: '0.7rem' }}
-              >
-                {formatMonthLabel(event.plannedDate)}
-              </Typography>
-              <Typography variant="h1">
-                {formatDayNumber(event.plannedDate)}
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{ fontSize: '.4rem', marginTop: '-16px' }}
-              >
-                download calendar
-              </Typography>
-            </Box>
+              <Stack className="event-detail-page__card-top-right">
+                <CalendarIcon
+                  sx={{
+                    color: 'var(--color-text-primary)',
+                    fontSize: 'var(--font-size-md)',
+                  }}
+                />
+                <Typography
+                  className="event-detail-page__page"
+                  variant="body2"
+                  sx={{ color: 'var(--color-text-primary)' }}
+                >
+                  {formatDateLabel(event.plannedDate)}
+                </Typography>
+              </Stack>
+            </Stack>
 
-            {/* Event Info */}
+            <Stack
+              direction="row"
+              spacing={2}
+              sx={{
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                height: '180px',
+                padding: '0 var(--spacing-md)',
+              }}
+              divider={
+                <Divider
+                  orientation="vertical"
+                  flexItem
+                  sx={{
+                    height: '90%',
+                    borderColor: 'var(--border-color-1)',
+                    alignSelf: 'center',
+                  }}
+                />
+              }
+            >
+              {/* Date Box */}
+              <Box
+                className="event-detail-page__date-box"
+                onClick={handleDownloadCalendar}
+                sx={{ cursor: 'pointer', '&:hover': { opacity: 0.8 } }}
+              >
+                <Typography
+                  variant="caption"
+                  sx={{ opacity: 0.9, fontSize: '0.7rem' }}
+                >
+                  {formatMonthLabel(event.plannedDate)}
+                </Typography>
+                <Typography variant="h1">
+                  {formatDayNumber(event.plannedDate)}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ fontSize: '.4rem', marginTop: '-16px' }}
+                >
+                  download calendar
+                </Typography>
+              </Box>
 
-            <Stack className="event-detail-page__event-info" spacing={2}>
-              {event.plannedDate && (
+              {/* Event Info */}
+
+              <Stack className="event-detail-page__event-info" spacing={2}>
+                {event.plannedDate && (
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    sx={{ alignItems: 'center' }}
+                  >
+                    <CalendarIcon sx={{ fontSize: 16 }} />
+                    <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                      {formatTimeLabel(event.plannedDate)}
+                    </Typography>
+                  </Stack>
+                )}
+
+                {
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    sx={{ alignItems: 'center' }}
+                  >
+                    <LocationIcon sx={{ color: '#fff', fontSize: 16 }} />
+                    <Typography
+                      variant="caption"
+                      sx={{ color: '#fff', opacity: 0.9 }}
+                    >
+                      {event.location && event.location.valueOf() !== ''
+                        ? typeof event.location === 'string'
+                          ? event.location
+                          : event.location?.address
+                        : 'Location not specified'}
+                    </Typography>
+                  </Stack>
+                }
+
                 <Stack
                   direction="row"
                   spacing={1}
                   sx={{ alignItems: 'center' }}
                 >
-                  <CalendarIcon sx={{ fontSize: 16 }} />
-                  <Typography variant="caption" sx={{ opacity: 0.9 }}>
-                    {formatTimeLabel(event.plannedDate)}
-                  </Typography>
-                </Stack>
-              )}
-
-              {
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  sx={{ alignItems: 'center' }}
-                >
-                  <LocationIcon sx={{ color: '#fff', fontSize: 16 }} />
+                  <PersonIcon sx={{ color: '#fff', fontSize: 16 }} />
                   <Typography
                     variant="caption"
                     sx={{ color: '#fff', opacity: 0.9 }}
                   >
-                    {event.location && event.location.valueOf() !== ''
-                      ? typeof event.location === 'string'
-                        ? event.location
-                        : event.location?.address
-                      : 'Location not specified'}
+                    {attendees.length} Attendees
                   </Typography>
                 </Stack>
-              }
-
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                <PersonIcon sx={{ color: '#fff', fontSize: 16 }} />
-                <Typography
-                  variant="caption"
-                  sx={{ color: '#fff', opacity: 0.9 }}
-                >
-                  {attendees.length} Attendees
-                </Typography>
               </Stack>
             </Stack>
-          </Stack>
-          <Box className="event-detail-page__title">
-            <Typography variant="h3">{event.title}</Typography>
-          </Box>
-        </Card>
+            <Box className="event-detail-page__title">
+              <Typography variant="h3">{event.title}</Typography>
+            </Box>
+          </Card>
 
-        {/* Join Button - Overlapping */}
-        <Box
-          className="event-detail-page__rsvp-button-container"
-          sx={{
-            position: 'relative',
-            zIndex: 10,
-            marginTop: '-28px !important',
-            marginBottom: '-28px',
-            padding: '0 var(--spacing-lg)',
-          }}
-        >
-          <Button
-            variant="contained"
-            fullWidth
-            className="event-detail-page__rsvp-button"
+          {/* Join Button - Overlapping */}
+          <Box
+            className="event-detail-page__rsvp-button-container"
+            sx={{
+              position: 'relative',
+              zIndex: 10,
+              marginTop: '-28px !important',
+              marginBottom: '-28px',
+              padding: '0 var(--spacing-lg)',
+            }}
           >
-            Join
-          </Button>
+            <Button
+              variant="contained"
+              fullWidth
+              className="event-detail-page__rsvp-button"
+            >
+              Join
+            </Button>
+          </Box>
         </Box>
 
         {/* Event Description */}
-        <Card className="event-detail-page__description-card">
+        <Card className="event-detail-page__description-card event-detail-page__paper">
           <Stack
             direction="row"
             className="event-detail-page__description-header"
@@ -604,25 +654,54 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
         </Card>
 
         {/* Event Image */}
-        <Box className="event-detail-page__image">
-          <img src={event.coverImageUrl} alt={event.title} />
-          <Chip
-            label={event.stage}
-            className="event-detail-page__stage-badge"
-            sx={{
-              backgroundColor: 'var(--color-stage-' + event.stage + ')',
-            }}
-          />
-        </Box>
+        {event.coverImageUrl && (
+          <Box className="event-detail-page__image">
+            <img src={event.coverImageUrl} alt={event.title} />
+          </Box>
+        )}
+
+        <Card className="event-detail-page__when-to-meet-card event-detail-page__paper">
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+            When to Meet
+          </Typography>
+          {eventAvailability.isLoading ? (
+            <WhenToMeetGridSkeleton visibleDays={visibleAvailabilityDays} />
+          ) : (
+            <WhenToMeetGrid
+              selectedSlots={eventAvailability.selectedSlots}
+              counts={eventAvailability.counts ?? toEmptyWhenToMeetCounts()}
+              totalResponses={eventAvailability.totalResponses}
+              visibleDays={visibleAvailabilityDays}
+              onAddDay={handleAddAvailabilityDay}
+              onRemoveDay={handleRemoveAvailabilityDay}
+              onToggle={(slot) => {
+                void handleToggleAvailabilitySlot(slot);
+              }}
+            />
+          )}
+        </Card>
 
         {/* Attendees List */}
-        <Card className="event-detail-page__attendees-card">
+        <Card className="event-detail-page__attendees-card event-detail-page__paper">
           <Typography
             variant="body2"
             sx={{ color: 'var(--color-text-secondary)', mb: 1.5 }}
           >
             Attendees of the meeting ({attendees.length} total)
           </Typography>
+          <AvatarGroup
+            max={20}
+            className="event-detail-page__attendee-avatars"
+            sx={{ justifyContent: 'flex-end' }}
+          >
+            {attendees.map((attendee) => (
+              <Avatar
+                key={attendee.id}
+                src={attendee.avatarUrl}
+                alt={attendee.name}
+              />
+            ))}
+          </AvatarGroup>
           {/* <List className="event-detail-page__attendees-list">
             {attendees.map((attendee) => (
               <ListItem
@@ -650,7 +729,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
         </Card>
 
         {/* Comments Section */}
-        <Card className="event-detail-page__comments-card">
+        <Card className="event-detail-page__comments-card event-detail-page__paper">
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
             Comments ({comments.length})
           </Typography>

@@ -1,6 +1,5 @@
 .event-detail-page__container {
   min-height: 100vh;
-  background-color: var(--color-light-background-1);
   padding: var(--spacing-lg);
   max-width: 640px;
   margin: 0 auto;
@@ -61,6 +60,8 @@
     &__event-info {
       padding: var(--spacing-lg) 0 var(--spacing-lg) var(--spacing-lg);
       color: var(--color-primary-contrast);
+      width: 50%;
+      align-self: flex-end;
 
       svg {
         font-size: 1.4rem;
@@ -71,6 +72,7 @@
       color: var(--color-primary-contrast);
       text-align: center;
       cursor: pointer;
+      width: 50%;
 
       h1 {
         font-size: 100px;
@@ -131,12 +133,25 @@
     }
 
     &__description-card,
+    &__when-to-meet-card,
     &__attendees-card,
     &__comments-card {
-      background-color: var(--color-light-background-3);
-      border-radius: var(--border-radius-xl);
+      border-radius: var(--border-radius-md);
       padding: var(--spacing-lg);
       margin-top: 0;
+    }
+
+    &__paper {
+      background-color: transparent;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: none;
+    }
+
+    &__when-to-meet-card {
+      background-color: var(--color-light-background-2);
+      border: 2px solid var(--color-light-background-3);
     }
 
     &__description-card {
@@ -171,6 +186,10 @@
       padding: var(--spacing-sm);
       background-color: var(--color-light-background-1);
       border-radius: var(--border-radius-md);
+    }
+
+    &__attendee-avatars {
+      justify-content: flex-end;
     }
   }
 }
