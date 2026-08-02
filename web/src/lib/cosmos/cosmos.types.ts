@@ -4,7 +4,7 @@ export type GroupType = 'community' | 'friendGroup';
 
 export type EventOwnerType = 'user' | 'group';
 
-export type EventStageDocument = 'idea' | 'picked' | 'planned';
+export type EventStageDocument = 'idea' | 'picked' | 'planned' | 'completed';
 
 export type AttendanceStatus = 'invited' | 'going' | 'checkedIn' | 'cancelled';
 

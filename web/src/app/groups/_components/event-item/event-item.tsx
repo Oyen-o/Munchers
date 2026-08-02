@@ -6,6 +6,7 @@ import type { Event, EventStage } from 'src/lib/types';
 import type { RatingDocument } from 'src/lib/cosmos/cosmos.types';
 import { Chip, Typography } from '@mui/material';
 import { Box, Stack } from '@mui/system';
+import { Place } from '@mui/icons-material';
 import { shortFormat } from 'src/lib/utils';
 import RatingStars from '../ratings/rating';
 import { RatingSkeleton } from '../ratings/rating.skeleton';
@@ -94,18 +95,24 @@ export function EventItem({
       idea: 'var(--color-stage-idea)',
       picked: 'var(--color-stage-picked)',
       planned: 'var(--color-stage-planned)',
+      completed: 'var(--color-stage-completed)',
     };
     return colors[stage];
   };
 
+  const eventLocationText =
+    typeof event.location === 'string'
+      ? event.location
+      : event.location?.address;
+
   return (
     <Box
       key={event.id}
-      className={`event-item__container ${size === 'large' ? 'event-item__container--large' : ''}`}
+      className={`event-item__container ${size ? `event-item__container--${size}` : ''}`}
     >
       {/* Event Image */}
       <Box
-        className={`event-item__event-card ${size === 'large' ? 'event-item__event-card--large' : ''}`}
+        className={`event-item__event-img-backdrop ${size ? `event-item__event-img-backdrop--${size}` : ''}`}
         onClick={() => {
           console.log(
             'Navigating to event detail page for event ID:',
@@ -115,29 +122,31 @@ export function EventItem({
         }}
       >
         <Stack className="event-item__event-header-layer" direction="column">
-          <Stack className="event-item__event-header-row" direction="row">
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-              <Avatar
-                src={event.metadata?.hostAvatarUrl || '/images/avatar.png'}
-                alt={event.hostName || 'Host Avatar'}
-                size="medium"
+          {size === 'large' && (
+            <Stack className="event-item__event-header-row" direction="row">
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <Avatar
+                  src={event.metadata?.hostAvatarUrl || '/images/avatar.png'}
+                  alt={event.hostName || 'Host Avatar'}
+                  size={size === 'large' ? 'medium' : 'small'}
+                />
+                <Typography
+                  variant="body2"
+                  className="event-item__event-subtitle"
+                >
+                  {event.hostName && `${event.hostName}`}
+                </Typography>
+              </Stack>
+              <Chip
+                label={event.stage}
+                size="small"
+                className={`event-item__event-stage-badge`}
+                sx={{
+                  backgroundColor: getStageColor(event.stage),
+                }}
               />
-              <Typography
-                variant="body2"
-                className="event-item__event-subtitle"
-              >
-                {event.hostName && `${event.hostName}`}
-              </Typography>
             </Stack>
-            <Chip
-              label={event.stage}
-              size="small"
-              className={`event-item__event-stage-badge`}
-              sx={{
-                backgroundColor: getStageColor(event.stage),
-              }}
-            />
-          </Stack>
+          )}
           <Typography variant="h4" className="event-item__event-title">
             {event.title}
           </Typography>
@@ -155,7 +164,7 @@ export function EventItem({
       </Box>
 
       {/* Event Content */}
-      <Stack className="event-item__event-content" spacing={1} sx={{}}>
+      <Stack className="event-item__event-content" spacing={1}>
         {size != 'large' && (
           <Box sx={{ width: '100%' }}>
             <Typography
@@ -172,12 +181,9 @@ export function EventItem({
               <Avatar
                 src={event.metadata?.hostAvatarUrl || '/images/avatar.png'}
                 alt={event.hostName || 'Host Avatar'}
-                size="medium"
+                size="small"
               />
               {event.hostName && `${event.hostName}`}
-            </Typography>
-            <Typography variant="h6" className="event-item__event-title">
-              {event.title}
             </Typography>
           </Box>
         )}
@@ -207,53 +213,51 @@ export function EventItem({
           </Typography>
         </Stack>
 
-        {/* <Stack
-                    direction="row"
-                    spacing={1}
-                    sx={{ alignItems: 'center' }}
-                  >
-                    <LocationIcon
-                      sx={{
-                        fontSize: 14,
-                        color: 'var(--color-text-secondary)',
-                      }}
-                    />
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        color: 'var(--color-text-secondary)',
-                        fontSize: '0.75rem',
-                      }}
-                    >
-                      {event.location
-                        ? event.location
-                        : 'Location not specified'}
-                    </Typography>
-                  </Stack> */}
-
-        <Box
-          className="event-item__event-rating"
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          {ratingQuery.isPending ? (
-            <RatingSkeleton />
-          ) : (
-            <RatingStars
-              rating={userRating}
-              fontSize={36}
-              onRatingChange={(rating) => {
-                if (!currentUserId) {
-                  return;
-                }
-
-                ratingMutation.mutate(rating);
+        {size === 'large' && (
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Place
+              sx={{
+                fontSize: 14,
+                color: 'var(--color-text-secondary)',
               }}
-            ></RatingStars>
-          )}
-        </Box>
+            />
+            <Typography
+              variant="caption"
+              sx={{
+                color: 'var(--color-text-secondary)',
+                fontSize: '0.75rem',
+              }}
+            >
+              {eventLocationText || 'Location not specified'}
+            </Typography>
+          </Stack>
+        )}
+
+        {size === 'large' && (
+          <Box
+            className="event-item__event-rating"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            {ratingQuery.isPending ? (
+              <RatingSkeleton />
+            ) : (
+              <RatingStars
+                rating={userRating}
+                fontSize={36}
+                onRatingChange={(rating) => {
+                  if (!currentUserId) {
+                    return;
+                  }
+
+                  ratingMutation.mutate(rating);
+                }}
+              ></RatingStars>
+            )}
+          </Box>
+        )}
         {/* Comments indicator */}
         {event.comments && event.comments.length > 0 && (
           <Stack

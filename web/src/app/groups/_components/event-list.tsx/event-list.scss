@@ -1,1 +1,8 @@
-
+.groups-page__events {
+  .groups-page {
+    &__plan-title {
+      margin-bottom: var(--spacing-md);
+      text-transform: uppercase;
+    }
+  }
+}

@@ -38,3 +38,7 @@ export function getMembershipsContainer(): Container {
 export function getRatingsContainer(): Container {
   return getContainer(process.env.COSMOS_RATINGS_CONTAINER_ID ?? 'Ratings');
 }
+
+export function getUsersContainer(): Container {
+  return getContainer(process.env.COSMOS_USERS_CONTAINER_ID ?? 'Users');
+}

@@ -13,6 +13,10 @@
     flex-direction: column;
   }
 
+  &--medium {
+    flex-direction: column;
+  }
+
   .event-item {
     &__event-image {
       width: 100%;
@@ -27,7 +31,7 @@
       box-shadow: var(--shadow-lg);
     }
 
-    &__event-card {
+    &__event-img-backdrop {
       position: relative;
       border-radius: var(--border-radius-lg);
       flex-shrink: 0;
@@ -35,6 +39,19 @@
       &--large {
         position: relative;
         height: 190px;
+      }
+
+      &--medium {
+        position: relative;
+        height: 140px;
+        .event-item__event-header-layer {
+          justify-content: center;
+          height: 100%;
+        }
+
+        .event-item____event-content {
+          padding-top: var(--padding-lg);
+        }
       }
     }
 

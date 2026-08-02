@@ -16,10 +16,14 @@ export function EventItemSkeleton({
       className={`event-item__container ${isLarge ? 'event-item__container--large' : ''}`}
     >
       <Box
-        className={`event-item__event-card ${isLarge ? 'event-item__event-card--large' : ''}`}
+        className={`event-item__event-img-backdrop ${isLarge ? 'event-item__event-img-backdrop--large' : ''}`}
       >
         <Box className="event-item__event-image-gradient" />
-        <Shimmer className="event-item__event-image" width="100%" height="100%" />
+        <Shimmer
+          className="event-item__event-image"
+          width="100%"
+          height="100%"
+        />
       </Box>
 
       <Stack className="event-item__event-content" spacing={1}>

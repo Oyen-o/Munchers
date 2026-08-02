@@ -392,6 +392,13 @@ export function GroupsPage() {
                 iconPosition="start"
                 className="groups-page__filter-tab-item groups-page__filter-tab-planned"
               />
+              <Tab
+                label="Completed"
+                value="completed"
+                icon={<CheckCircleIcon />}
+                iconPosition="start"
+                className="groups-page__filter-tab-item groups-page__filter-tab-planned"
+              />
             </Tabs>
           </Box>
         </Drawer>
