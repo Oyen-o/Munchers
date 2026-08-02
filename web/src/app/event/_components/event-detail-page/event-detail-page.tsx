@@ -416,6 +416,36 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
     }).format(safeDate);
   };
 
+  const whenToMeetDateText = (() => {
+    const selectedDate = editDate
+      ? new Date(`${editDate}T00:00:00.000Z`)
+      : event.plannedDate
+        ? new Date(event.plannedDate)
+        : null;
+
+    if (!selectedDate || Number.isNaN(selectedDate.getTime())) {
+      return 'No date selected yet. Select a date to focus this weekend availability.';
+    }
+
+    const weekendStart = new Date(
+      Date.UTC(
+        selectedDate.getUTCFullYear(),
+        selectedDate.getUTCMonth(),
+        selectedDate.getUTCDate(),
+      ),
+    );
+    const dayOfWeek = weekendStart.getUTCDay();
+    const daysUntilSaturday = (6 - dayOfWeek + 7) % 7;
+    weekendStart.setUTCDate(weekendStart.getUTCDate() + daysUntilSaturday);
+
+    return `Weekend of ${new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      timeZone: 'UTC',
+    }).format(weekendStart)}`;
+  })();
+
   return (
     <Box className="event-detail-page__container">
       <Stack className="event-detail-page__nav" direction="row">
@@ -661,8 +691,14 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
         )}
 
         <Card className="event-detail-page__when-to-meet-card event-detail-page__paper">
-          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
             When to Meet
+          </Typography>
+          <Typography
+            variant="caption"
+            sx={{ color: 'var(--color-text-secondary)', mb: 1.5 }}
+          >
+            {whenToMeetDateText}
           </Typography>
           {eventAvailability.isLoading ? (
             <WhenToMeetGridSkeleton visibleDays={visibleAvailabilityDays} />

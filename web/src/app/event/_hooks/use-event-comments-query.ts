@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import type { Comment } from '../../../../lib/types';
-import type { CommentDocument } from '../../../../lib/cosmos/cosmos.types';
+import { CommentDocument } from 'src/lib/cosmos/cosmos.types';
+import type { Comment } from 'src/lib/types';
 
 function toComment(document: CommentDocument): Comment {
   return {

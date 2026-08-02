@@ -224,8 +224,8 @@ export function GroupsPage() {
     }
   }, [eventsQuery.error, eventsQuery.isError]);
 
-  const fetchGroupEvents = async (groupId: string) => {
-    if (groupId !== selectedGroup?.id) {
+  const fetchGroupEvents = async (groupId: string | undefined) => {
+    if (groupId && groupId !== selectedGroup?.id) {
       const groupToSelect = groups.find((group) => group.id === groupId);
       if (groupToSelect) {
         setSelectedGroup(groupToSelect);
@@ -408,6 +408,8 @@ export function GroupsPage() {
           events={events ?? []}
           selectedGroup={selectedGroup}
           eventsLoading={eventsLoading}
+          itemSize="medium"
+          showTypeSections={false}
           fetchGroupEvents={fetchGroupEvents}
         />
       </Stack>

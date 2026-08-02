@@ -146,13 +146,13 @@ export function GroupDetails({ groupId }: GroupDetailsProps) {
             Members
           </Typography>
           <Stack direction="row" spacing={1} sx={{ overflowX: 'auto', pb: 1 }}>
-            <AvatarGroup max={5} total={members.length}>
+            <AvatarGroup max={20} total={members.length}>
               {members.slice(0, 5).map((member) => (
                 <Avatar
                   key={member.userId}
                   src={member.avatarUrl}
                   alt={member.displayName}
-                  sx={{ width: 44, height: 44, cursor: 'pointer' }}
+                  sx={{ cursor: 'pointer' }}
                   onClick={() => setMembersDrawerOpen(true)}
                 />
               ))}
@@ -200,8 +200,9 @@ export function GroupDetails({ groupId }: GroupDetailsProps) {
         onClose={() => setMembersDrawerOpen(false)}
         PaperProps={{
           sx: {
-            width: '86vw',
-            maxWidth: 360,
+            borderRadius: 0,
+            maxWidth: '90vw',
+            width: 360,
           },
         }}
       >
