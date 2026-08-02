@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Typography,
   Box,
@@ -9,10 +9,6 @@ import {
   Chip,
   IconButton,
   Button,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   Card,
   TextField,
   Divider,
@@ -29,7 +25,7 @@ import { downloadCalendarEvent } from '../../../../lib/utils';
 import './event-detail-page.scss';
 
 interface EventDetailPageProps {
-  eventId: string;
+  eventId?: string;
 }
 
 // Mock attendees data
@@ -88,7 +84,7 @@ const mockAttendees = [
 // Mock event data
 const mockEvent: Event = {
   id: 'event1',
-  title: 'Taco Guild Meetup',
+  title: 'Taco Guild',
   description:
     'Join us for delicious tacos and great conversation at Taco Guild! This is a casual gathering for our group to catch up and enjoy some amazing food together.',
   coverImageUrl:
@@ -128,6 +124,58 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
   const [event, setEvent] = useState<Event>(mockEvent);
   const [attendees, setAttendees] = useState(mockAttendees);
   const [newComment, setNewComment] = useState('');
+
+  useEffect(() => {
+    if (!eventId) {
+      setEvent(mockEvent);
+      return;
+    }
+
+    let isCancelled = false;
+
+    const fetchEventById = async () => {
+      try {
+        const response = await fetch(
+          `/api/events?eventId=${encodeURIComponent(eventId)}`,
+        );
+
+        if (!response.ok) {
+          throw new Error(`Events API returned ${response.status}`);
+        }
+
+        const data: unknown = await response.json();
+
+        if (!Array.isArray(data) || data.length === 0) {
+          if (!isCancelled) {
+            setEvent(mockEvent);
+          }
+          return;
+        }
+
+        const fetchedEvent = data[0] as Partial<Event>;
+
+        if (!isCancelled) {
+          setEvent({
+            ...mockEvent,
+            ...fetchedEvent,
+            comments: fetchedEvent.comments ?? [],
+            ratings: fetchedEvent.ratings ?? [],
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching event details:', error);
+        if (!isCancelled) {
+          setEvent(mockEvent);
+        }
+      }
+    };
+
+    fetchEventById();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [eventId]);
 
   const handleAddComment = () => {
     if (!newComment.trim()) return;

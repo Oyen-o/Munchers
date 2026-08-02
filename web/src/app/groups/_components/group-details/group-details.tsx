@@ -97,7 +97,7 @@ export function GroupDetails({ groupId }: GroupDetailsProps) {
       <Box className="group-detail-page__hero">
         <img
           className="group-detail-page__hero-image"
-          src={group.image || '/images/loading-splash.png'}
+          src={group.image || '/images/event-types/foodie.png'}
           alt={group.name}
         />
         <Box className="group-detail-page__hero-gradient" />
