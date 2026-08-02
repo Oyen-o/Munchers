@@ -312,7 +312,6 @@ export function GroupsPage() {
         <Box className="groups-page__groups-list">
           <Tabs
             value={groups.findIndex((g) => g.id === selectedGroup?.id || 1)}
-            // onChange={(_, index) => setSelectedGroup(groups[index])}
             variant="scrollable"
             scrollButtons="auto"
           >
@@ -322,6 +321,9 @@ export function GroupsPage() {
                 label={group.name}
                 icon={<PeopleIcon />}
                 iconPosition="start"
+                onClick={() => {
+                  router.push(`/groups/${group.id}`);
+                }}
               />
             ))}
           </Tabs>
