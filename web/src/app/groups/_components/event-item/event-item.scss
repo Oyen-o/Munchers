@@ -16,6 +16,8 @@
   &--medium {
     flex-direction: column;
     height: 260px;
+    min-width: unset;
+    width: 220px;
   }
 
   .event-item {

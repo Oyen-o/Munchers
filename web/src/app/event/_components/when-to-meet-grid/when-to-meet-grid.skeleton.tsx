@@ -47,12 +47,19 @@ export function WhenToMeetGridSkeleton({
             </Typography>
             {WHEN_TO_MEET_GRID[day].map((slot) => (
               <Box key={slot} className="when-to-meet-grid__cell-skeleton">
-                <Shimmer width="100%" height={44} borderRadius={10} />
+                <Shimmer
+                  width="100%"
+                  height={44}
+                  borderRadius="var(--border-radius-md)"
+                />
               </Box>
             ))}
             <Box className="when-to-meet-grid__remove-cell" />
           </Fragment>
         ))}
+      </Box>
+      <Box className="when-to-meet-grid__add-day-skeleton">
+        <Shimmer width="100%" height={44} marginTop={16} />
       </Box>
     </Box>
   );

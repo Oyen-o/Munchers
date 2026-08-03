@@ -85,6 +85,12 @@ function DraggableEventCard({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'stretch',
+        visibility: 'visible',
+        '&:hover .event-list__drag-handle, &:focus-within .event-list__drag-handle':
+          {
+            opacity: 1,
+            pointerEvents: 'auto',
+          },
       }}
     >
       <EventItem event={event} size={size} />
@@ -98,6 +104,7 @@ function DraggableEventCard({
         }}
       >
         <Box
+          className="event-list__drag-handle"
           sx={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -113,6 +120,11 @@ function DraggableEventCard({
             userSelect: 'none',
             fontSize: '0.7rem',
             fontWeight: 600,
+            opacity: isDragging ? 1 : 0,
+            transition: 'opacity 0.15s ease',
+            '@media (max-width: 640px)': {
+              opacity: 1,
+            },
           }}
           {...listeners}
           {...attributes}
@@ -163,6 +175,8 @@ export default function EventList({
   useEffect(() => {
     setEventsData(events);
   }, [events]);
+
+  const shouldShowSkeleton = Boolean(eventsLoading) && eventsData.length === 0;
 
   const stageRows: Array<{
     key: StageKey;
@@ -361,7 +375,7 @@ export default function EventList({
                         },
                       }}
                     >
-                      {eventsLoading ? (
+                      {shouldShowSkeleton ? (
                         <>
                           <EventItemSkeleton size={itemSize} />
                           <EventItemSkeleton size={itemSize} />
@@ -434,7 +448,7 @@ export default function EventList({
             },
           }}
         >
-          {eventsLoading ? (
+          {shouldShowSkeleton ? (
             <>
               <EventItemSkeleton size={itemSize} />
               <EventItemSkeleton size={itemSize} />
@@ -490,44 +504,6 @@ export default function EventList({
             </Box>
           </Box>
         ))}
-
-      {/* Add Event Dialog */}
-      <Dialog
-        open={addEventOpen}
-        onClose={() => setAddEventOpen(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>Add New Event</DialogTitle>
-        <DialogContent>
-          <Box sx={{ pt: 2 }}>
-            <TextField
-              label="Event Title"
-              value={newEventTitle}
-              onChange={(e) => setNewEventTitle(e.target.value)}
-              fullWidth
-              className="groups-page__dialog-input"
-            />
-            <TextField
-              label="Description (Optional)"
-              value={newEventDescription}
-              onChange={(e) => setNewEventDescription(e.target.value)}
-              fullWidth
-              multiline
-              rows={3}
-              className="groups-page__dialog-input"
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setAddEventOpen(false)} variant="outlined">
-            Cancel
-          </Button>
-          <Button onClick={handleAddEvent} variant="contained" color="primary">
-            Add Event
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 }

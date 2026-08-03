@@ -15,9 +15,17 @@ import {
   ListItemAvatar,
   ListItemText,
   Stack,
+  TextField,
   Typography,
 } from '@mui/material';
-import { ArrowBack, Group as GroupIcon, Place, Add } from '@mui/icons-material';
+import {
+  ArrowBack,
+  Group as GroupIcon,
+  Place,
+  Add,
+  Search,
+  Close as CloseIcon,
+} from '@mui/icons-material';
 import type { Event, Group } from '../../../../lib/types';
 import EventList from '../event-list.tsx/event-list';
 import { CreateEventIdeaDrawer } from 'src/components/create-event-idea-drawer/create-event-idea-drawer';
@@ -43,6 +51,8 @@ type GroupDetailsProps = {
 export function GroupDetails({ groupId }: GroupDetailsProps) {
   const [membersDrawerOpen, setMembersDrawerOpen] = useState(false);
   const [createIdeaOpen, setCreateIdeaOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [eventSearch, setEventSearch] = useState('');
 
   const groupQuery = useQuery<GroupDetailsResponse, Error>({
     queryKey: ['group-details', groupId],
@@ -91,6 +101,18 @@ export function GroupDetails({ groupId }: GroupDetailsProps) {
 
   const group = groupQuery.data.group;
   const members = groupQuery.data.members ?? [];
+  const normalizedSearch = eventSearch.trim().toLowerCase();
+  const filteredEvents = (eventsQuery.data ?? []).filter((event) => {
+    if (!normalizedSearch) {
+      return true;
+    }
+
+    const eventOwner = event.hostName ?? event.createdBy ?? '';
+
+    return [event.title, eventOwner, event.description ?? ''].some((value) =>
+      value.toLowerCase().includes(normalizedSearch),
+    );
+  });
 
   return (
     <Box className="group-detail-page">
@@ -177,12 +199,43 @@ export function GroupDetails({ groupId }: GroupDetailsProps) {
             variant="contained"
             onClick={() => setCreateIdeaOpen(true)}
           >
-            New Idea
+            Create Idea
           </Button>
         </Stack>
 
+        <Stack
+          direction="row"
+          sx={{ justifyContent: 'flex-end', alignItems: 'center', gap: 1 }}
+        >
+          <Typography variant="subtitle2" sx={{ mr: 1 }}>
+            Search
+          </Typography>
+          <IconButton
+            onClick={() => {
+              if (searchOpen) {
+                setEventSearch('');
+              }
+              setSearchOpen((open) => !open);
+            }}
+            size="small"
+          >
+            {searchOpen ? <CloseIcon /> : <Search />}
+          </IconButton>
+        </Stack>
+
+        {searchOpen ? (
+          <TextField
+            fullWidth
+            size="small"
+            label="Search events"
+            placeholder="Filter by name, owner, or description"
+            value={eventSearch}
+            onChange={(event) => setEventSearch(event.target.value)}
+          />
+        ) : null}
+
         <EventList
-          events={eventsQuery.data ?? []}
+          events={filteredEvents}
           selectedGroup={group}
           eventsLoading={eventsQuery.isLoading || eventsQuery.isFetching}
           itemSize="medium"

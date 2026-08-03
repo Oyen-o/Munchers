@@ -40,7 +40,16 @@
   &__cell-skeleton {
     height: 44px;
     width: 100%;
-    border-radius: 10px;
+    border: 1px solid rgba(102, 102, 102, 0.38);
+    border-radius: var(--border-radius-md);
+    box-sizing: border-box;
+    background-color: var(--color-light-background-2);
+    overflow: hidden;
+  }
+
+  &__add-day-skeleton {
+    margin-top: 12px;
+    width: 100%;
     overflow: hidden;
   }
 

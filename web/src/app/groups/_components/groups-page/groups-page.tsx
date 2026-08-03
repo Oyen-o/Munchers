@@ -13,6 +13,7 @@ import {
   Stack,
   Drawer,
   Button,
+  TextField,
 } from '@mui/material';
 import {
   People as PeopleIcon,
@@ -46,6 +47,7 @@ export function GroupsPage() {
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
   const [stageFilter, setStageFilter] = useState<EventStage | 'all'>('all');
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [eventSearch, setEventSearch] = useState('');
 
   const groupsFallback: Group[] = [
     {
@@ -153,6 +155,22 @@ export function GroupsPage() {
 
   const loading = !userId || groupsQuery.isLoading;
   const events = eventsQuery.data ?? [];
+  const normalizedSearch = eventSearch.trim().toLowerCase();
+  const filteredEvents = events.filter((event) => {
+    if (stageFilter !== 'all' && event.stage !== stageFilter) {
+      return false;
+    }
+
+    if (!normalizedSearch) {
+      return true;
+    }
+
+    const eventOwner = event.hostName ?? event.createdBy ?? '';
+
+    return [event.title, eventOwner, event.description ?? ''].some((value) =>
+      value.toLowerCase().includes(normalizedSearch),
+    );
+  });
   const eventsLoading = eventsQuery.isLoading || eventsQuery.isFetching;
 
   if (loading) {
@@ -274,6 +292,16 @@ export function GroupsPage() {
               </IconButton>
             </Stack>
 
+            <TextField
+              fullWidth
+              size="small"
+              label="Search events"
+              placeholder="Filter by name, owner, or description"
+              value={eventSearch}
+              onChange={(event) => setEventSearch(event.target.value)}
+              sx={{ mb: 2 }}
+            />
+
             <Tabs
               value={stageFilter}
               onChange={(_, value) => setStageFilter(value)}
@@ -320,11 +348,11 @@ export function GroupsPage() {
           </Box>
         </Drawer>
         <EventList
-          events={events ?? []}
+          events={filteredEvents}
           selectedGroup={selectedGroup}
           eventsLoading={eventsLoading}
-          itemSize="medium"
-          showTypeSections={false}
+          itemSize="large"
+          showTypeSections={true}
           fetchGroupEvents={fetchGroupEvents}
         />
       </Stack>
