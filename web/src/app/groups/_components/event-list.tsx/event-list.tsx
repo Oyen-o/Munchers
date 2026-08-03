@@ -22,12 +22,11 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from '@dnd-kit/core';
-import { CSS } from '@dnd-kit/utilities';
+import { ChevronRight, DragIndicator } from '@mui/icons-material';
 
 import { Event, EventTypeLabels, Group } from '../../../../lib/types';
 import { EventItem } from '../event-item/event-item';
 import { EventItemSkeleton } from '../event-item/event-item.skeleton';
-import { ChevronRight } from '@mui/icons-material';
 
 import './event-list.scss';
 import '../groups-page/groups-page.scss';
@@ -70,30 +69,60 @@ function DraggableEventCard({
   event: Event;
   size: 'small' | 'medium' | 'large';
 }) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: `event-${event.id}`,
-      data: {
-        eventId: event.id,
-        fromStage: event.stage,
-      },
-    });
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: `event-${event.id}`,
+    data: {
+      eventId: event.id,
+      fromStage: event.stage,
+    },
+  });
 
   return (
     <Box
       ref={setNodeRef}
-      style={{
-        transform: CSS.Translate.toString(transform),
-        opacity: isDragging ? 0.75 : 1,
-      }}
       sx={{
-        touchAction: 'none',
-        cursor: isDragging ? 'grabbing' : 'grab',
+        opacity: isDragging ? 0.45 : 1,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'stretch',
       }}
-      {...listeners}
-      {...attributes}
     >
       <EventItem event={event} size={size} />
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          minHeight: 28,
+          marginTop: '-4px',
+          padding: '4px 8px 0',
+        }}
+      >
+        <Box
+          sx={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 0.5,
+            position: 'relative',
+            bottom: '36px',
+            px: 1,
+            py: 0.5,
+            color: 'var(--color-text-secondary)',
+            cursor: isDragging ? 'grabbing' : 'grab',
+            touchAction: 'none',
+            userSelect: 'none',
+            fontSize: '0.7rem',
+            fontWeight: 600,
+          }}
+          {...listeners}
+          {...attributes}
+        >
+          <DragIndicator sx={{ fontSize: 16 }} />
+          <Typography component="span" sx={{ fontSize: '0.7rem' }}>
+            Drag
+          </Typography>
+        </Box>
+      </Box>
     </Box>
   );
 }

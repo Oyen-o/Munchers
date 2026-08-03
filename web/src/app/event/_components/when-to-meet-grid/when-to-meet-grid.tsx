@@ -145,9 +145,14 @@ export function WhenToMeetGrid({
                   aria-pressed={isSelected}
                   aria-label={`${slot} (${slotCount} selections)`}
                 >
-                  {isSelected && (
-                    <CheckIcon className="when-to-meet-grid__check" />
-                  )}
+                  {isSelected ? (
+                    <span className="when-to-meet-grid__cell-content">
+                      <CheckIcon className="when-to-meet-grid__check" />
+                    </span>
+                  ) : null}
+                  <span className="when-to-meet-grid__vote-count">
+                    {slotCount}
+                  </span>
                 </button>
               );
             })}

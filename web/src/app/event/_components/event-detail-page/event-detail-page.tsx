@@ -170,7 +170,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
 
   useEffect(() => {
     if (!eventId) {
-      setEvent(mockEvent);
+      // setEvent(mockEvent);
       return;
     }
 
@@ -189,9 +189,6 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
         const data: unknown = await response.json();
 
         if (!Array.isArray(data) || data.length === 0) {
-          if (!isCancelled) {
-            setEvent(mockEvent);
-          }
           return;
         }
 
@@ -306,6 +303,10 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
     }
 
     try {
+      const description = editDescription.trim();
+      const location = editLocation.trim();
+      const time = editTime.trim();
+
       const parsedPlannedDate = editDate
         ? new Date(`${editDate}T00:00:00.000Z`)
         : undefined;
@@ -318,9 +319,9 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
       const updatedEvent = await updateEventMutation.mutateAsync({
         id: targetEventId,
         title,
-        description: editDescription.trim(),
-        location: editLocation.trim(),
-        time: editTime.trim(),
+        description: description || undefined,
+        location: location || undefined,
+        time: time || undefined,
         plannedDate,
       });
 
@@ -521,7 +522,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
                 </Typography>
                 <Typography
                   variant="body2"
-                  sx={{ fontSize: '.4rem', marginTop: '-16px' }}
+                  sx={{ fontSize: '.6rem', marginTop: '-12px' }}
                 >
                   download calendar
                 </Typography>
