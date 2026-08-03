@@ -30,6 +30,21 @@
     color: var(--color-text-secondary);
     font-weight: 700;
     text-align: center;
+    line-height: 1.15;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  &__header {
+    padding: 0 4px;
+  }
+
+  &__header-label {
+    display: inline;
+
+    &--short {
+      display: none;
+    }
   }
 
   &__day-label {
@@ -127,5 +142,51 @@
     text-transform: none;
     font-weight: 600;
     border-width: 1px;
+  }
+
+  @media (max-width: 480px) {
+    &__table {
+      grid-template-columns: 76px repeat(3, minmax(0, 1fr)) 28px;
+      column-gap: 4px;
+      row-gap: 6px;
+    }
+
+    &__header,
+    &__day-label {
+      font-size: 0.68rem;
+      letter-spacing: 0;
+    }
+
+    &__day-label {
+      padding-left: 0;
+    }
+  }
+
+  @media (max-width: 400px) {
+    &__table {
+      grid-template-columns: 68px repeat(3, minmax(0, 1fr)) 24px;
+      column-gap: 3px;
+      row-gap: 5px;
+    }
+
+    &__header,
+    &__day-label {
+      font-size: 0.62rem;
+      line-height: 1.1;
+    }
+
+    &__header {
+      padding: 0 2px;
+    }
+
+    &__header-label {
+      &--full {
+        display: none;
+      }
+
+      &--short {
+        display: inline;
+      }
+    }
   }
 }

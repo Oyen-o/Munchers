@@ -14,6 +14,8 @@ type WhenToMeetGridSkeletonProps = {
   visibleDays?: WhenToMeetDay[];
 };
 
+const WHEN_TO_MEET_PERIOD_SHORT_LABELS = ['AM', 'PM', 'EVE'] as const;
+
 export function WhenToMeetGridSkeleton({
   visibleDays,
 }: WhenToMeetGridSkeletonProps) {
@@ -32,7 +34,16 @@ export function WhenToMeetGridSkeleton({
             variant="caption"
             className="when-to-meet-grid__header"
           >
-            {period}
+            <span className="when-to-meet-grid__header-label when-to-meet-grid__header-label--full">
+              {period}
+            </span>
+            <span className="when-to-meet-grid__header-label when-to-meet-grid__header-label--short">
+              {
+                WHEN_TO_MEET_PERIOD_SHORT_LABELS[
+                  WHEN_TO_MEET_PERIODS.indexOf(period)
+                ]
+              }
+            </span>
           </Typography>
         ))}
         <Box className="when-to-meet-grid__header-spacer" />

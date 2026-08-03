@@ -39,6 +39,8 @@ type WhenToMeetGridProps = {
   disabled?: boolean;
 };
 
+const WHEN_TO_MEET_PERIOD_SHORT_LABELS = ['AM', 'PM', 'EVE'] as const;
+
 function getHeatColor(
   slotCount: number,
   totalResponses: number,
@@ -112,7 +114,16 @@ export function WhenToMeetGrid({
             variant="caption"
             className="when-to-meet-grid__header"
           >
-            {period}
+            <span className="when-to-meet-grid__header-label when-to-meet-grid__header-label--full">
+              {period}
+            </span>
+            <span className="when-to-meet-grid__header-label when-to-meet-grid__header-label--short">
+              {
+                WHEN_TO_MEET_PERIOD_SHORT_LABELS[
+                  WHEN_TO_MEET_PERIODS.indexOf(period)
+                ]
+              }
+            </span>
           </Typography>
         ))}
         <Box className="when-to-meet-grid__header-spacer" />
@@ -182,13 +193,12 @@ export function WhenToMeetGrid({
           <Button
             className="when-to-meet-grid__add-day"
             variant="outlined"
-            startIcon={<AddIcon />}
             fullWidth
             size="small"
             onClick={handleAddDayClick}
             disabled={disabled || remainingDays.length === 0}
           >
-            Add another day
+            Add Day
           </Button>
           <Menu
             anchorEl={menuAnchor}
