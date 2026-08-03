@@ -85,7 +85,7 @@ export function GroupDetails({ groupId }: GroupDetailsProps) {
 
   if (groupQuery.isLoading) {
     return (
-      <Box className="group-detail-page__loading">
+      <Box className="group-detail__loading">
         <CircularProgress size={64} />
       </Box>
     );
@@ -93,7 +93,7 @@ export function GroupDetails({ groupId }: GroupDetailsProps) {
 
   if (groupQuery.isError || !groupQuery.data?.group) {
     return (
-      <Box className="group-detail-page__loading">
+      <Box className="group-detail__loading">
         <Typography variant="h6">Unable to load group.</Typography>
       </Box>
     );
@@ -115,42 +115,35 @@ export function GroupDetails({ groupId }: GroupDetailsProps) {
   });
 
   return (
-    <Box className="group-detail-page">
-      <Box className="group-detail-page__hero">
+    <Box className="group-detail">
+      <Box className="group-detail__hero">
         <img
-          className="group-detail-page__hero-image"
+          className="group-detail__hero-image"
           src={group.image || '/images/event-types/foodie.png'}
           alt={group.name}
         />
-        <Box className="group-detail-page__hero-gradient" />
+        <Box className="group-detail__hero-gradient" />
 
-        <Stack className="group-detail-page__hero-overlay" spacing={1}>
+        <Stack className="group-detail__hero-overlay" spacing={1}>
           <IconButton
-            className="group-detail-page__back"
+            className="group-detail__back"
             onClick={() => window.history.back()}
           >
             <ArrowBack />
           </IconButton>
 
-          <Typography variant="h4" className="group-detail-page__title">
+          <Typography variant="h4" className="group-detail__title">
             {group.name}
           </Typography>
 
-          <Typography
-            variant="body2"
-            className="group-detail-page__description"
-          >
+          <Typography variant="body2" className="group-detail__description">
             {group.description || 'No group description yet.'}
           </Typography>
         </Stack>
       </Box>
 
-      <Stack className="group-detail-page__content" spacing={3}>
-        <Stack
-          direction="row"
-          spacing={3}
-          className="group-detail-page__meta-row"
-        >
+      <Stack className="group-detail__content" spacing={3}>
+        <Stack direction="row" spacing={3} className="group-detail__meta-row">
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             <GroupIcon fontSize="small" />
             <Typography variant="body2">{members.length} members</Typography>
@@ -199,7 +192,7 @@ export function GroupDetails({ groupId }: GroupDetailsProps) {
             variant="contained"
             onClick={() => setCreateIdeaOpen(true)}
           >
-            Create Idea
+            Add an Idea
           </Button>
         </Stack>
 

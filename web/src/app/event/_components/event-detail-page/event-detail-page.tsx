@@ -7,7 +7,6 @@ import {
   Stack,
   Avatar,
   AvatarGroup,
-  Chip,
   IconButton,
   Button,
   Card,
@@ -36,6 +35,7 @@ import {
   useUpdateEventMutation,
 } from '../../_hooks';
 import { WhenToMeetGrid, WhenToMeetGridSkeleton } from '../when-to-meet-grid';
+import { EventDetailSkeleton } from './event-detail.skeleton';
 import './event-detail-page.scss';
 
 interface EventDetailPageProps {
@@ -135,8 +135,8 @@ const mockEvent: Event = {
 };
 
 export function EventDetailPage({ eventId }: EventDetailPageProps) {
-  const [event, setEvent] = useState<Event>(mockEvent);
-  const [attendees, setAttendees] = useState(mockAttendees);
+  const [event, setEvent] = useState<Event | null>(null);
+  const [isEventLoading, setIsEventLoading] = useState(Boolean(eventId));
   const [newComment, setNewComment] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(mockEvent.title);
@@ -165,16 +165,18 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
   const commentsQuery = useEventCommentsQuery(eventId);
   const addCommentMutation = useAddEventCommentMutation();
   const updateEventMutation = useUpdateEventMutation();
-  const targetEventId = eventId ?? event.id;
+  const targetEventId = eventId ?? event?.id;
   const eventAvailability = useEventAvailability(targetEventId, currentUserId);
 
   useEffect(() => {
     if (!eventId) {
-      // setEvent(mockEvent);
+      setEvent(mockEvent);
+      setIsEventLoading(false);
       return;
     }
 
     let isCancelled = false;
+    setIsEventLoading(true);
 
     const fetchEventById = async () => {
       try {
@@ -200,7 +202,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
             ...fetchedEvent,
             comments: fetchedEvent.comments ?? [],
             ratings: fetchedEvent.ratings ?? [],
-          };
+          } as Event;
 
           setEvent(nextEvent);
           setEditTitle(nextEvent.title);
@@ -216,11 +218,26 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
               ? new Date(nextEvent.plannedDate).toISOString().slice(0, 10)
               : '',
           );
+          setIsEventLoading(false);
         }
       } catch (error) {
         console.error('Error fetching event details:', error);
         if (!isCancelled) {
           setEvent(mockEvent);
+          setEditTitle(mockEvent.title);
+          setEditDescription(mockEvent.description ?? '');
+          setEditLocation(
+            typeof mockEvent.location === 'string'
+              ? mockEvent.location
+              : (mockEvent.location?.address ?? ''),
+          );
+          setEditTime(mockEvent.time ?? '');
+          setEditDate(
+            mockEvent.plannedDate
+              ? new Date(mockEvent.plannedDate).toISOString().slice(0, 10)
+              : '',
+          );
+          setIsEventLoading(false);
         }
       }
     };
@@ -234,21 +251,21 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
 
   useEffect(() => {
     setEditDate(
-      event.plannedDate
+      event?.plannedDate
         ? new Date(event.plannedDate).toISOString().slice(0, 10)
         : '',
     );
-  }, [event.plannedDate]);
+  }, [event?.plannedDate]);
 
   const comments =
     commentsQuery.data && commentsQuery.data.length > 0
       ? commentsQuery.data
-      : event.comments;
+      : (event?.comments ?? []);
 
   const handleAddComment = async () => {
     const content = newComment.trim();
 
-    if (!content) {
+    if (!content || !targetEventId) {
       return;
     }
 
@@ -296,9 +313,9 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
   };
 
   const handleSaveEvent = async () => {
-    const title = editTitle.trim();
+    const title = editTitle?.trim();
 
-    if (!title) {
+    if (!title || !targetEventId) {
       return;
     }
 
@@ -325,12 +342,18 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
         plannedDate,
       });
 
-      setEvent((previousEvent) => ({
-        ...previousEvent,
-        ...updatedEvent,
-        comments: previousEvent.comments,
-        ratings: previousEvent.ratings,
-      }));
+      setEvent((previousEvent) => {
+        if (!previousEvent) {
+          return updatedEvent;
+        }
+
+        return {
+          ...previousEvent,
+          ...updatedEvent,
+          comments: previousEvent.comments,
+          ratings: previousEvent.ratings,
+        };
+      });
       setIsEditing(false);
     } catch (error) {
       console.error('Error updating event:', error);
@@ -338,6 +361,11 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
   };
 
   const handleCancelEdit = () => {
+    if (!event) {
+      setIsEditing(false);
+      return;
+    }
+
     setEditTitle(event.title);
     setEditDescription(event.description ?? '');
     setEditLocation(
@@ -355,7 +383,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
   };
 
   const handleDownloadCalendar = () => {
-    if (!event.plannedDate) return;
+    if (!event?.plannedDate) return;
     downloadCalendarEvent(
       event.title,
       event.plannedDate,
@@ -367,8 +395,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
     );
   };
 
-  const goingCount = attendees.filter((a) => a.attendance === 'Going').length;
-  const maybeCount = attendees.filter((a) => a.attendance === 'Maybe').length;
+  const attendees = mockAttendees;
 
   const formatDateLabel = (value?: Date | string) => {
     const safeDate = value ? new Date(value) : null;
@@ -420,7 +447,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
   const whenToMeetDateText = (() => {
     const selectedDate = editDate
       ? new Date(`${editDate}T00:00:00.000Z`)
-      : event.plannedDate
+      : event?.plannedDate
         ? new Date(event.plannedDate)
         : null;
 
@@ -446,6 +473,17 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
       timeZone: 'UTC',
     }).format(weekendStart)}`;
   })();
+
+  const isPageLoading =
+    isEventLoading ||
+    (Boolean(eventId) && commentsQuery.isLoading) ||
+    (Boolean(targetEventId) && eventAvailability.isLoading && !event);
+
+  if (isPageLoading || isEventLoading) {
+    return (
+      <EventDetailSkeleton visibleAvailabilityDays={visibleAvailabilityDays} />
+    );
+  }
 
   return (
     <Box className="event-detail-page__container">
@@ -479,7 +517,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
                   variant="body2"
                   sx={{ color: 'var(--color-text-primary)' }}
                 >
-                  {formatDateLabel(event.plannedDate)}
+                  {formatDateLabel(event?.plannedDate)}
                 </Typography>
               </Stack>
             </Stack>
@@ -515,10 +553,10 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
                   variant="caption"
                   sx={{ opacity: 0.9, fontSize: '0.7rem' }}
                 >
-                  {formatMonthLabel(event.plannedDate)}
+                  {formatMonthLabel(event?.plannedDate)}
                 </Typography>
                 <Typography variant="h1">
-                  {formatDayNumber(event.plannedDate)}
+                  {formatDayNumber(event?.plannedDate)}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -531,7 +569,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
               {/* Event Info */}
 
               <Stack className="event-detail-page__event-info" spacing={2}>
-                {event.plannedDate && (
+                {event?.plannedDate && (
                   <Stack
                     direction="row"
                     spacing={1}
@@ -539,7 +577,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
                   >
                     <CalendarIcon sx={{ fontSize: 16 }} />
                     <Typography variant="caption" sx={{ opacity: 0.9 }}>
-                      {formatTimeLabel(event.plannedDate)}
+                      {formatTimeLabel(event?.plannedDate)}
                     </Typography>
                   </Stack>
                 )}
@@ -555,7 +593,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
                       variant="caption"
                       sx={{ color: '#fff', opacity: 0.9 }}
                     >
-                      {event.location && event.location.valueOf() !== ''
+                      {event?.location && event.location.valueOf() !== ''
                         ? typeof event.location === 'string'
                           ? event.location
                           : event.location?.address
@@ -580,7 +618,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
               </Stack>
             </Stack>
             <Box className="event-detail-page__title">
-              <Typography variant="h3">{event.title}</Typography>
+              <Typography variant="h3">{event?.title}</Typography>
             </Box>
           </Card>
 
@@ -613,7 +651,6 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
             spacing={2}
             sx={{ justifyContent: 'space-between' }}
           >
-            <Typography variant="h6">Event Details</Typography>
             {!isEditing ? (
               <Button size="small" onClick={() => setIsEditing(true)}>
                 Edit
@@ -679,15 +716,15 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
               variant="body1"
               sx={{ color: 'var(--color-text-secondary)' }}
             >
-              {event.description || 'No description yet.'}
+              {event?.description || 'No description yet.'}
             </Typography>
           )}
         </Card>
 
         {/* Event Image */}
-        {event.coverImageUrl && (
+        {event?.coverImageUrl && (
           <Box className="event-detail-page__image">
-            <img src={event.coverImageUrl} alt={event.title} />
+            <img src={event?.coverImageUrl} alt={event?.title} />
           </Box>
         )}
 

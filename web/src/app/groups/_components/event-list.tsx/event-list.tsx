@@ -1,20 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Typography,
-  Box,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  TextField,
-  Stack,
-} from '@mui/material';
+import { Typography, Box, IconButton, Stack } from '@mui/material';
 import {
   DndContext,
   DragOverlay,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   useDraggable,
   useDroppable,
   useSensor,
@@ -101,6 +91,9 @@ function DraggableEventCard({
           minHeight: 28,
           marginTop: '-4px',
           padding: '4px 8px 0',
+          className: 'event-list__drag-handle-wrapper',
+          position: 'relative',
+          bottom: '36px',
         }}
       >
         <Box
@@ -110,8 +103,7 @@ function DraggableEventCard({
             alignItems: 'center',
             justifyContent: 'center',
             gap: 0.5,
-            position: 'relative',
-            bottom: '36px',
+
             px: 1,
             py: 0.5,
             color: 'var(--color-text-secondary)',
@@ -165,9 +157,15 @@ export default function EventList({
   );
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    useSensor(MouseSensor, {
       activationConstraint: {
         distance: 6,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 20,
+        tolerance: 10,
       },
     }),
   );
@@ -433,6 +431,8 @@ export default function EventList({
             gap: 1,
             overflowX: 'auto',
             overflowY: 'hidden',
+            touchAction: 'pan-x',
+            overscrollBehaviorX: 'contain',
             pb: 2,
             WebkitOverflowScrolling: 'touch',
             '&::-webkit-scrollbar': {
