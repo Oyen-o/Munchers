@@ -1,11 +1,13 @@
 .group-detail {
-  min-height: 100vh;
-
+  height: 100vh;
+  perspective: 1px;
   background: var(--color-light-background-1);
   color: var(--color-text-primary);
+  overflow-x: hidden;
+  overflow-y: auto;
 
   &__loading {
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -37,11 +39,10 @@
     );
   }
 
-  &__hero-overlay {
-    position: absolute;
+  &__content-header {
     inset: 0;
+    z-index: 3;
     padding: 16px;
-    justify-content: flex-end;
     text-transform: uppercase;
     color: var(--color-dark-brown);
   }
@@ -74,5 +75,33 @@
 
   &__meta-row {
     color: var(--color-text-secondary);
+  }
+
+  &__parallax-group {
+    position: relative;
+    transform-style: preserve-3d;
+    height: 100vh;
+  }
+
+  .parallax-layer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  .parallax-background {
+    background-size: cover;
+    background-position: center;
+    /* Push into 3D space and correct size */
+    transform: translateZ(-1px) scale(3);
+    z-index: 1;
+  }
+
+  /* 5. Keep foreground at base depth */
+  .parallax-foreground {
+    transform: translateZ(-1);
+    z-index: 2;
   }
 }

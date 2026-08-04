@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   Avatar,
@@ -49,6 +49,7 @@ type GroupDetailsProps = {
 };
 
 export function GroupDetails({ groupId }: GroupDetailsProps) {
+  const contentRef = useRef<HTMLDivElement | null>(null);
   const [membersDrawerOpen, setMembersDrawerOpen] = useState(false);
   const [createIdeaOpen, setCreateIdeaOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -116,129 +117,135 @@ export function GroupDetails({ groupId }: GroupDetailsProps) {
 
   return (
     <Box className="group-detail">
-      <Box className="group-detail__hero">
-        <img
-          className="group-detail__hero-image"
-          src={group.image || '/images/event-types/foodie.png'}
-          alt={group.name}
-        />
-        <Box className="group-detail__hero-gradient" />
-
-        <Stack className="group-detail__hero-overlay" spacing={1}>
-          <IconButton
-            className="group-detail__back"
-            onClick={() => window.history.back()}
-          >
-            <ArrowBack />
-          </IconButton>
-
-          <Typography variant="h4" className="group-detail__title">
-            {group.name}
-          </Typography>
-
-          <Typography variant="body2" className="group-detail__description">
-            {group.description || 'No group description yet.'}
-          </Typography>
-        </Stack>
-      </Box>
-
-      <Stack className="group-detail__content" spacing={3}>
-        <Stack direction="row" spacing={3} className="group-detail__meta-row">
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <GroupIcon fontSize="small" />
-            <Typography variant="body2">{members.length} members</Typography>
-          </Stack>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Place fontSize="small" />
-            <Typography variant="body2">
-              {eventsQuery.data?.length ?? 0} events
-            </Typography>
-          </Stack>
-        </Stack>
-
-        <Box>
-          <Typography variant="h6" sx={{ mb: 1 }}>
-            Members
-          </Typography>
-          <Stack direction="row" spacing={1} sx={{ overflowX: 'auto', pb: 1 }}>
-            <AvatarGroup max={20} total={members.length}>
-              {members.slice(0, 5).map((member) => (
-                <Avatar
-                  key={member.userId}
-                  src={member.avatarUrl}
-                  alt={member.displayName}
-                  sx={{ cursor: 'pointer' }}
-                  onClick={() => setMembersDrawerOpen(true)}
-                />
-              ))}
-            </AvatarGroup>
-          </Stack>
-          <Button
-            variant="text"
-            onClick={() => setMembersDrawerOpen(true)}
-            sx={{ mt: 1, p: 0 }}
-          >
-            View all members
-          </Button>
+      <Box className="group-detail__parallax-group">
+        <Box className="group-detail__hero  parallax-background ">
+          <img
+            className="group-detail__hero-image"
+            src={group.image || '/images/event-types/foodie.png'}
+            alt={group.name}
+          />
+          <Box className="group-detail__hero-gradient " />
         </Box>
 
-        <Stack
-          direction="row"
-          sx={{ justifyContent: 'space-between', alignItems: 'center' }}
-        >
-          <Typography variant="h5">Group Ideas & Recommendations</Typography>
-          <Button
-            startIcon={<Add />}
-            variant="contained"
-            onClick={() => setCreateIdeaOpen(true)}
-          >
-            Add an Idea
-          </Button>
-        </Stack>
+        <Stack ref={contentRef} className="group-detail__content" spacing={3}>
+          <Stack className="group-detail__content-header" spacing={1}>
+            <IconButton
+              className="group-detail__back"
+              onClick={() => window.history.back()}
+            >
+              <ArrowBack />
+            </IconButton>
 
-        <Stack
-          direction="row"
-          sx={{ justifyContent: 'flex-end', alignItems: 'center', gap: 1 }}
-        >
-          <Typography variant="subtitle2" sx={{ mr: 1 }}>
-            Search
-          </Typography>
-          <IconButton
-            onClick={() => {
-              if (searchOpen) {
-                setEventSearch('');
-              }
-              setSearchOpen((open) => !open);
+            <Typography variant="h4" className="group-detail__title">
+              {group.name}
+            </Typography>
+
+            <Typography variant="body2" className="group-detail__description">
+              {group.description || 'No group description yet.'}
+            </Typography>
+          </Stack>
+          <Stack direction="row" spacing={3} className="group-detail__meta-row">
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <GroupIcon fontSize="small" />
+              <Typography variant="body2">{members.length} members</Typography>
+            </Stack>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Place fontSize="small" />
+              <Typography variant="body2">
+                {eventsQuery.data?.length ?? 0} events
+              </Typography>
+            </Stack>
+          </Stack>
+
+          <Box>
+            <Typography variant="h6" sx={{ mb: 1 }}>
+              Members
+            </Typography>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{ overflowX: 'auto', pb: 1 }}
+            >
+              <AvatarGroup max={20} total={members.length}>
+                {members.slice(0, 5).map((member) => (
+                  <Avatar
+                    key={member.userId}
+                    src={member.avatarUrl}
+                    alt={member.displayName}
+                    sx={{ cursor: 'pointer' }}
+                    onClick={() => setMembersDrawerOpen(true)}
+                  />
+                ))}
+              </AvatarGroup>
+            </Stack>
+            <Button
+              variant="text"
+              onClick={() => setMembersDrawerOpen(true)}
+              sx={{ mt: 1, p: 0 }}
+            >
+              View all members
+            </Button>
+          </Box>
+
+          <Stack
+            direction="row"
+            sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+          >
+            <Typography variant="h5">Group Ideas & Recommendations</Typography>
+            <Button
+              startIcon={<Add />}
+              variant="contained"
+              onClick={() => setCreateIdeaOpen(true)}
+            >
+              Add an Idea
+            </Button>
+          </Stack>
+
+          <Stack
+            direction="row"
+            sx={{ justifyContent: 'flex-end', alignItems: 'center', gap: 1 }}
+          >
+            <Typography variant="subtitle2" sx={{ mr: 1 }}>
+              Search
+            </Typography>
+            <IconButton
+              onClick={() => {
+                if (searchOpen) {
+                  setEventSearch('');
+                }
+                setSearchOpen((open) => !open);
+              }}
+              size="small"
+            >
+              {searchOpen ? <CloseIcon /> : <Search />}
+            </IconButton>
+          </Stack>
+
+          {searchOpen ? (
+            <TextField
+              fullWidth
+              size="small"
+              label="Search events"
+              placeholder="Filter by name, owner, or description"
+              value={eventSearch}
+              onChange={(event) => setEventSearch(event.target.value)}
+            />
+          ) : null}
+
+          <EventList
+            events={filteredEvents}
+            selectedGroup={group}
+            eventsLoading={eventsQuery.isLoading || eventsQuery.isFetching}
+            itemSize="medium"
+            showTypeSections={false}
+            groupByStageRows
+            dragBoundaryRef={contentRef}
+            fetchGroupEvents={async () => {
+              await eventsQuery.refetch();
             }}
-            size="small"
-          >
-            {searchOpen ? <CloseIcon /> : <Search />}
-          </IconButton>
-        </Stack>
-
-        {searchOpen ? (
-          <TextField
-            fullWidth
-            size="small"
-            label="Search events"
-            placeholder="Filter by name, owner, or description"
-            value={eventSearch}
-            onChange={(event) => setEventSearch(event.target.value)}
           />
-        ) : null}
-
-        <EventList
-          events={filteredEvents}
-          selectedGroup={group}
-          eventsLoading={eventsQuery.isLoading || eventsQuery.isFetching}
-          itemSize="medium"
-          showTypeSections={false}
-          groupByStageRows
-          fetchGroupEvents={async () => {
-            await eventsQuery.refetch();
-          }}
-        />
-      </Stack>
+        </Stack>
+      </Box>
 
       <Drawer
         anchor="left"

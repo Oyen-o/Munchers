@@ -1,10 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Typography, Box, IconButton, Stack } from '@mui/material';
 import {
+  closestCenter,
   DndContext,
   DragOverlay,
   MouseSensor,
+  pointerWithin,
+  rectIntersection,
   TouchSensor,
+  type CollisionDetection,
+  type Modifier,
   useDraggable,
   useDroppable,
   useSensor,
@@ -22,6 +28,36 @@ import './event-list.scss';
 import '../groups-page/groups-page.scss';
 
 type StageKey = 'planned' | 'picked' | 'idea' | 'completed';
+
+function getNearestScrollableAncestor(
+  node: HTMLElement | null,
+): HTMLElement | Window {
+  if (!node) {
+    return window;
+  }
+
+  let current: HTMLElement | null = node.parentElement;
+
+  while (current) {
+    const styles = window.getComputedStyle(current);
+    const overflowY = styles.overflowY;
+    const overflowX = styles.overflowX;
+    const overflow = styles.overflow;
+
+    const isScrollable =
+      /(auto|scroll|overlay)/.test(overflowY) ||
+      /(auto|scroll|overlay)/.test(overflowX) ||
+      /(auto|scroll|overlay)/.test(overflow);
+
+    if (isScrollable) {
+      return current;
+    }
+
+    current = current.parentElement;
+  }
+
+  return window;
+}
 
 function StageDropZone({
   stage,
@@ -139,6 +175,7 @@ export default function EventList({
   showTypeSections = true,
   groupByStageRows = false,
   fetchGroupEvents,
+  dragBoundaryRef,
 }: {
   events: Event[];
   selectedGroup?: Group | null;
@@ -147,7 +184,9 @@ export default function EventList({
   showTypeSections?: boolean;
   groupByStageRows?: boolean;
   fetchGroupEvents: (groupId?: string) => Promise<void>;
+  dragBoundaryRef?: React.RefObject<HTMLElement | null>;
 }) {
+  const scrollHostRef = useRef<HTMLDivElement | null>(null);
   const [addEventOpen, setAddEventOpen] = useState(false);
   const [newEventTitle, setNewEventTitle] = useState('');
   const [newEventDescription, setNewEventDescription] = useState('');
@@ -173,6 +212,58 @@ export default function EventList({
   useEffect(() => {
     setEventsData(events);
   }, [events]);
+
+  const collisionDetection: CollisionDetection = (args) => {
+    const scrollHost = getNearestScrollableAncestor(scrollHostRef.current);
+    const scrollLeft =
+      scrollHost instanceof Window ? window.scrollX : scrollHost.scrollLeft;
+    const scrollTop =
+      scrollHost instanceof Window ? window.scrollY : scrollHost.scrollTop;
+
+    if (args.pointerCoordinates) {
+      const adjustedPointer = {
+        x: args.pointerCoordinates.x + scrollLeft,
+        y: args.pointerCoordinates.y + scrollTop,
+      };
+
+      const pointerCollisions = pointerWithin({
+        ...args,
+        pointerCoordinates: adjustedPointer,
+      });
+
+      if (pointerCollisions.length > 0) {
+        return pointerCollisions;
+      }
+    }
+
+    const rectCollisions = rectIntersection(args);
+    if (rectCollisions.length > 0) {
+      return rectCollisions;
+    }
+
+    return closestCenter(args);
+  };
+
+  const lockToBoundary: Modifier = ({ transform }) => {
+    const boundary = dragBoundaryRef?.current;
+    if (!boundary) {
+      return transform;
+    }
+
+    const boundaryRect = boundary.getBoundingClientRect();
+
+    return {
+      ...transform,
+      x: Math.min(
+        Math.max(transform.x, -boundaryRect.width),
+        boundaryRect.width,
+      ),
+      y: Math.min(
+        Math.max(transform.y, -boundaryRect.height),
+        boundaryRect.height,
+      ),
+    };
+  };
 
   const shouldShowSkeleton = Boolean(eventsLoading) && eventsData.length === 0;
 
@@ -294,7 +385,7 @@ export default function EventList({
 
   return (
     /* Events List */
-    <Box className="groups-page__events">
+    <Box ref={scrollHostRef} className="groups-page__events">
       {/* Events Section */}
       <Box
         sx={{
@@ -319,6 +410,9 @@ export default function EventList({
       {groupByStageRows ? (
         <DndContext
           sensors={sensors}
+          collisionDetection={collisionDetection}
+          modifiers={[lockToBoundary]}
+          autoScroll={false}
           onDragStart={handleDragStart}
           onDragEnd={(dragEvent) => void handleDragEnd(dragEvent)}
           onDragCancel={() => setActiveDragEventId(null)}
@@ -405,22 +499,27 @@ export default function EventList({
             })}
           </Stack>
 
-          <DragOverlay zIndex={2000}>
-            {activeDragEvent ? (
-              <Box
-                sx={{
-                  width:
-                    itemSize === 'small'
-                      ? 160
-                      : itemSize === 'medium'
-                        ? 220
-                        : 280,
-                }}
-              >
-                <EventItem event={activeDragEvent} size={itemSize} />
-              </Box>
-            ) : null}
-          </DragOverlay>
+          {typeof document !== 'undefined'
+            ? createPortal(
+                <DragOverlay zIndex={2000}>
+                  {activeDragEvent ? (
+                    <Box
+                      sx={{
+                        width:
+                          itemSize === 'small'
+                            ? 160
+                            : itemSize === 'medium'
+                              ? 220
+                              : 280,
+                      }}
+                    >
+                      <EventItem event={activeDragEvent} size={itemSize} />
+                    </Box>
+                  ) : null}
+                </DragOverlay>,
+                document.body,
+              )
+            : null}
         </DndContext>
       ) : (
         <Box
