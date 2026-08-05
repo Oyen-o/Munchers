@@ -40,7 +40,7 @@
   &__hero-overlay {
     position: absolute;
     inset: 0;
-    padding: 16px;
+    padding: var(--spacing-md);
     justify-content: flex-end;
     text-transform: uppercase;
     color: var(--color-dark-brown);
@@ -48,8 +48,8 @@
 
   &__back {
     position: absolute;
-    top: 12px;
-    left: 12px;
+    top: var(--spacing-sm);
+    left: var(--spacing-sm);
     color: var(--color-cream-highlights);
     background: rgba(0, 0, 0, 0.3);
   }
@@ -64,8 +64,8 @@
   }
 
   &__content {
-    padding: 16px;
-    margin-top: 4px;
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-xs);
     width: 100%;
     max-width: 800px;
     margin-left: auto;

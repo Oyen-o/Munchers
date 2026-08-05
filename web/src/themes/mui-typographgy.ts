@@ -29,39 +29,35 @@ export const muiTypography = {
       fontFamily: "var(--font-family-heading)",
       fontSize: 'var(--font-size-2xl)',
       fontWeight: 600,
-      lineHeight: 1.5,
     },
     h5: {
       fontFamily: "var(--font-family-heading)",
       fontSize: 'var(--font-size-xl)',
       fontWeight: 500,
-      lineHeight: 1.5,
+
     },
     h6: {
       fontFamily: "var(--font-family-heading)",
       fontSize: 'var(--font-size-lg)',
       fontWeight: 500,
-      lineHeight: 1.5,
+
     },
     body1: {
-      fontSize: '1rem',
+      fontSize: 'var(--font-size-md)',
       fontWeight: 400,
-      lineHeight: 1.5,
+
     },
     body2: {
-      fontSize: '0.875rem',
-      fontWeight: 400,
-      lineHeight: 1.5,
+      fontSize: 'var(--font-size-sm)',
     },
     button: {
-      fontSize: '0.875rem',
+      fontSize: 'var(--font-size-sm)',
       fontWeight: 500,
       textTransform: 'none',
     },
     caption: {
-      fontSize: '0.75rem',
+      fontSize: 'var(--font-size-xs)',
       fontWeight: 400,
-      lineHeight: 1.5,
     },
   },
 }

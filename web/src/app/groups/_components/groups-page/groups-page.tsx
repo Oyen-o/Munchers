@@ -270,7 +270,7 @@ export function GroupsPage() {
             paper: {
               sx: {
                 maxWidth: '95%',
-                padding: '16px',
+                padding: 'var(--spacing-md)',
                 borderRadius: '0',
               },
             },
@@ -278,14 +278,7 @@ export function GroupsPage() {
         >
           {/* Filter Tabs */}
           <Box className="groups-page__filters">
-            <Stack
-              direction="row"
-              sx={{
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: 2,
-              }}
-            >
+            <Stack direction="row" className="groups-page__filters-header">
               <Typography variant="h5">Filter by Stage</Typography>
               <IconButton onClick={() => setDrawerOpen(false)} size="small">
                 <CloseIcon />

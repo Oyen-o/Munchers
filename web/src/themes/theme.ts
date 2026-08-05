@@ -70,11 +70,12 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
+          fontSize: '1rem',
           borderRadius: 'var(--border-radius-md)',
           transition: 'var(--transition-base)',
           textTransform: 'none',
-          fontWeight: 600,
-          padding: '10px 24px',        
+          fontWeight: 700,
+          padding: 'var(--spacing-sm) var(--spacing-xl)',
         },
         contained: {
           backgroundColor: 'var(--color-accent-main)',
@@ -141,7 +142,7 @@ const theme = createTheme({
           borderRadius: 'var(--border-radius-sm)',
           width: '124px',
           fontWeight: 600,
-          padding: '4px 12px',
+          padding: 'var(--spacing-xs) var(--spacing-sm)',
           color : 'var(--color-primary-contrast)',
         },
       },
@@ -217,6 +218,25 @@ const theme = createTheme({
           borderRadius: 'var(--border-radius-lg)',
           '&:hover': {
             backgroundColor: 'rgba(0, 0, 0, 0.08)',
+          },
+        },
+      },
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: 'var(--color-primary-contrast)',
+          textDecorationColor: 'currentColor',
+          textUnderlineOffset: '2px',
+          textDecorationThickness: '1px',
+          transition: 'opacity var(--transition-fast)',
+          '&:hover': {
+            opacity: 1,
+          },
+          '&:focus-visible': {
+            outline: '2px solid rgba(255, 255, 255, 0.8)',
+            outlineOffset: '2px',
+            borderRadius: '2px',
           },
         },
       },

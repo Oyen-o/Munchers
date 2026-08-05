@@ -34,6 +34,7 @@ type WhenToMeetGridProps = {
   totalResponses: number;
   onToggle: (slot: WhenToMeetSlot) => void;
   visibleDays?: WhenToMeetDay[];
+  dayLabels?: Partial<Record<WhenToMeetDay, string>>;
   onAddDay?: (day: WhenToMeetDay) => void;
   onRemoveDay?: (day: WhenToMeetDay) => void;
   disabled?: boolean;
@@ -69,6 +70,7 @@ export function WhenToMeetGrid({
   totalResponses,
   onToggle,
   visibleDays,
+  dayLabels,
   onAddDay,
   onRemoveDay,
   disabled = false,
@@ -104,6 +106,8 @@ export function WhenToMeetGrid({
     setMenuAnchor(null);
   };
 
+  const getDayLabel = (day: WhenToMeetDay) => dayLabels?.[day] ?? day;
+
   return (
     <Box className="when-to-meet-grid">
       <Box className="when-to-meet-grid__table">
@@ -134,7 +138,7 @@ export function WhenToMeetGrid({
               variant="caption"
               className="when-to-meet-grid__day-label"
             >
-              {day}
+              {getDayLabel(day)}
             </Typography>
             {WHEN_TO_MEET_GRID[day].map((slot) => {
               const slotCount = counts[slot] ?? 0;
@@ -169,14 +173,14 @@ export function WhenToMeetGrid({
             })}
             <Box className="when-to-meet-grid__remove-cell">
               {onRemoveDay && !isWhenToMeetWeekendDay(day) ? (
-                <Tooltip title={`Remove ${day}`}>
+                <Tooltip title={`Remove ${getDayLabel(day)}`}>
                   <span>
                     <IconButton
                       className="when-to-meet-grid__remove-day"
                       size="small"
                       onClick={() => onRemoveDay(day)}
                       disabled={disabled}
-                      aria-label={`Remove ${day}`}
+                      aria-label={`Remove ${getDayLabel(day)}`}
                     >
                       <DeleteOutlineIcon fontSize="small" />
                     </IconButton>
@@ -207,7 +211,7 @@ export function WhenToMeetGrid({
           >
             {remainingDays.map((day) => (
               <MenuItem key={day} onClick={() => handleSelectDay(day)}>
-                {day}
+                {getDayLabel(day)}
               </MenuItem>
             ))}
           </Menu>

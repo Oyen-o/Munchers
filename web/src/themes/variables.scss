@@ -120,6 +120,29 @@
   --z-index-tooltip: 1070;
 }
 
+@media (max-width: 768px) {
+  :root {
+    --font-size-xxxs: 4px;
+    --font-size-xxs: 6px;
+    --font-size-xs: 10px;
+    --font-size-sm: 10px;
+    --font-size-base: 14px;
+    --font-size-lg: 16px;
+    --font-size-xl: 18px;
+    --font-size-2xl: 22px;
+    --font-size-3xl: 26px;
+    --font-size-4xl: 32px;
+    --font-size-5xl: 40px;
+
+    --spacing-xs: 2px;
+    --spacing-sm: 4px;
+    --spacing-md: 8px;
+    --spacing-lg: 12px;
+    --spacing-xl: 16px;
+    --spacing-xxl: 32px;
+  }
+}
+
 // Dark Mode Overrides
 [data-theme='dark'] {
   --color-light-background-1: #0f172a;

@@ -15,6 +15,12 @@
       padding: var(--spacing-lg);
     }
 
+    &____filters-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
     &__filter-tab-idea {
       .MuiSvgIcon-root {
         color: var(--color-stage-idea);

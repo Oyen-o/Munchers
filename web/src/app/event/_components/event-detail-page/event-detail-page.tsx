@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   Typography,
+  Link,
   Box,
   Stack,
   Avatar,
@@ -18,11 +19,14 @@ import {
   LocationOn as LocationIcon,
   CalendarToday as CalendarIcon,
   Person as PersonIcon,
+  Link as LinkIcon,
   Send as SendIcon,
+  AccessTime,
 } from '@mui/icons-material';
 import { Event } from '../../../../lib/types';
 import { downloadCalendarEvent } from '../../../../lib/utils';
 import {
+  WHEN_TO_MEET_DAYS,
   WHEN_TO_MEET_DEFAULT_DAYS,
   isWhenToMeetWeekendDay,
   toEmptyWhenToMeetCounts,
@@ -163,10 +167,10 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
   }, []);
 
   const commentsQuery = useEventCommentsQuery(eventId);
+  const eventAvailability = useEventAvailability(eventId, currentUserId);
   const addCommentMutation = useAddEventCommentMutation();
   const updateEventMutation = useUpdateEventMutation();
-  const targetEventId = eventId ?? event?.id;
-  const eventAvailability = useEventAvailability(targetEventId, currentUserId);
+  const targetEventId = eventId;
 
   useEffect(() => {
     if (!eventId) {
@@ -395,17 +399,50 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
     );
   };
 
+  const locationLabel =
+    typeof event?.location === 'string'
+      ? event.location.trim()
+      : (event?.location?.address ?? '').trim();
+  const locationMapUrl = locationLabel
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locationLabel)}`
+    : '';
+
   const attendees = mockAttendees;
 
-  const formatDateLabel = (value?: Date | string) => {
-    const safeDate = value ? new Date(value) : null;
-    if (!safeDate || Number.isNaN(safeDate.getTime())) return '';
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      timeZone: 'UTC',
-    }).format(safeDate);
-  };
+  const eventCountdownText = useMemo(() => {
+    const targetDate = editDate
+      ? new Date(`${editDate}T00:00:00.000Z`)
+      : event?.plannedDate
+        ? new Date(event.plannedDate)
+        : null;
+
+    if (!targetDate || Number.isNaN(targetDate.getTime())) {
+      return '- week(s) - day(s)';
+    }
+
+    const today = new Date();
+    const todayUtcStart = Date.UTC(
+      today.getUTCFullYear(),
+      today.getUTCMonth(),
+      today.getUTCDate(),
+    );
+    const targetUtcStart = Date.UTC(
+      targetDate.getUTCFullYear(),
+      targetDate.getUTCMonth(),
+      targetDate.getUTCDate(),
+    );
+
+    const millisecondsPerDay = 24 * 60 * 60 * 1000;
+    const totalDaysRemaining = Math.max(
+      0,
+      Math.ceil((targetUtcStart - todayUtcStart) / millisecondsPerDay),
+    );
+
+    const weeksRemaining = Math.floor(totalDaysRemaining / 7);
+    const daysRemaining = totalDaysRemaining % 7;
+
+    return `${weeksRemaining} week(s) ${daysRemaining} day(s)`;
+  }, [editDate, event?.plannedDate]);
 
   const formatMonthLabel = (value?: Date | string) => {
     const safeDate = value ? new Date(value) : null;
@@ -444,34 +481,86 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
     }).format(safeDate);
   };
 
-  const whenToMeetDateText = (() => {
-    const selectedDate = editDate
+  const whenToMeetSelectedDate = useMemo(() => {
+    const safeDate = editDate
       ? new Date(`${editDate}T00:00:00.000Z`)
       : event?.plannedDate
         ? new Date(event.plannedDate)
         : null;
 
-    if (!selectedDate || Number.isNaN(selectedDate.getTime())) {
-      return 'No date selected yet. Select a date to focus this weekend availability.';
+    if (!safeDate || Number.isNaN(safeDate.getTime())) {
+      return null;
+    }
+
+    return safeDate;
+  }, [editDate, event?.plannedDate]);
+
+  const whenToMeetWeekendStart = useMemo(() => {
+    if (!whenToMeetSelectedDate) {
+      return null;
     }
 
     const weekendStart = new Date(
       Date.UTC(
-        selectedDate.getUTCFullYear(),
-        selectedDate.getUTCMonth(),
-        selectedDate.getUTCDate(),
+        whenToMeetSelectedDate.getUTCFullYear(),
+        whenToMeetSelectedDate.getUTCMonth(),
+        whenToMeetSelectedDate.getUTCDate(),
       ),
     );
     const dayOfWeek = weekendStart.getUTCDay();
     const daysUntilSaturday = (6 - dayOfWeek + 7) % 7;
     weekendStart.setUTCDate(weekendStart.getUTCDate() + daysUntilSaturday);
 
+    return weekendStart;
+  }, [whenToMeetSelectedDate]);
+
+  const whenToMeetDayLabels = useMemo(() => {
+    if (!whenToMeetWeekendStart) {
+      return {} as Partial<Record<WhenToMeetDay, string>>;
+    }
+
+    const dayOffsetsFromSaturday: Record<WhenToMeetDay, number> = {
+      Monday: -5,
+      Tuesday: -4,
+      Wednesday: -3,
+      Thursday: -2,
+      Friday: -1,
+      Saturday: 0,
+      Sunday: 1,
+    };
+
+    return WHEN_TO_MEET_DAYS.reduce(
+      (acc, day) => {
+        const dayDate = new Date(whenToMeetWeekendStart);
+        dayDate.setUTCDate(
+          whenToMeetWeekendStart.getUTCDate() + dayOffsetsFromSaturday[day],
+        );
+
+        const dateLabel = new Intl.DateTimeFormat('en-US', {
+          month: 'numeric',
+          day: 'numeric',
+          timeZone: 'UTC',
+        }).format(dayDate);
+
+        acc[day] = `${day} (${dateLabel})`;
+        return acc;
+      },
+      {} as Partial<Record<WhenToMeetDay, string>>,
+    );
+  }, [whenToMeetWeekendStart]);
+
+  const whenToMeetDateText = (() => {
+    if (!whenToMeetWeekendStart) {
+      return 'No date selected yet. Select a date to focus this weekend availability.';
+    }
+
     return `Weekend of ${new Intl.DateTimeFormat('en-US', {
-      month: 'short',
+      weekday: 'long',
+      month: 'numeric',
       day: 'numeric',
       year: 'numeric',
       timeZone: 'UTC',
-    }).format(weekendStart)}`;
+    }).format(whenToMeetWeekendStart)}`;
   })();
 
   const isPageLoading =
@@ -506,18 +595,24 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
               spacing={2}
             >
               <Stack className="event-detail-page__card-top-right">
-                <CalendarIcon
+                <AccessTime
                   sx={{
                     color: 'var(--color-text-primary)',
-                    fontSize: 'var(--font-size-md)',
+                    marginRight: '8px',
+                    fontSize: '1.5rem',
                   }}
                 />
                 <Typography
                   className="event-detail-page__page"
-                  variant="body2"
-                  sx={{ color: 'var(--color-text-primary)' }}
+                  variant="body1"
+                  sx={{
+                    color: 'var(--color-text-primary)',
+                    fontSize: 'var(--font-size-md)',
+                    fontWeight: 'var(--font-weight-semibold)',
+                    whiteSpace: 'nowrap',
+                  }}
                 >
-                  {formatDateLabel(event?.plannedDate)}
+                  {eventCountdownText}
                 </Typography>
               </Stack>
             </Stack>
@@ -525,12 +620,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
             <Stack
               direction="row"
               spacing={2}
-              sx={{
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                height: '180px',
-                padding: '0 var(--spacing-md)',
-              }}
+              className="event-detail-page__info-stack"
               divider={
                 <Divider
                   orientation="vertical"
@@ -544,14 +634,14 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
               }
             >
               {/* Date Box */}
-              <Box
+              <Stack
                 className="event-detail-page__date-box"
                 onClick={handleDownloadCalendar}
                 sx={{ cursor: 'pointer', '&:hover': { opacity: 0.8 } }}
               >
                 <Typography
                   variant="caption"
-                  sx={{ opacity: 0.9, fontSize: '0.7rem' }}
+                  sx={{ opacity: 0.9, fontSize: 'var(--font-size-xs)' }}
                 >
                   {formatMonthLabel(event?.plannedDate)}
                 </Typography>
@@ -559,58 +649,78 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
                   {formatDayNumber(event?.plannedDate)}
                 </Typography>
                 <Typography
+                  className="event-detail-page__inline-link event-detail-page__inline-link--calendar"
                   variant="body2"
-                  sx={{ fontSize: '.6rem', marginTop: '-12px' }}
+                  sx={{ fontSize: 'var(--font-size-xs)', marginTop: '-12px' }}
                 >
+                  <LinkIcon
+                    sx={{
+                      fontSize: 'var(--font-size-xs)',
+
+                      verticalAlign: 'text-bottom',
+                    }}
+                  />
                   download calendar
                 </Typography>
-              </Box>
+              </Stack>
 
               {/* Event Info */}
 
-              <Stack className="event-detail-page__event-info" spacing={2}>
+              <Stack
+                className="event-detail-page__event-info"
+                spacing={2}
+                gap={1.5}
+              >
                 {event?.plannedDate && (
                   <Stack
                     direction="row"
                     spacing={1}
                     sx={{ alignItems: 'center' }}
                   >
-                    <CalendarIcon sx={{ fontSize: 16 }} />
-                    <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                    <CalendarIcon sx={{ fontSize: 18 }} />
+                    <Typography variant="body2" sx={{ fontSize: '0.95rem' }}>
                       {formatTimeLabel(event?.plannedDate)}
                     </Typography>
                   </Stack>
                 )}
-
-                {
-                  <Stack
-                    direction="row"
-                    spacing={1}
-                    sx={{ alignItems: 'center' }}
-                  >
-                    <LocationIcon sx={{ color: '#fff', fontSize: 16 }} />
-                    <Typography
-                      variant="caption"
-                      sx={{ color: '#fff', opacity: 0.9 }}
-                    >
-                      {event?.location && event.location.valueOf() !== ''
-                        ? typeof event.location === 'string'
-                          ? event.location
-                          : event.location?.address
-                        : 'Location not specified'}
-                    </Typography>
-                  </Stack>
-                }
 
                 <Stack
                   direction="row"
                   spacing={1}
                   sx={{ alignItems: 'center' }}
                 >
-                  <PersonIcon sx={{ color: '#fff', fontSize: 16 }} />
+                  <LocationIcon sx={{ color: '#fff', fontSize: 18 }} />
+                  {locationMapUrl ? (
+                    <Link
+                      href={locationMapUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      variant="body2"
+                      className="event-detail-page__inline-link"
+                      underline="always"
+                      sx={{ fontSize: '0.95rem' }}
+                    >
+                      {locationLabel}
+                    </Link>
+                  ) : (
+                    <Typography
+                      variant="body2"
+                      sx={{ color: '#fff', fontSize: '0.95rem' }}
+                    >
+                      Location not specified
+                    </Typography>
+                  )}
+                </Stack>
+
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  sx={{ alignItems: 'center' }}
+                >
+                  <PersonIcon sx={{ color: '#fff', fontSize: 18 }} />
                   <Typography
-                    variant="caption"
-                    sx={{ color: '#fff', opacity: 0.9 }}
+                    variant="body2"
+                    sx={{ color: '#fff', opacity: 0.9, fontSize: '0.95rem' }}
                   >
                     {attendees.length} Attendees
                   </Typography>
@@ -644,34 +754,9 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
         </Box>
 
         {/* Event Description */}
-        <Card className="event-detail-page__description-card event-detail-page__paper">
-          <Stack
-            direction="row"
-            className="event-detail-page__description-header"
-            spacing={2}
-            sx={{ justifyContent: 'space-between' }}
-          >
-            {!isEditing ? (
-              <Button size="small" onClick={() => setIsEditing(true)}>
-                Edit
-              </Button>
-            ) : (
-              <Stack direction="row" spacing={1}>
-                <Button size="small" onClick={handleCancelEdit}>
-                  Cancel
-                </Button>
-                <Button
-                  size="small"
-                  variant="contained"
-                  onClick={() => void handleSaveEvent()}
-                  disabled={!editTitle.trim() || updateEventMutation.isPending}
-                >
-                  Save
-                </Button>
-              </Stack>
-            )}
-          </Stack>
-
+        <Card
+          className={`event-detail-page__description-card event-detail-page__paper ${isEditing ? 'event-detail-page__description-card--edit' : ''}`}
+        >
           {isEditing ? (
             <Stack spacing={2}>
               <TextField
@@ -687,6 +772,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
                 size="small"
                 multiline
                 minRows={2}
+                maxRows={4}
               />
               <TextField
                 label="Location"
@@ -719,6 +805,42 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
               {event?.description || 'No description yet.'}
             </Typography>
           )}
+
+          <Stack
+            direction="row"
+            className="event-detail-page__description-bottom"
+            spacing={3}
+            sx={{
+              justifyContent: isEditing ? 'space-between' : 'space-around',
+            }}
+          >
+            {!isEditing ? (
+              <Button
+                className="event-detail-page__edit-button"
+                variant="contained"
+                onClick={() => setIsEditing(true)}
+              >
+                Edit
+              </Button>
+            ) : (
+              <>
+                <Button
+                  className="event-detail-page__cancel-button"
+                  onClick={handleCancelEdit}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="event-detail-page__save-button"
+                  variant="contained"
+                  onClick={() => void handleSaveEvent()}
+                  disabled={!editTitle.trim() || updateEventMutation.isPending}
+                >
+                  Save
+                </Button>
+              </>
+            )}
+          </Stack>
         </Card>
 
         {/* Event Image */}
@@ -739,13 +861,17 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
             {whenToMeetDateText}
           </Typography>
           {eventAvailability.isLoading ? (
-            <WhenToMeetGridSkeleton visibleDays={visibleAvailabilityDays} />
+            <WhenToMeetGridSkeleton
+              visibleDays={visibleAvailabilityDays}
+              dayLabels={whenToMeetDayLabels}
+            />
           ) : (
             <WhenToMeetGrid
               selectedSlots={eventAvailability.selectedSlots}
               counts={eventAvailability.counts ?? toEmptyWhenToMeetCounts()}
               totalResponses={eventAvailability.totalResponses}
               visibleDays={visibleAvailabilityDays}
+              dayLabels={whenToMeetDayLabels}
               onAddDay={handleAddAvailabilityDay}
               onRemoveDay={handleRemoveAvailabilityDay}
               onToggle={(slot) => {
@@ -761,7 +887,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
             variant="body2"
             sx={{ color: 'var(--color-text-secondary)', mb: 1.5 }}
           >
-            Attendees of the meeting ({attendees.length} total)
+            Attendees ({attendees.length})
           </Typography>
           <AvatarGroup
             max={20}

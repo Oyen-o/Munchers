@@ -12,12 +12,14 @@ import './when-to-meet-grid.scss';
 
 type WhenToMeetGridSkeletonProps = {
   visibleDays?: WhenToMeetDay[];
+  dayLabels?: Partial<Record<WhenToMeetDay, string>>;
 };
 
 const WHEN_TO_MEET_PERIOD_SHORT_LABELS = ['AM', 'PM', 'EVE'] as const;
 
 export function WhenToMeetGridSkeleton({
   visibleDays,
+  dayLabels,
 }: WhenToMeetGridSkeletonProps) {
   const activeDays =
     visibleDays && visibleDays.length > 0
@@ -54,7 +56,7 @@ export function WhenToMeetGridSkeleton({
               variant="caption"
               className="when-to-meet-grid__day-label"
             >
-              {day}
+              {dayLabels?.[day] ?? day}
             </Typography>
             {WHEN_TO_MEET_GRID[day].map((slot) => (
               <Box key={slot} className="when-to-meet-grid__cell-skeleton">
