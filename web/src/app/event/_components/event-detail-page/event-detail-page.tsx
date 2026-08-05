@@ -417,7 +417,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
         : null;
 
     if (!targetDate || Number.isNaN(targetDate.getTime())) {
-      return '- week(s) - day(s)';
+      return '- day(s)';
     }
 
     const today = new Date();
@@ -438,10 +438,16 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
       Math.ceil((targetUtcStart - todayUtcStart) / millisecondsPerDay),
     );
 
-    const weeksRemaining = Math.floor(totalDaysRemaining / 7);
-    const daysRemaining = totalDaysRemaining % 7;
+    if (totalDaysRemaining > 14) {
+      return new Intl.DateTimeFormat('en-US', {
+        month: 'numeric',
+        day: 'numeric',
+        year: 'numeric',
+        timeZone: 'UTC',
+      }).format(targetDate);
+    }
 
-    return `${weeksRemaining} week(s) ${daysRemaining} day(s)`;
+    return `${totalDaysRemaining} day(s)`;
   }, [editDate, event?.plannedDate]);
 
   const formatMonthLabel = (value?: Date | string) => {
