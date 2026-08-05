@@ -24,7 +24,7 @@ import {
   AccessTime,
 } from '@mui/icons-material';
 import { Event } from '../../../../lib/types';
-import { downloadCalendarEvent } from '../../../../lib/utils';
+import { openCalendarEventByBrowser } from '../../../../lib/utils';
 import {
   WHEN_TO_MEET_DAYS,
   WHEN_TO_MEET_DEFAULT_DAYS,
@@ -388,15 +388,22 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
 
   const handleDownloadCalendar = () => {
     if (!event?.plannedDate) return;
-    downloadCalendarEvent(
-      event.title,
-      event.plannedDate,
-      event.description,
-      typeof event.location === 'string'
-        ? event.location
-        : event.location?.address,
-      event.id,
-    );
+
+    const plannedDate = new Date(event.plannedDate);
+    if (Number.isNaN(plannedDate.getTime())) {
+      return;
+    }
+
+    openCalendarEventByBrowser({
+      title: event.title,
+      plannedDate,
+      description: event.description,
+      location:
+        typeof event.location === 'string'
+          ? event.location
+          : event.location?.address,
+      eventId: event.id,
+    });
   };
 
   const locationLabel =
@@ -439,12 +446,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
     );
 
     if (totalDaysRemaining > 14) {
-      return new Intl.DateTimeFormat('en-US', {
-        month: 'numeric',
-        day: 'numeric',
-        year: 'numeric',
-        timeZone: 'UTC',
-      }).format(targetDate);
+      return null;
     }
 
     return `${totalDaysRemaining} day(s)`;
@@ -595,33 +597,35 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
         <Box className="event-detail-page__hero-section">
           {/* Hero Info Card */}
           <Card className="event-detail-page__hero-card">
-            <Stack
-              className="event-detail-page__card-top"
-              direction="row"
-              spacing={2}
-            >
-              <Stack className="event-detail-page__card-top-right">
-                <AccessTime
-                  sx={{
-                    color: 'var(--color-text-primary)',
-                    marginRight: '8px',
-                    fontSize: '1.5rem',
-                  }}
-                />
-                <Typography
-                  className="event-detail-page__page"
-                  variant="body1"
-                  sx={{
-                    color: 'var(--color-text-primary)',
-                    fontSize: 'var(--font-size-md)',
-                    fontWeight: 'var(--font-weight-semibold)',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {eventCountdownText}
-                </Typography>
+            {eventCountdownText && (
+              <Stack
+                className="event-detail-page__card-top"
+                direction="row"
+                spacing={2}
+              >
+                <Stack className="event-detail-page__card-top-right">
+                  <AccessTime
+                    sx={{
+                      color: 'var(--color-text-primary)',
+                      marginRight: '8px',
+                      fontSize: '1.5rem',
+                    }}
+                  />
+                  <Typography
+                    className="event-detail-page__page"
+                    variant="body1"
+                    sx={{
+                      color: 'var(--color-text-primary)',
+                      fontSize: 'var(--font-size-md)',
+                      fontWeight: 'var(--font-weight-semibold)',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {eventCountdownText}
+                  </Typography>
+                </Stack>
               </Stack>
-            </Stack>
+            )}
 
             <Stack
               direction="row"

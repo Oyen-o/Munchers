@@ -81,3 +81,80 @@ export function downloadCalendarEvent(
   link.click();
   document.body.removeChild(link);
 }
+
+type CalendarEventActionInput = {
+  title: string;
+  plannedDate: Date;
+  description?: string;
+  location?: string;
+  eventId?: string;
+};
+
+export function openCalendarEventByBrowser({
+  title,
+  plannedDate,
+  description,
+  location,
+  eventId,
+}: CalendarEventActionInput): void {
+  if (Number.isNaN(plannedDate.getTime())) {
+    return;
+  }
+
+  const nav = typeof navigator !== 'undefined' ? navigator : null;
+  const userAgent = nav?.userAgent ?? '';
+  const ua = userAgent.toLowerCase();
+
+  const brands =
+    // userAgentData is not typed in all TS lib versions.
+    ((nav as Navigator & {
+      userAgentData?: { brands?: Array<{ brand: string; version: string }> };
+    })?.userAgentData?.brands ?? []);
+
+  const isChromeFromBrands = brands.some((entry) => {
+    const brand = entry.brand.toLowerCase();
+    return brand.includes('google chrome') || brand.includes('chromium');
+  });
+
+  const looksLikeChrome =
+    ua.includes('chrome/') || ua.includes('crios/') || ua.includes('chromium/');
+  const isExcludedBrowser =
+    ua.includes('edg/') ||
+    ua.includes('edga/') ||
+    ua.includes('edgios/') ||
+    ua.includes('opr/') ||
+    ua.includes('opios/') ||
+    ua.includes('samsungbrowser/') ||
+    ua.includes('firefox/') ||
+    ua.includes('fxios/') ||
+    ua.includes('duckduckgo/');
+
+  const isChromeBrowser = (isChromeFromBrands || looksLikeChrome) && !isExcludedBrowser;
+
+  if (isChromeBrowser) {
+    console.log('Opening Google Calendar event in Chrome browser...');
+    const endDate = new Date(plannedDate.getTime() + 2 * 60 * 60 * 1000);
+    const toGoogleCalendarDate = (value: Date) =>
+      value.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+
+    const calendarUrl = new URL('https://calendar.google.com/calendar/render');
+    calendarUrl.searchParams.set('action', 'TEMPLATE');
+    calendarUrl.searchParams.set('text', title);
+    calendarUrl.searchParams.set(
+      'dates',
+      `${toGoogleCalendarDate(plannedDate)}/${toGoogleCalendarDate(endDate)}`,
+    );
+    if (description) {
+      calendarUrl.searchParams.set('details', description);
+    }
+    if (location) {
+      calendarUrl.searchParams.set('location', location);
+    }
+
+    window.open(calendarUrl.toString(), '_blank', 'noopener,noreferrer');
+    return;
+  }
+
+  // Safari and non-Chrome browsers keep ICS download behavior.
+  downloadCalendarEvent(title, plannedDate, description, location, eventId);
+}

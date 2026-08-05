@@ -5,15 +5,11 @@
   margin: 0 auto;
 
   .event-detail-page {
-    &__stack {
-      margin: 0 auto;
-    }
-
     &__hero-card {
       background-color: var(--color-warm-brown);
       border-radius: var(--border-radius-xl);
-      padding: var(--spacing-lg);
-      padding-bottom: 0;
+      padding: 22px var(--spacing-lg) 0 var(--spacing-lg);
+
       box-shadow: var(--shadow-lg);
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
@@ -57,13 +53,16 @@
     }
 
     &__info-stack {
-      align-items: center;
+      div {
+        height: 100%;
+      }
+      display: flex;
+      align-items: flex-end;
       justify-content: space-between;
       padding: var(--spacing-lg) 0;
     }
 
     &__event-info {
-      padding: 0 var(--spacing-lg);
       color: var(--color-primary-contrast);
       justify-content: flex-end;
       width: 75%;
@@ -82,7 +81,7 @@
       gap: var(--spacing-md);
 
       h1 {
-        font-size: 50px;
+        font-size: 64px;
       }
 
       span {

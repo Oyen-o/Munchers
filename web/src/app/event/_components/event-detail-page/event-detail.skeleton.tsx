@@ -35,47 +35,63 @@ export function EventDetailSkeleton({
               spacing={2}
             >
               <Stack className="event-detail-page__card-top-right">
-                <Shimmer width={110} height={45} borderRadius={16} />
+                <Shimmer width={22} height={22} borderRadius="50%" />
+                <Shimmer width={170} height={24} borderRadius={10} />
               </Stack>
             </Stack>
 
             <Stack
               direction="row"
               spacing={2}
-              sx={{
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                height: '180px',
-                padding: '0 var(--spacing-md)',
-              }}
+              className="event-detail-page__info-stack"
             >
               <Box
                 sx={{
-                  width: '50%',
+                  width: '25%',
                   display: 'flex',
                   flexDirection: 'column',
-                  justifyContent: 'center',
+                  justifyContent: 'flex-start',
                   alignItems: 'center',
-
-                  gap: 1,
+                  gap: 'var(--spacing-md)',
                 }}
               >
-                <Shimmer width={56} height={26} borderRadius={6} />
-                <Shimmer width={160} height={100} borderRadius={6} />
+                <Shimmer width={34} height={12} borderRadius={3} />
+                <Shimmer width={64} height={64} borderRadius={4} />
+                <Shimmer width={104} height={12} borderRadius={3} />
               </Box>
+
+              <Box
+                sx={{
+                  width: '1px',
+                  alignSelf: 'stretch',
+                  backgroundColor: 'var(--border-color-1)',
+                  opacity: 0.8,
+                }}
+              />
 
               <Stack
                 sx={{
-                  width: '50%',
-                  gap: 1.5,
-                  justifyContent: 'flex-end',
+                  width: '75%',
+                  gap: 1.25,
+                  justifyContent: 'center',
                   height: '100%',
-                  padding: '0 0 var(--spacing-md) var(--spacing-lg)',
+                  padding: '0 var(--spacing-lg)',
                 }}
               >
-                <Shimmer width="85%" height={14} borderRadius={2} />
-                <Shimmer width="95%" height={14} borderRadius={2} />
-                <Shimmer width="70%" height={14} borderRadius={2} />
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Shimmer width={18} height={18} borderRadius="50%" />
+                  <Shimmer width="62%" height={16} borderRadius={4} />
+                </Box>
+                <Shimmer width="100%" height={1} borderRadius={0} />
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Shimmer width={18} height={18} borderRadius="50%" />
+                  <Shimmer width="86%" height={16} borderRadius={4} />
+                </Box>
+                <Shimmer width="100%" height={1} borderRadius={0} />
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Shimmer width={18} height={18} borderRadius="50%" />
+                  <Shimmer width="56%" height={16} borderRadius={4} />
+                </Box>
               </Stack>
             </Stack>
 
@@ -102,7 +118,7 @@ export function EventDetailSkeleton({
               padding: '0 var(--spacing-lg)',
             }}
           >
-            <Shimmer width="33%" height={46} borderRadius={20} />
+            <Shimmer width="100%" height={46} borderRadius={20} />
           </Box>
         </Box>
 
