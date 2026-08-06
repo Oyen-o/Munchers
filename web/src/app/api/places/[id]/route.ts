@@ -32,10 +32,10 @@ const mockPlaces: Record<string, any> = {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { id } =await params;
+    const { id } = await params;
     console.log('Fetching place with ID:', id);
     const place = mockPlaces[id];
 

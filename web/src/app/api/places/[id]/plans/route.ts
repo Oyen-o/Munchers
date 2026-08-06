@@ -3,10 +3,10 @@ import { NextRequest, NextResponse } from 'next/server';
 // Get plans at a specific place
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { id: placeId } = params;
+    const { id: placeId } = await params;
 
     // Mock plans data - in production, query events where location matches this place
     const mockPlans = [
@@ -77,10 +77,10 @@ export async function GET(
 // Create a new plan at this place
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { id: placeId } = params;
+    const { id: placeId } = await params;
     const body = await request.json();
     const { title, userId, groupId, plannedDate } = body;
 
