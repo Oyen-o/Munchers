@@ -161,6 +161,80 @@ export interface EventAvailabilityDocument extends BaseDocument {
 	slots: string[];
 }
 
+export interface BrandSocialLinkDocument {
+	platform: string;
+	url: string;
+}
+
+export interface BrandDocument extends BaseDocument {
+	type: 'brand';
+	name: string;
+	slug: string;
+	description?: string;
+	website?: string;
+	logo?: string;
+	banner?: string;
+	verified?: boolean;
+	ownerUserId?: string;
+	ownerOrganizationId?: string;
+	status?: string;
+	socialLinks?: BrandSocialLinkDocument[];
+	createdAt: string;
+	updatedAt?: string;
+}
+
+export interface ExperienceDocument extends BaseDocument {
+	type: 'experience';
+	entityId: string;
+	name: string;
+	slug: string;
+	category: string;
+	description: string;
+	createdBy: string;
+	visibility: Visibility;
+	coverPhoto: string;
+	tags: string[];
+	followers: number;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface PlanDocument extends BaseDocument {
+	type: 'plan';
+	groupId: string;
+	entityId: string;
+	entityName?: string;
+	entityPhoto?: string;
+	entityCity?: string;
+	experienceId: string;
+	title: string;
+	description: string;
+	startsAt: string;
+	endsAt: string;
+	status: string;
+	createdBy: string;
+	attendeeCount: number;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface UserEntityDocument extends BaseDocument {
+	type: 'userEntity';
+	userId: string;
+	entityId: string;
+	relationship: string;
+	createdAt: string;
+}
+
+export interface GroupEntityDocument extends BaseDocument {
+	type: 'groupEntity';
+	groupId: string;
+	entityId: string;
+	relationship: string;
+	addedBy: string;
+	createdAt: string;
+}
+
 export interface NotificationDocument extends BaseDocument {
 	type: 'notification';
 	ownerId: string;
