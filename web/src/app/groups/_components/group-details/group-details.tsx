@@ -28,7 +28,7 @@ import {
 } from '@mui/icons-material';
 import type { Event, Group } from '../../../../lib/types';
 import EventList from '../event-list.tsx/event-list';
-import { CreateEventIdeaDrawer } from 'src/components/create-event-idea-drawer/create-event-idea-drawer';
+import { CreateEventIdeaDrawer } from 'src/components/create-event-idea-drawer/create-event-idea-modal';
 
 import './group-details.scss';
 

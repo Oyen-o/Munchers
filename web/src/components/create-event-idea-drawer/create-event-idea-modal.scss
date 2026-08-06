@@ -1,0 +1,102 @@
+.create-event-idea {
+  &__paper {
+    width: min(460px, 100vw);
+    max-width: 100%;
+    max-height: calc(100vh - 32px);
+    margin: 16px;
+    border-radius: 24px;
+    background-color: var(--color-light-background-2);
+  }
+
+  &__content {
+    height: 100%;
+    padding: var(--spacing-md);
+    overflow: hidden;
+  }
+
+  &__header {
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__description {
+    color: var(--color-text-secondary);
+  }
+
+  &__preview {
+    padding-inline: 4px;
+    flex-shrink: 0;
+  }
+
+  &__fields-pane {
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  &__field-editor {
+    padding: var(--spacing-sm);
+    border-radius: 16px;
+    background-color: var(--color-light-background-1);
+  }
+
+  &__text-field {
+    .MuiOutlinedInput-root {
+      background-color: #fff;
+      border-radius: 14px;
+    }
+  }
+
+  &__field-actions {
+    justify-content: flex-end;
+  }
+
+  &__field-display {
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-sm);
+    border-radius: 16px;
+  }
+
+  &__field-copy {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__field-label {
+    color: var(--color-text-secondary);
+  }
+
+  &__field-value {
+    font-weight: 600;
+  }
+
+  &__edit-button,
+  &__icon-button {
+    min-width: 0;
+  }
+
+  &__footer {
+    margin-top: auto;
+    flex-shrink: 0;
+  }
+
+  &__submit {
+    border-radius: 999px;
+  }
+}
+
+@media (max-width: 600px) {
+  .create-event-idea-drawer {
+    &__paper {
+      width: calc(100vw - 16px);
+      margin: 8px;
+      max-height: calc(100vh - 16px);
+    }
+
+    &__content {
+      padding: 16px;
+    }
+  }
+}

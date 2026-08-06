@@ -17,9 +17,13 @@ import './event-item.scss';
 export function EventItem({
   event,
   size = 'large',
+  disableNavigation = false,
+  showRating = size === 'large',
 }: {
   event: Event;
   size?: 'small' | 'medium' | 'large';
+  disableNavigation?: boolean;
+  showRating?: boolean;
 }) {
   const queryClient = useQueryClient();
   const currentUserId = useMemo(() => {
@@ -114,6 +118,10 @@ export function EventItem({
       <Box
         className={`event-item__event-img-backdrop ${size ? `event-item__event-img-backdrop--${size}` : ''}`}
         onClick={() => {
+          if (disableNavigation) {
+            return;
+          }
+
           console.log(
             'Navigating to event detail page for event ID:',
             event.id,
@@ -233,7 +241,7 @@ export function EventItem({
           </Stack>
         )}
 
-        {size === 'large' && (
+        {size === 'large' && showRating && (
           <Box
             className="event-item__event-rating"
             sx={{
