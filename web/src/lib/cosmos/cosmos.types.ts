@@ -120,6 +120,37 @@ export interface FriendshipDocument extends BaseDocument {
 	updatedAt?: string;
 }
 
+export interface PlaceDocument extends BaseDocument {
+	type: 'place';
+	googlePlaceId: string;
+	name: string;
+	category: string;
+	address: string;
+	coordinates: {
+		lat: number;
+		lng: number;
+	};
+	phone?: string;
+	website?: string;
+	hours?: {
+		[day: string]: string;
+	};
+	priceLevel?: number;
+	isOpen?: boolean;
+	createdAt: string;
+	updatedAt?: string;
+}
+
+export interface PlaceRatingDocument extends BaseDocument {
+	type: 'placeRating';
+	placeId: string;
+	userId: string;
+	groupId?: string;
+	rating: number;
+	createdAt: string;
+	updatedAt?: string;
+}
+
 export interface AttendanceDocument extends BaseDocument {
 	type: 'attendance';
 	eventId: string;

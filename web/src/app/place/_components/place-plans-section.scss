@@ -1,0 +1,46 @@
+.place-plans {
+  padding: var(--spacing-lg);
+  background: white;
+
+  &__title {
+    font-weight: 800;
+  }
+
+  &__subtitle {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-lg);
+  }
+
+  &__card {
+    padding: var(--spacing-md);
+    border-radius: 16px;
+    border: 1px solid #f1dfca;
+    background: #fffdf8;
+    box-shadow: 0 2px 8px rgba(94, 63, 31, 0.04);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      box-shadow: 0 4px 16px rgba(94, 63, 31, 0.1);
+      transform: translateY(-2px);
+    }
+
+    &--empty {
+      padding: var(--spacing-xl);
+      text-align: center;
+      cursor: default;
+
+      &:hover {
+        transform: none;
+        box-shadow: 0 2px 8px rgba(94, 63, 31, 0.04);
+      }
+    }
+  }
+
+  &__idea-badge {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #92400e;
+    font-weight: 700;
+    border: 1px solid #fbbf24;
+  }
+}

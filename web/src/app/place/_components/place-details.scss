@@ -1,0 +1,132 @@
+.place-details {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-bottom: var(--spacing-xl);
+  background: linear-gradient(180deg, #fffdf9 0%, #fff8f1 100%);
+  min-height: 100vh;
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+  }
+
+  &__hero {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    overflow: hidden;
+  }
+
+  &__hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__hero-gradient {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(0, 0, 0, 0.4) 50%,
+      transparent 100%
+    );
+  }
+
+  &__hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  &__back {
+    align-self: flex-start;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    color: #000;
+
+    &:hover {
+      background: rgba(255, 255, 255, 1);
+    }
+  }
+
+  &__hero-info {
+    color: white;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  &__title {
+    font-weight: 800;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  &__category {
+    opacity: 0.95;
+    font-weight: 500;
+  }
+
+  &__info-bar {
+    padding: var(--spacing-lg);
+    background: white;
+    border-bottom: 1px solid #f1e2d3;
+  }
+
+  &__status-chip {
+    &--open {
+      background-color: #d1fae5;
+      color: #065f46;
+      font-weight: 600;
+    }
+
+    &--closed {
+      background-color: #fee2e2;
+      color: #991b1b;
+      font-weight: 600;
+    }
+  }
+
+  &__actions {
+    margin-top: var(--spacing-sm);
+  }
+
+  &__primary-action {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+    font-weight: 700;
+
+    &:hover {
+      background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    }
+  }
+
+  &__quick-info {
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: white;
+    border-bottom: 1px solid #f1e2d3;
+    color: var(--color-text-secondary);
+  }
+}
+
+@media (max-width: 768px) {
+  .place-details {
+    &__hero {
+      height: 240px;
+    }
+
+    &__title {
+      font-size: 1.75rem;
+    }
+  }
+}

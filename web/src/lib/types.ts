@@ -160,6 +160,58 @@ export interface Attendance {
   lastCheckIn?: string;
 }
 
+// Place Types
+export interface Place {
+  id: string;
+  type: 'place';
+  googlePlaceId: string;
+  name: string;
+  category: string; // e.g., 'Restaurant', 'Café', 'Bar'
+  address: string;
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
+  phone?: string;
+  website?: string;
+  hours?: {
+    [day: string]: string; // e.g., 'Monday': '9:00 AM - 5:00 PM'
+  };
+  priceLevel?: number; // 1-4
+  isOpen?: boolean;
+  createdAt: Date | string;
+  updatedAt?: Date | string;
+}
+
+export interface PlaceRating {
+  id: string;
+  placeId: string;
+  userId: string;
+  groupId?: string; // If rating is from a group context
+  rating: number; // 1-5
+  createdAt: Date | string;
+  updatedAt?: Date | string;
+}
+
+export interface PlaceCommunityRatings {
+  friends?: {
+    average: number;
+    count: number;
+  };
+  userGroups: Array<{
+    groupId: string;
+    groupName: string;
+    average: number;
+    count: number;
+  }>;
+  popularGroups: Array<{
+    groupId: string;
+    groupName: string;
+    average: number;
+    count: number;
+  }>;
+}
+
 // API Response Types
 export interface ApiResponse<T> {
   success: boolean;

@@ -1,0 +1,39 @@
+.place-ratings {
+  padding: var(--spacing-lg);
+  background: white;
+  border-bottom: 1px solid #f1e2d3;
+
+  &__title {
+    font-weight: 800;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  &__subtitle {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-lg);
+  }
+
+  &__section-title {
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+  }
+
+  &__card {
+    padding: var(--spacing-md);
+    border-radius: 16px;
+    border: 1px solid #f1dfca;
+    background: #fffdf8;
+    box-shadow: 0 2px 8px rgba(94, 63, 31, 0.04);
+
+    &--friends {
+      background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+      border-color: #bfdbfe;
+    }
+
+    &--empty {
+      padding: var(--spacing-xl);
+      text-align: center;
+    }
+  }
+}
