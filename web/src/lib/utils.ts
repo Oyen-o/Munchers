@@ -158,3 +158,16 @@ export function openCalendarEventByBrowser({
   // Safari and non-Chrome browsers keep ICS download behavior.
   downloadCalendarEvent(title, plannedDate, description, location, eventId);
 }
+
+/**
+ * Get the rating image path based on the rating value
+ * @param rating - The rating value (1-5)
+ * @returns The path to the rating image
+ */
+export function getRatingImage(rating: number): string {
+  if (rating >= 4.5) return '/ratings/rating-5.png';
+  if (rating >= 4) return '/ratings/rating-4.png';
+  if (rating >= 3) return '/ratings/rating-3.png';
+  if (rating >= 2) return '/ratings/rating-2.png';
+  return '/ratings/rating-1.png';
+}

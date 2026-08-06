@@ -4,5 +4,7 @@
   &__paper {
     border-radius: 24px;
     max-width: 460px;
+    background-color: var(--color-light-background-2);
+    border: 2px solid var(--color-light-background-3);
   }
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import { Box, Card, Stack, Typography } from '@mui/material';
-import { Star, Group as GroupIcon } from '@mui/icons-material';
 
 import './place-experiences-section.scss';
 
@@ -23,7 +22,11 @@ export function PlaceExperiencesSection() {
             spacing={1}
             sx={{ alignItems: 'center', mb: 1.5 }}
           >
-            <Star sx={{ color: '#f59e0b', fontSize: 20 }} />
+            <img
+              src="/ratings/rating-5.png"
+              alt="Official experiences"
+              style={{ width: 40, height: 40 }}
+            />
             <Typography variant="h6" sx={{ fontWeight: 700 }}>
               Official Experiences
             </Typography>
@@ -46,7 +49,11 @@ export function PlaceExperiencesSection() {
             spacing={1}
             sx={{ alignItems: 'center', mb: 1.5 }}
           >
-            <GroupIcon sx={{ color: '#3b82f6', fontSize: 20 }} />
+            <img
+              src="/images/home-splash.png"
+              alt="Community experiences"
+              style={{ width: 60, height: 60 }}
+            />
             <Typography variant="h6" sx={{ fontWeight: 700 }}>
               Community Experiences
             </Typography>

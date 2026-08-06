@@ -4,7 +4,7 @@ export type GroupType = 'community' | 'friendGroup';
 
 export type EventOwnerType = 'user' | 'group';
 
-export type EventStageDocument = 'idea' | 'picked' | 'planned' | 'completed';
+export type EventStageDocument = 'idea' | 'planned' | 'completed';
 
 export type AttendanceStatus = 'invited' | 'going' | 'checkedIn' | 'cancelled';
 
@@ -147,6 +147,28 @@ export interface PlaceRatingDocument extends BaseDocument {
 	userId: string;
 	groupId?: string;
 	rating: number;
+	createdAt: string;
+	updatedAt?: string;
+}
+
+export interface GroupListDocument extends BaseDocument {
+	type: 'groupList';
+	groupId: string;
+	name: string;
+	description?: string;
+	visibility: 'public' | 'private';
+	createdAt: string;
+	updatedAt?: string;
+}
+
+export interface GroupListItemDocument extends BaseDocument {
+	type: 'groupListItem';
+	groupId: string;
+	listId: string;
+	entityId: string;
+	rank: number;
+	addedBy: string;
+	notes?: string;
 	createdAt: string;
 	updatedAt?: string;
 }

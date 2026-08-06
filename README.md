@@ -29,7 +29,7 @@ A full-stack event planning application built with NX monorepo, Next.js, Materia
 - Group-level events and comments
 
 ### Events
-- Three stages: Idea → Picked → Planned
+- Three stages: Idea → Planned → Completed
 - Events can belong to users or groups
 - Event hosting and planning details
 - Comments on events
@@ -42,7 +42,7 @@ A full-stack event planning application built with NX monorepo, Next.js, Materia
 
 ### Groups Menu
 - List of user's groups
-- Event filtering by stage (Idea, Picked, Planned)
+- Event filtering by stage (Idea, Planned, Completed)
 - Event details with host and planning information
 
 ## 🚀 Getting Started

@@ -100,33 +100,44 @@ export function PlacePlansSection({
           </Button>
         </Card>
       ) : (
-        <Stack spacing={1.5}>
+        <Box className="place-plans__carousel">
           {plans.map((plan) => (
-            <Card key={plan.id} className="place-plans__card">
-              <Stack spacing={1.5}>
-                {/* Title and Stage */}
+            <Box key={plan.id} className="place-plans__plan-card">
+              {/* Plan Image Backdrop */}
+              <Box className="place-plans__plan-img-backdrop">
                 <Stack
-                  direction="row"
-                  spacing={1}
-                  sx={{
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start',
-                  }}
+                  className="place-plans__plan-header-layer"
+                  direction="column"
                 >
-                  <Typography variant="h6" sx={{ fontWeight: 700, flex: 1 }}>
+                  <Stack
+                    className="place-plans__plan-header-row"
+                    direction="row"
+                  >
+                    {plan.stage === 'idea' && (
+                      <Chip
+                        label="Idea"
+                        size="small"
+                        className="place-plans__idea-badge"
+                      />
+                    )}
+                  </Stack>
+                  <Typography variant="h5" className="place-plans__plan-title">
                     {plan.title}
                   </Typography>
-                  {plan.stage === 'idea' && (
-                    <Chip
-                      label="Idea"
-                      size="small"
-                      className="place-plans__idea-badge"
-                    />
-                  )}
                 </Stack>
 
+                <Box className="place-plans__plan-image-gradient" />
+                <img
+                  className="place-plans__plan-image"
+                  src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=200&fit=crop"
+                  alt={plan.title}
+                />
+              </Box>
+
+              {/* Plan Content */}
+              <Stack className="place-plans__plan-content" spacing={1}>
                 {/* Creator and Group */}
-                <Stack spacing={1}>
+                <Stack spacing={0.5}>
                   <Stack
                     direction="row"
                     spacing={1}
@@ -134,13 +145,19 @@ export function PlacePlansSection({
                   >
                     <Person
                       fontSize="small"
-                      sx={{ color: 'var(--color-text-secondary)' }}
+                      sx={{
+                        color: 'var(--color-text-secondary)',
+                        fontSize: 14,
+                      }}
                     />
                     <Typography
-                      variant="body2"
-                      sx={{ color: 'var(--color-text-secondary)' }}
+                      variant="caption"
+                      sx={{
+                        color: 'var(--color-text-secondary)',
+                        fontSize: '0.75rem',
+                      }}
                     >
-                      Created by {plan.creatorName || plan.createdBy}
+                      {plan.creatorName || plan.createdBy}
                     </Typography>
                   </Stack>
 
@@ -152,11 +169,17 @@ export function PlacePlansSection({
                     >
                       <Group
                         fontSize="small"
-                        sx={{ color: 'var(--color-text-secondary)' }}
+                        sx={{
+                          color: 'var(--color-text-secondary)',
+                          fontSize: 14,
+                        }}
                       />
                       <Typography
-                        variant="body2"
-                        sx={{ color: 'var(--color-text-secondary)' }}
+                        variant="caption"
+                        sx={{
+                          color: 'var(--color-text-secondary)',
+                          fontSize: '0.75rem',
+                        }}
                       >
                         {plan.groupName}
                       </Typography>
@@ -164,38 +187,39 @@ export function PlacePlansSection({
                   )}
                 </Stack>
 
-                {/* Date and Attendees */}
+                {/* Date */}
                 <Stack
                   direction="row"
-                  spacing={2}
-                  sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+                  spacing={1}
+                  sx={{ alignItems: 'center' }}
                 >
-                  <Stack
-                    direction="row"
-                    spacing={1}
-                    sx={{ alignItems: 'center' }}
-                  >
-                    <CalendarToday
-                      fontSize="small"
-                      sx={{ color: 'var(--color-text-secondary)' }}
-                    />
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                      {formatDate(plan.plannedDate || null)}
-                    </Typography>
-                  </Stack>
-
+                  <CalendarToday
+                    fontSize="small"
+                    sx={{ color: 'var(--color-text-secondary)', fontSize: 14 }}
+                  />
                   <Typography
                     variant="caption"
-                    sx={{ color: 'var(--color-text-secondary)' }}
+                    sx={{ fontWeight: 600, fontSize: '0.75rem' }}
                   >
-                    {plan.attendeeCount}{' '}
-                    {plan.attendeeCount === 1 ? 'person' : 'people'} interested
+                    {formatDate(plan.plannedDate || null)}
                   </Typography>
                 </Stack>
+
+                {/* Attendees */}
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: 'var(--color-text-secondary)',
+                    fontSize: '0.7rem',
+                  }}
+                >
+                  {plan.attendeeCount}{' '}
+                  {plan.attendeeCount === 1 ? 'person' : 'people'} interested
+                </Typography>
               </Stack>
-            </Card>
+            </Box>
           ))}
-        </Stack>
+        </Box>
       )}
     </Box>
   );

@@ -1,17 +1,15 @@
 .event-detail-page__container {
   min-height: 100vh;
-  padding: var(--spacing-lg);
   max-width: 640px;
   margin: 0 auto;
 
   .event-detail-page {
     &__hero-card {
       background-color: var(--color-warm-brown);
-      border-radius: var(--border-radius-xl);
+
       padding: 22px var(--spacing-lg) 0 var(--spacing-lg);
       box-shadow: var(--shadow-lg);
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
+      border-radius: 0;
     }
 
     &__card-top {
@@ -130,7 +128,7 @@
     &__save-button {
       text-transform: uppercase;
       border-radius: var(--border-radius-xl);
-      width: 40%;
+      width: fit-content;
 
       &:hover {
         background-color: var(--color-light-tan);
@@ -143,12 +141,9 @@
       top: -25px;
       width: 100%;
       aspect-ratio: 2 / 1;
-      border-radius: var(--border-radius-xl);
       overflow: hidden;
       box-shadow: var(--shadow-md);
       margin-top: 0;
-      border-top-left-radius: 0;
-      border-top-right-radius: 0;
 
       img {
         width: 100%;
@@ -189,7 +184,7 @@
 
     &__description-card {
       border-radius: 0;
-      padding: var(--spacing-xl) 0;
+      padding: 22px var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
       min-height: 160px;
       max-height: 320px;
       overflow: hidden;

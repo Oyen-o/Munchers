@@ -21,7 +21,7 @@ import { EventItemSkeleton } from '../event-item/event-item.skeleton';
 import './event-list.scss';
 import '../groups-page/groups-page.scss';
 
-type StageKey = 'planned' | 'picked' | 'idea' | 'completed';
+type StageKey = 'planned' | 'idea' | 'completed';
 
 function StageDropZone({
   stage,
@@ -186,7 +186,6 @@ export default function EventList({
       color: 'var(--color-stage-completed)',
     },
     { key: 'planned', label: 'Planned', color: 'var(--color-stage-planned)' },
-    { key: 'picked', label: 'Picked', color: 'var(--color-stage-picked)' },
     { key: 'idea', label: 'Idea', color: 'var(--color-stage-idea)' },
   ];
 

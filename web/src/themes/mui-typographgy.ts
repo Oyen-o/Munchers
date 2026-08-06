@@ -42,6 +42,16 @@ export const muiTypography = {
       fontWeight: 500,
 
     },
+    subtitle1: {
+      fontSize: 'var(--font-size-md)',
+      fontWeight: 500,
+            letterSpacing: '-1px',
+    },
+    subtitle2: {
+      fontSize: 'var(--font-size-sm)',
+      fontWeight: 500,
+            letterSpacing: '-1px',
+    },
     body1: {
       fontSize: 'var(--font-size-md)',
       fontWeight: 400,

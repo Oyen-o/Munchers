@@ -97,7 +97,6 @@ export function EventItem({
   const getStageColor = (stage: EventStage) => {
     const colors = {
       idea: 'var(--color-stage-idea)',
-      picked: 'var(--color-stage-picked)',
       planned: 'var(--color-stage-planned)',
       completed: 'var(--color-stage-completed)',
     };

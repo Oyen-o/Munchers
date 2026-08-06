@@ -1,7 +1,7 @@
 import { getEventsContainer } from '../../../lib/cosmos/cosmos';
 import type { EventDocument, EventStageDocument } from '../../../lib/cosmos/cosmos.types';
 
-const EVENT_STAGES: EventStageDocument[] = ['idea', 'picked', 'planned', 'completed'];
+const EVENT_STAGES: EventStageDocument[] = ['idea', 'planned', 'completed'];
 
 function isEventStage(value: string): value is EventStageDocument {
   return EVENT_STAGES.includes(value as EventStageDocument);

@@ -315,14 +315,6 @@ export function GroupsPage() {
                 icon={<LightbulbIcon />}
                 iconPosition="start"
               />
-
-              <Tab
-                label="Picked"
-                value="picked"
-                icon={<CheckCircleIcon />}
-                iconPosition="start"
-                className="groups-page__filter-tab-item groups-page__filter-tab-picked"
-              />
               <Tab
                 label="Planned"
                 value="planned"

@@ -5,7 +5,6 @@ import { useQuery } from '@tanstack/react-query';
 import {
   Box,
   Button,
-  Chip,
   CircularProgress,
   IconButton,
   Stack,
@@ -21,6 +20,7 @@ import {
   LocationOn,
 } from '@mui/icons-material';
 import type { Place, PlaceCommunityRatings } from 'src/lib/types';
+import { getRatingImage } from 'src/lib/utils';
 
 import './place-details.scss';
 import { CreatePlanModal } from './create-plan-modal';
@@ -138,12 +138,30 @@ export function PlaceDetails({ placeId }: PlaceDetailsProps) {
           <Typography variant="body2">{place.address}</Typography>
         </Stack>
 
-        {place.isOpen !== undefined && (
-          <Chip
-            label={place.isOpen ? 'Open Now' : 'Closed'}
-            size="small"
-            className={`place-details__status-chip ${place.isOpen ? 'place-details__status-chip--open' : 'place-details__status-chip--closed'}`}
-          />
+        {/* Friends Rating */}
+        {ratingsQuery.data?.friends && ratingsQuery.data.friends.count > 0 && (
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{ alignItems: 'center', mt: 1 }}
+            className="place-details__friends-rating"
+          >
+            <img
+              src={getRatingImage(ratingsQuery.data.friends.average)}
+              alt="star"
+              style={{ width: 63, height: 63 }}
+            />
+            <Typography variant="h5" sx={{ fontWeight: 700, lineHeight: 1 }}>
+              {ratingsQuery.data.friends.average.toFixed(1)}
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{ color: 'var(--color-text-secondary)' }}
+            >
+              ({ratingsQuery.data.friends.count}{' '}
+              {ratingsQuery.data.friends.count === 1 ? 'friend' : 'friends'})
+            </Typography>
+          </Stack>
         )}
 
         <Stack direction="row" spacing={1} className="place-details__actions">
@@ -191,14 +209,14 @@ export function PlaceDetails({ placeId }: PlaceDetailsProps) {
         </Stack>
       )}
 
+      {/* Experiences Section */}
+      <PlaceExperiencesSection />
+
       {/* Community Ratings Section */}
       <PlaceRatingsSection
         ratings={ratingsQuery.data}
         loading={ratingsQuery.isLoading}
       />
-
-      {/* Experiences Section */}
-      <PlaceExperiencesSection />
 
       {/* Plans Section */}
       <PlacePlansSection

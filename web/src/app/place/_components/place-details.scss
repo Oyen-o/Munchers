@@ -79,22 +79,13 @@
 
   &__info-bar {
     padding: var(--spacing-lg);
-    background: white;
+    background: #f8f8f8;
     border-bottom: 1px solid #f1e2d3;
   }
 
-  &__status-chip {
-    &--open {
-      background-color: #d1fae5;
-      color: #065f46;
-      font-weight: 600;
-    }
-
-    &--closed {
-      background-color: #fee2e2;
-      color: #991b1b;
-      font-weight: 600;
-    }
+  &__friends-rating {
+    padding: var(--spacing-sm) 0;
+    margin-top: var(--spacing-xs) !important;
   }
 
   &__actions {
@@ -113,7 +104,7 @@
 
   &__quick-info {
     padding: var(--spacing-md) var(--spacing-lg);
-    background: white;
+    background: #f8f8f8;
     border-bottom: 1px solid #f1e2d3;
     color: var(--color-text-secondary);
   }

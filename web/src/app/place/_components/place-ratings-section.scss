@@ -1,6 +1,6 @@
 .place-ratings {
   padding: var(--spacing-lg);
-  background: white;
+  background: #f8f8f8;
   border-bottom: 1px solid #f1e2d3;
 
   &__title {
@@ -19,17 +19,48 @@
     margin-top: var(--spacing-md);
   }
 
+  &__carousel {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(200px, 240px);
+    gap: 14px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scroll-snap-type: x mandatory;
+  }
+
+  &__rating-card {
+    min-width: 200px;
+    padding: var(--spacing-lg);
+    border-radius: 16px;
+    border: 1px solid #f1e2d3;
+    background: #fffdf8;
+    box-shadow: 0 4px 12px rgba(94, 63, 31, 0.06);
+    scroll-snap-align: start;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+      box-shadow: 0 6px 18px rgba(94, 63, 31, 0.1);
+      transform: translateY(-2px);
+    }
+  }
+
+  &__group-name {
+    font-size: 1.25rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--color-dark-brown);
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+  }
+
   &__card {
     padding: var(--spacing-md);
     border-radius: 16px;
-    border: 1px solid #f1dfca;
-    background: #fffdf8;
-    box-shadow: 0 2px 8px rgba(94, 63, 31, 0.04);
-
-    &--friends {
-      background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
-      border-color: #bfdbfe;
-    }
 
     &--empty {
       padding: var(--spacing-xl);

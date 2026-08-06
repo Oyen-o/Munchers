@@ -120,10 +120,6 @@ router.patch('/:id/stage', async (req, res) => {
     event.stage = stage;
     event.updatedAt = new Date().toISOString();
 
-    if (stage === 'picked' && hostId) {
-      event.hostId = hostId;
-    }
-
     if (stage === 'planned') {
       if (plannedDate) event.plannedDate = plannedDate;
       if (location) event.location = location;

@@ -111,9 +111,10 @@
     &__event-title {
       text-align: center;
       width: 100%;
-      padding: var(--spacing-xm);
-      color: var(--color-text-cream);
+      padding: var(--spacing-md);
+      color: var(--color-cream-highlights);
       text-transform: uppercase;
+      text-shadow: 0 2px 4px #000c;
       letter-spacing: -2px;
     }
 

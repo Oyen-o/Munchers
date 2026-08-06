@@ -46,7 +46,7 @@ export interface GroupMember {
 }
 
 // Event Types
-export type EventStage = 'idea' | 'picked' | 'planned' | 'completed';
+export type EventStage = 'idea' | 'planned' | 'completed';
 
 export enum EventType {
   Foodie = 'foodie',
@@ -210,6 +210,29 @@ export interface PlaceCommunityRatings {
     average: number;
     count: number;
   }>;
+}
+
+// Group List Types
+export interface GroupList {
+  id: string;
+  groupId: string;
+  name: string;
+  description?: string;
+  visibility: 'public' | 'private';
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+}
+
+export interface GroupListItem {
+  id: string;
+  groupId: string;
+  listId: string;
+  entityId: string; // ID of the place/restaurant/etc.
+  rank: number;
+  addedBy: string; // User ID who added this item
+  notes?: string;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
 }
 
 // API Response Types

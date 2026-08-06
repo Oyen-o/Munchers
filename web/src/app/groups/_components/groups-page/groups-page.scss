@@ -32,12 +32,6 @@
       margin-top: var(--spacing-lg);
     }
 
-    &__filter-tab-picked {
-      .MuiSvgIcon-root {
-        color: var(--color-stage-picked);
-      }
-    }
-
     &__filter-tab-planned {
       .MuiSvgIcon-root {
         color: var(--color-stage-planned);
@@ -95,12 +89,6 @@
   &__filter-tabs {
     background-color: var(--color-light-background-4);
     margin-top: var(--spacing-md);
-  }
-
-  &__filter-tab-picked {
-    .MuiSvgIcon-root {
-      color: var(--color-stage-picked);
-    }
   }
 
   &__filter-tab-planned {

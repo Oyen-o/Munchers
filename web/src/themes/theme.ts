@@ -6,12 +6,10 @@ import { muiTypography } from './mui-typographgy';
 declare module '@mui/material/styles' {
   interface Palette {
     stageIdea: Palette['primary'];
-    stagePicked: Palette['primary'];
     stagePlanned: Palette['primary'];
   }
   interface PaletteOptions {
     stageIdea?: PaletteOptions['primary'];
-    stagePicked?: PaletteOptions['primary'];
     stagePlanned?: PaletteOptions['primary'];
   }
 }
@@ -54,9 +52,6 @@ const theme = createTheme({
     stageIdea: {
       main: '#FFB84D',
     },
-    stagePicked: {
-      main: '#8B7FD6',
-    },
     stagePlanned: {
       main: '#6BCF9C',
     },
@@ -91,9 +86,11 @@ const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          borderRadius: 'var(--border-radius-lg)',
-          boxShadow: 'var(--shadow-md)',
-          border: 'none',
+          borderRadius: 'var(--border-radius-md)',
+          boxShadow: 'none',
+          backgroundColor: 'var(--color-light-background-2)',
+          border: "1px solid var(--color-orange-scarf)",
+          margin: '4px',
         },
       },
     },
