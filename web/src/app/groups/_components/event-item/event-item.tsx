@@ -133,6 +133,7 @@ export function EventItem({
             <Stack className="event-item__event-header-row" direction="row">
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                 <Avatar
+                  userId={event.hostId}
                   src={event.metadata?.hostAvatarUrl || '/images/avatar.png'}
                   alt={event.hostName || 'Host Avatar'}
                   size={size === 'large' ? 'medium' : 'small'}
@@ -186,6 +187,7 @@ export function EventItem({
               }}
             >
               <Avatar
+                userId={event.hostId}
                 src={event.metadata?.hostAvatarUrl || '/images/avatar.png'}
                 alt={event.hostName || 'Host Avatar'}
                 size="small"
