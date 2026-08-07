@@ -10,6 +10,7 @@
       padding: 22px var(--spacing-lg) 0 var(--spacing-lg);
       box-shadow: var(--shadow-lg);
       border-radius: 0;
+      border: none;
     }
 
     &__card-top {
@@ -185,6 +186,7 @@
     &__description-card {
       border-radius: 0;
       padding: 22px var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
+      border: none;
       min-height: 160px;
       max-height: 320px;
       overflow: hidden;

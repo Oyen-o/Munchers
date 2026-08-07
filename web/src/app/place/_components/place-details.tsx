@@ -19,7 +19,11 @@ import {
   Language,
   LocationOn,
 } from '@mui/icons-material';
-import type { Place, PlaceCommunityRatings } from 'src/lib/types';
+import type {
+  Place,
+  PlaceCommunityRatings,
+  PlaceGroupLists,
+} from 'src/lib/types';
 import { getRatingImage } from 'src/lib/utils';
 
 import './place-details.scss';
@@ -55,8 +59,11 @@ export function PlaceDetails({ placeId }: PlaceDetailsProps) {
     },
   });
 
-  // Fetch community ratings
-  const ratingsQuery = useQuery<PlaceCommunityRatings, Error>({
+  // Fetch community ratings and group lists
+  const ratingsQuery = useQuery<
+    { ratings: PlaceCommunityRatings; lists: PlaceGroupLists },
+    Error
+  >({
     queryKey: ['place-ratings', placeId, currentUserId],
     enabled: Boolean(placeId && currentUserId),
     queryFn: async () => {
@@ -139,30 +146,34 @@ export function PlaceDetails({ placeId }: PlaceDetailsProps) {
         </Stack>
 
         {/* Friends Rating */}
-        {ratingsQuery.data?.friends && ratingsQuery.data.friends.count > 0 && (
-          <Stack
-            direction="row"
-            spacing={1}
-            sx={{ alignItems: 'center', mt: 1 }}
-            className="place-details__friends-rating"
-          >
-            <img
-              src={getRatingImage(ratingsQuery.data.friends.average)}
-              alt="star"
-              style={{ width: 63, height: 63 }}
-            />
-            <Typography variant="h5" sx={{ fontWeight: 700, lineHeight: 1 }}>
-              {ratingsQuery.data.friends.average.toFixed(1)}
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{ color: 'var(--color-text-secondary)' }}
+        {ratingsQuery.data?.ratings?.friends &&
+          ratingsQuery.data.ratings.friends.count > 0 && (
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{ alignItems: 'center', mt: 1 }}
+              className="place-details__friends-rating"
             >
-              ({ratingsQuery.data.friends.count}{' '}
-              {ratingsQuery.data.friends.count === 1 ? 'friend' : 'friends'})
-            </Typography>
-          </Stack>
-        )}
+              <img
+                src={getRatingImage(ratingsQuery.data.ratings.friends.average)}
+                alt="star"
+                style={{ width: 63, height: 63 }}
+              />
+              <Typography variant="h5" sx={{ fontWeight: 700, lineHeight: 1 }}>
+                {ratingsQuery.data.ratings.friends.average.toFixed(1)}
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{ color: 'var(--color-text-secondary)' }}
+              >
+                ({ratingsQuery.data.ratings.friends.count}{' '}
+                {ratingsQuery.data.ratings.friends.count === 1
+                  ? 'friend'
+                  : 'friends'}
+                )
+              </Typography>
+            </Stack>
+          )}
 
         <Stack direction="row" spacing={1} className="place-details__actions">
           <Button
@@ -214,7 +225,7 @@ export function PlaceDetails({ placeId }: PlaceDetailsProps) {
 
       {/* Community Ratings Section */}
       <PlaceRatingsSection
-        ratings={ratingsQuery.data}
+        lists={ratingsQuery.data?.lists}
         loading={ratingsQuery.isLoading}
       />
 

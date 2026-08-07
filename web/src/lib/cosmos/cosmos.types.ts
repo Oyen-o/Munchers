@@ -145,7 +145,6 @@ export interface PlaceRatingDocument extends BaseDocument {
 	type: 'placeRating';
 	placeId: string;
 	userId: string;
-	groupId?: string;
 	rating: number;
 	createdAt: string;
 	updatedAt?: string;

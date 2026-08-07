@@ -10,85 +10,88 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { Group, ExpandMore, ExpandLess } from '@mui/icons-material';
-import type { PlaceCommunityRatings } from 'src/lib/types';
-import { getRatingImage } from 'src/lib/utils';
+import { Group, ExpandMore, ExpandLess, FormatListNumbered } from '@mui/icons-material';
+import type { PlaceGroupLists } from 'src/lib/types';
 
 import './place-ratings-section.scss';
 
 type PlaceRatingsSectionProps = {
-  ratings?: PlaceCommunityRatings;
+  lists?: PlaceGroupLists;
   loading?: boolean;
 };
 
 export function PlaceRatingsSection({
-  ratings,
+  lists,
   loading,
 }: PlaceRatingsSectionProps) {
-  const [showPopularGroups, setShowPopularGroups] = useState(false);
+  const [showPopularLists, setShowPopularLists] = useState(false);
+  
   if (loading) {
     return (
       <Box className="place-ratings">
         <Typography variant="h5" className="place-ratings__title">
-          Community Ratings
+          Group Lists
         </Typography>
         <CircularProgress size={32} />
       </Box>
     );
   }
 
-  const RatingDisplay = ({
-    value,
-    count,
+  const ListDisplay = ({
+    listName,
+    rank,
+    totalItems,
   }: {
-    value: number;
-    count: number;
+    listName: string;
+    rank?: number;
+    totalItems: number;
   }) => (
-    <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
-      <img
-        src={getRatingImage(value)}
-        alt="star"
-        style={{ width: 45, height: 45 }}
-      />
-      <Typography variant="h6" sx={{ fontWeight: 700 }}>
-        {value.toFixed(1)}
-      </Typography>
-      <Typography variant="body2" sx={{ color: 'var(--color-text-secondary)' }}>
-        ({count} {count === 1 ? 'rating' : 'ratings'})
-      </Typography>
+    <Stack spacing={0.5}>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+        <FormatListNumbered sx={{ color: 'var(--color-dark-brown)', fontSize: 20 }} />
+        <Typography variant="body2" sx={{ fontWeight: 700, color: 'var(--color-dark-brown)' }}>
+          {listName}
+        </Typography>
+      </Stack>
+      {rank && (
+        <Typography variant="body2" sx={{ color: 'var(--color-text-secondary)' }}>
+          #{rank} of {totalItems}
+        </Typography>
+      )}
     </Stack>
   );
 
   return (
     <Box className="place-ratings">
       <Typography variant="h5" className="place-ratings__title">
-        Community Ratings
+        Group Lists
       </Typography>
       <Typography variant="body2" className="place-ratings__subtitle">
-        See what your community thinks about this place
+        See which group lists include this place
       </Typography>
 
       <Stack spacing={2}>
-        {/* User's Groups */}
-        {ratings?.userGroups && ratings.userGroups.length > 0 && (
+        {/* User's Group Lists */}
+        {lists?.userGroupLists && lists.userGroupLists.length > 0 && (
           <Box>
             <Typography variant="h6" className="place-ratings__section-title">
               Your Groups
             </Typography>
             <Box className="place-ratings__carousel">
-              {ratings.userGroups.map((group) => (
-                <Box key={group.groupId} className="place-ratings__rating-card">
+              {lists.userGroupLists.map((item) => (
+                <Box key={item.listId} className="place-ratings__rating-card">
                   <Stack spacing={1.5} sx={{ height: '100%' }}>
                     <Typography
                       variant="h6"
                       className="place-ratings__group-name"
                     >
-                      {group.groupName}
+                      {item.groupName}
                     </Typography>
                     <Box sx={{ mt: 'auto' }}>
-                      <RatingDisplay
-                        value={group.average}
-                        count={group.count}
+                      <ListDisplay
+                        listName={item.listName}
+                        rank={item.rank}
+                        totalItems={item.totalItems}
                       />
                     </Box>
                   </Stack>
@@ -98,97 +101,54 @@ export function PlaceRatingsSection({
           </Box>
         )}
 
-        {/* Popular Community Groups */}
-        {ratings?.popularGroups && ratings.popularGroups.length > 0 && (
+        {/* Popular Group Lists */}
+        {lists?.popularGroupLists && lists.popularGroupLists.length > 0 && (
           <Box>
             <Stack
               direction="row"
-              spacing={1}
               sx={{
-                justifyContent: 'space-between',
                 alignItems: 'center',
-                mb: showPopularGroups ? 0.5 : 0,
+                justifyContent: 'space-between',
+                mb: 1,
               }}
             >
               <Typography variant="h6" className="place-ratings__section-title">
-                Popular Community Ratings
+                Popular Groups
               </Typography>
               <Button
                 size="small"
-                endIcon={showPopularGroups ? <ExpandLess /> : <ExpandMore />}
-                onClick={() => setShowPopularGroups(!showPopularGroups)}
+                endIcon={showPopularLists ? <ExpandLess /> : <ExpandMore />}
+                onClick={() => setShowPopularLists(!showPopularLists)}
                 sx={{ textTransform: 'none' }}
               >
-                {showPopularGroups ? 'Hide' : 'Show'}
+                {showPopularLists ? 'Hide' : 'Show'} ({lists.popularGroupLists.length})
               </Button>
             </Stack>
-            {!showPopularGroups && (
-              <Typography
-                variant="caption"
-                sx={{ color: 'var(--color-text-secondary)', display: 'block' }}
-              >
-                Top 10 groups by number of ratings
-              </Typography>
-            )}
-            {showPopularGroups && (
-              <>
-                <Typography
-                  variant="caption"
-                  sx={{ color: 'var(--color-text-secondary)', mb: 1.5 }}
-                >
-                  Top 10 groups by number of ratings
-                </Typography>
-                <Box className="place-ratings__carousel">
-                  {ratings.popularGroups.slice(0, 10).map((group, index) => (
-                    <Box
-                      key={group.groupId}
-                      className="place-ratings__rating-card"
-                    >
-                      <Stack spacing={1.5} sx={{ height: '100%' }}>
-                        <Stack
-                          direction="row"
-                          spacing={1}
-                          sx={{ alignItems: 'center' }}
-                        >
-                          <Chip
-                            label={`#${index + 1}`}
-                            size="small"
-                            sx={{ minWidth: 40, fontWeight: 700 }}
-                          />
-                        </Stack>
-                        <Typography
-                          variant="h6"
-                          className="place-ratings__group-name"
-                        >
-                          {group.groupName}
-                        </Typography>
-                        <Box sx={{ mt: 'auto' }}>
-                          <RatingDisplay
-                            value={group.average}
-                            count={group.count}
-                          />
-                        </Box>
-                      </Stack>
-                    </Box>
-                  ))}
-                </Box>
-              </>
+            {showPopularLists && (
+              <Box className="place-ratings__carousel">
+                {lists.popularGroupLists.map((item) => (
+                  <Box key={item.listId} className="place-ratings__rating-card">
+                    <Stack spacing={1.5} sx={{ height: '100%' }}>
+                      <Typography
+                        variant="h6"
+                        className="place-ratings__group-name"
+                      >
+                        {item.groupName}
+                      </Typography>
+                      <Box sx={{ mt: 'auto' }}>
+                        <ListDisplay
+                          listName={item.listName}
+                          rank={item.rank}
+                          totalItems={item.totalItems}
+                        />
+                      </Box>
+                    </Stack>
+                  </Box>
+                ))}
+              </Box>
             )}
           </Box>
         )}
-
-        {!ratings?.friends &&
-          (!ratings?.userGroups || ratings.userGroups.length === 0) &&
-          (!ratings?.popularGroups || ratings.popularGroups.length === 0) && (
-            <Card className="place-ratings__card place-ratings__card--empty">
-              <Typography
-                variant="body2"
-                sx={{ color: 'var(--color-text-secondary)' }}
-              >
-                No community ratings yet. Be the first to rate this place!
-              </Typography>
-            </Card>
-          )}
       </Stack>
     </Box>
   );

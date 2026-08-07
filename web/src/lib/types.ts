@@ -187,28 +187,36 @@ export interface PlaceRating {
   id: string;
   placeId: string;
   userId: string;
-  groupId?: string; // If rating is from a group context
   rating: number; // 1-5
   createdAt: Date | string;
   updatedAt?: Date | string;
 }
 
+// Friends still use ratings for places
 export interface PlaceCommunityRatings {
   friends?: {
     average: number;
     count: number;
   };
-  userGroups: Array<{
+}
+
+// Groups rank places in custom lists/categories instead of ratings
+export interface PlaceGroupLists {
+  userGroupLists: Array<{
+    listId: string;
+    listName: string;
     groupId: string;
     groupName: string;
-    average: number;
-    count: number;
+    rank?: number; // Where this place ranks in the list (if present)
+    totalItems: number;
   }>;
-  popularGroups: Array<{
+  popularGroupLists: Array<{
+    listId: string;
+    listName: string;
     groupId: string;
     groupName: string;
-    average: number;
-    count: number;
+    rank?: number;
+    totalItems: number;
   }>;
 }
 
