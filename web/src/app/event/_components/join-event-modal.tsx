@@ -181,11 +181,12 @@ export function JoinEventModal({
       onClose={onClose}
       maxWidth="md"
       fullWidth
-      PaperProps={{
-        className: 'join-event-modal__dialog-paper',
+      className="join-event-modal__container"
+      slotProps={{
+        paper: { className: 'join-event-modal__dialog-paper ' },
       }}
     >
-      <DialogContent sx={{ p: 0 }}>
+      <DialogContent sx={{ p: 0 }} className="parallax-wrapper">
         {/* Close Button */}
         <IconButton
           onClick={onClose}
@@ -194,24 +195,35 @@ export function JoinEventModal({
           <Close />
         </IconButton>
 
-        {/* Event Image */}
+        {/* Event Image with Title Overlay */}
         {event.coverImageUrl && (
-          <Box
-            component="img"
-            src={event.coverImageUrl}
-            alt={event.title}
-            className="join-event-modal__event-image"
-          />
+          <Box className="parallax-group ">
+            <Box className="join-event-modal__image-container parallax-layer layer-back">
+              <Box
+                className="join-event-modal__event-image"
+                sx={{
+                  backgroundImage: `url(${event.coverImageUrl})`,
+                }}
+                role="img"
+                aria-label={event.title}
+              />
+            </Box>
+
+            <Box className="join-event-modal__image-overlay parallax-layer layer-base">
+              <Typography
+                variant="h3"
+                className="join-event-modal__title-overlay"
+              >
+                {event.title}
+              </Typography>
+            </Box>
+          </Box>
         )}
 
-        <Box className="join-event-modal__content">
+        <Box className="join-event-modal__content static-section ">
           {/* Event Details */}
           <Stack className="join-event-modal__details-stack">
             <Box>
-              <Typography variant="h4" className="join-event-modal__title">
-                {event.title}
-              </Typography>
-
               {event.description && (
                 <Typography
                   variant="body1"

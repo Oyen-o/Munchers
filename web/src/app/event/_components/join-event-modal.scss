@@ -1,137 +1,220 @@
-.join-event-modal {
-  &__dialog-paper {
-    border-radius: 16px;
-    margin: var(--spacing-lg);
-  }
+.join-event-modal__container {
+  .join-event-modal {
+    &__dialog-paper {
+      border-radius: 16px;
+      margin: var(--spacing-lg);
+    }
 
-  &__close-button {
-    position: absolute;
-    right: 16px;
-    top: 16px;
-    z-index: 10;
-    background-color: rgba(255, 255, 255, 0.9);
+    &__close-button {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      z-index: 10;
+      background-color: rgba(255, 255, 255, 0.9);
 
-    &:hover {
-      background-color: rgba(255, 255, 255, 1);
+      &:hover {
+        background-color: rgba(255, 255, 255, 1);
+      }
+    }
+
+    &__image-container {
+      position: relative;
+      width: calc(100vw - 16px);
+      height: 300px;
+    }
+
+    &__event-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    &__image-overlay {
+      position: absolute;
+      height: 300px;
+      width: 100%;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 2;
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.7) 0%,
+        rgba(0, 0, 0, 0.5) 50%,
+        transparent 100%
+      );
+    }
+
+    &__title-overlay {
+      color: var(--color-cream-highlights);
+
+      text-shadow:
+        4px 4px 8px rgba(0, 0, 0, 0.8),
+        0 0 20px rgba(0, 0, 0, 0.5);
+    }
+
+    &__content {
+      padding: var(--spacing-lg);
+    }
+
+    &__title {
+      font-weight: 700;
+      margin-bottom: var(--spacing-md);
+    }
+
+    &__description {
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-md);
+    }
+
+    &__details-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+    }
+
+    &__date-time-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+    }
+
+    &__detail-row {
+      display: flex;
+      flex-direction: row;
+      gap: var(--spacing-sm);
+      align-items: center;
+    }
+
+    &__detail-icon {
+      color: var(--color-text-secondary);
+    }
+
+    &__divider {
+      margin: var(--spacing-md) 0;
+    }
+
+    &__loading-container {
+      display: flex;
+      justify-content: center;
+      padding: var(--spacing-md) 0;
+    }
+
+    &__join-button {
+      padding: var(--spacing-md) 0;
+      font-size: 1.1rem;
+      text-transform: none;
+      border-radius: 12px;
+    }
+
+    &__going-card {
+      padding: var(--spacing-lg);
+      background-color: var(--color-success-background);
+      border: 2px solid var(--color-success-border);
+      border-radius: 12px;
+    }
+
+    &__going-text {
+      color: var(--color-success);
+
+      text-align: center;
+    }
+
+    &__post-join-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+    }
+
+    &__calendar-card,
+    &__availability-card {
+      padding: var(--spacing-lg);
+      border: 1px solid #f1dfca;
+      border-radius: 12px;
+      background-color: var(--color-background-contrast);
+    }
+
+    &__card-header {
+      display: flex;
+      flex-direction: row;
+      gap: var(--spacing-sm);
+      align-items: center;
+    }
+
+    &__card-icon {
+      color: var(--color-accent-main);
+    }
+
+    &__card-title {
+      font-weight: 700;
+    }
+
+    &__card-description {
+      color: var(--color-text-secondary);
+    }
+
+    &__calendar-button {
+      padding: var(--spacing-sm);
+      border-radius: var(--border-radius-sm);
+      text-transform: none;
+      font-weight: 600;
+    }
+
+    &__availability-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
     }
   }
 
-  &__event-image {
+  /* Creates a 3D viewport space */
+  .parallax-wrapper {
+    overflow-x: hidden;
+    overflow-y: auto;
+    perspective: 10px; /* Crucial: Sets the distance from the user to the Z-plane */
+  }
+
+  /* Holds layers together within the same perspective space */
+  .parallax-group {
     width: 100%;
-    height: 240px;
-    object-fit: cover;
+    height: 100%;
+    transform-style: preserve-3d; /* Enforces 3D positioning for children */
   }
 
-  &__content {
-    padding: var(--spacing-lg);
+  /* Absolute positioning base for all layers */
+  .parallax-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0px;
   }
 
-  &__title {
-    font-weight: 700;
-    margin-bottom: var(--spacing-md);
+  /* Background Layer: Pushed back and scaled up to retain original visual size */
+  .layer-back {
+    transform: translateZ(-10px) translateY(calc(-50% - 85px)) translateX(-0%)
+      scale(2);
+    position: relative;
+    z-index: 1;
   }
 
-  &__description {
-    color: var(--color-text-secondary);
-    margin-bottom: var(--spacing-md);
-  }
-
-  &__details-stack {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-lg);
-  }
-
-  &__date-time-stack {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-lg);
-  }
-
-  &__detail-row {
-    display: flex;
-    flex-direction: row;
-    gap: var(--spacing-sm);
-    align-items: center;
-  }
-
-  &__detail-icon {
-    color: var(--color-text-secondary);
-  }
-
-  &__divider {
-    margin: var(--spacing-md) 0;
-  }
-
-  &__loading-container {
+  /* Foreground Layer: Remains at normal scale and distance */
+  .layer-base {
+    transform: translateZ(-0.01px);
     display: flex;
     justify-content: center;
-    padding: var(--spacing-md) 0;
-  }
-
-  &__join-button {
-    padding: var(--spacing-md) 0;
-    font-size: 1.1rem;
-    text-transform: none;
-    border-radius: 12px;
-  }
-
-  &__going-card {
-    padding: var(--spacing-lg);
-    background-color: var(--color-success-background);
-    border: 2px solid var(--color-success-border);
-    border-radius: 12px;
-  }
-
-  &__going-text {
-    color: var(--color-success);
-
-    text-align: center;
-  }
-
-  &__post-join-section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-lg);
-  }
-
-  &__calendar-card,
-  &__availability-card {
-    padding: var(--spacing-lg);
-    border: 1px solid #f1dfca;
-    border-radius: 12px;
-    background-color: var(--color-background-contrast);
-  }
-
-  &__card-header {
-    display: flex;
-    flex-direction: row;
-    gap: var(--spacing-sm);
     align-items: center;
+    z-index: 2;
   }
-
-  &__card-icon {
-    color: var(--color-accent-main);
-  }
-
-  &__card-title {
-    font-weight: 700;
-  }
-
-  &__card-description {
-    color: var(--color-text-secondary);
-  }
-
-  &__calendar-button {
-    padding: var(--spacing-sm);
-    border-radius: var(--border-radius-sm);
-    text-transform: none;
-    font-weight: 600;
-  }
-
-  &__availability-content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
+  .static-section {
+    position: relative;
+    height: 100vh;
+    background: white;
+    z-index: 2;
   }
 }
