@@ -53,11 +53,13 @@ export const muiTypography = {
             letterSpacing: '-1px',
     },
     body1: {
+      fontFamily: "var(--font-family-body)",
       fontSize: 'var(--font-size-md)',
       fontWeight: 400,
 
     },
     body2: {
+      fontFamily: "var(--font-family-body)",
       fontSize: 'var(--font-size-sm)',
     },
     button: {
@@ -66,8 +68,9 @@ export const muiTypography = {
       textTransform: 'none',
     },
     caption: {
-      fontSize: 'var(--font-size-xs)',
-      fontWeight: 400,
+      fontFamily: "var(--font-family-body)",
+      fontSize: 'var(--font-size-sm)',
+      fontWeight: 300,
     },
   },
 }

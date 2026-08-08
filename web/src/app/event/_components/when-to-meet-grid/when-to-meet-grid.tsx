@@ -77,10 +77,34 @@ export function WhenToMeetGrid({
 }: WhenToMeetGridProps) {
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 
-  const activeDays =
-    visibleDays && visibleDays.length > 0
-      ? visibleDays
-      : [...WHEN_TO_MEET_DEFAULT_DAYS];
+  // Calculate days with at least one vote
+  const daysWithVotes = useMemo(() => {
+    return WHEN_TO_MEET_DAYS.filter((day) => {
+      const slotsForDay = WHEN_TO_MEET_GRID[day];
+      return slotsForDay.some((slot) => (counts[slot] ?? 0) > 0);
+    });
+  }, [counts]);
+
+  // Combine visible days, default days, and days with votes
+  const activeDays = useMemo(() => {
+    if (visibleDays && visibleDays.length > 0) {
+      // If visibleDays is provided, merge with days that have votes
+      const uniqueDays = Array.from(
+        new Set([...visibleDays, ...daysWithVotes])
+      );
+      // Sort in correct order
+      return uniqueDays.sort((a, b) => {
+        return WHEN_TO_MEET_DAYS.indexOf(a) - WHEN_TO_MEET_DAYS.indexOf(b);
+      });
+    }
+    // Default: combine default days with days that have votes
+    const uniqueDays = Array.from(
+      new Set([...WHEN_TO_MEET_DEFAULT_DAYS, ...daysWithVotes])
+    );
+    return uniqueDays.sort((a, b) => {
+      return WHEN_TO_MEET_DAYS.indexOf(a) - WHEN_TO_MEET_DAYS.indexOf(b);
+    });
+  }, [visibleDays, daysWithVotes]);
 
   const remainingDays = useMemo(
     () => WHEN_TO_MEET_DAYS.filter((day) => !activeDays.includes(day)),
