@@ -73,7 +73,7 @@ const theme = createTheme({
           padding: 'var(--spacing-sm) var(--spacing-xl)',
         },
         contained: {
-          backgroundColor: 'var(--color-accent-main)',
+          backgroundColor: 'var(--color-orange-scarf)',
           color: 'var(--color-primary-contrast)',
           boxShadow: 'var(--shadow-sm)',
           '&:hover': {

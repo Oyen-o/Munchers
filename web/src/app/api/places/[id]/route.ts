@@ -28,6 +28,33 @@ const mockPlaces: Record<string, any> = {
     isOpen: true,
     createdAt: new Date().toISOString(),
   },
+  '2': {
+    id: '2',
+    type: 'place',
+    googlePlaceId: 'ChIJScottsdaleParkAZ',
+    name: 'Scottsdale Ranch Park Volleyball Courts',
+    category: 'Outdoor Volleyball Courts',
+    address: 'Scottsdale Ranch Park, 10400 E Via Linda, Scottsdale, AZ',
+    coordinates: {
+      lat: 33.6189,
+      lng: -111.8910,
+    },
+    phone: null,
+    website: null,
+    hours: {
+      Monday: '6:00 AM - 10:00 PM',
+      Tuesday: '6:00 AM - 10:00 PM',
+      Wednesday: '6:00 AM - 10:00 PM',
+      Thursday: '6:00 AM - 10:00 PM',
+      Friday: '6:00 AM - 10:00 PM',
+      Saturday: '6:00 AM - 10:00 PM',
+      Sunday: '6:00 AM - 10:00 PM',
+    },
+    priceLevel: 0,
+    isOpen: true,
+    tags: ['Outdoor', 'Volleyball', 'Sports', 'Pickup Games', 'Tournament', 'Community'],
+    createdAt: new Date().toISOString(),
+  },
 };
 
 export async function GET(

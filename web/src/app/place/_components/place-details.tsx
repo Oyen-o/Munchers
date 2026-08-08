@@ -40,6 +40,13 @@ export function PlaceDetails({ placeId }: PlaceDetailsProps) {
   const [createPlanOpen, setCreatePlanOpen] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
+  console.log(
+    'Rendering PlaceDetails for placeId:',
+    placeId,
+    'currentUserId:',
+    currentUserId,
+  );
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setCurrentUserId(window.localStorage.getItem('phoneNumber'));
@@ -108,13 +115,21 @@ export function PlaceDetails({ placeId }: PlaceDetailsProps) {
 
   const place = placeQuery.data;
 
+  // Get hero image based on place
+  const getHeroImage = () => {
+    if (placeId === '2') {
+      return 'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=1200&h=400&fit=crop';
+    }
+    return 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=400&fit=crop';
+  };
+
   return (
     <Box className="place-details">
       {/* Hero Header */}
       <Box className="place-details__hero">
         <img
           className="place-details__hero-image"
-          src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=400&fit=crop"
+          src={getHeroImage()}
           alt={place.name}
         />
         <Box className="place-details__hero-gradient" />
