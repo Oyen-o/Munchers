@@ -1,0 +1,137 @@
+.join-event-modal {
+  &__dialog-paper {
+    border-radius: 16px;
+    margin: var(--spacing-lg);
+  }
+
+  &__close-button {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.9);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 1);
+    }
+  }
+
+  &__event-image {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+  }
+
+  &__content {
+    padding: var(--spacing-lg);
+  }
+
+  &__title {
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+  }
+
+  &__description {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-md);
+  }
+
+  &__details-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  &__date-time-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  &__detail-row {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-sm);
+    align-items: center;
+  }
+
+  &__detail-icon {
+    color: var(--color-text-secondary);
+  }
+
+  &__divider {
+    margin: var(--spacing-md) 0;
+  }
+
+  &__loading-container {
+    display: flex;
+    justify-content: center;
+    padding: var(--spacing-md) 0;
+  }
+
+  &__join-button {
+    padding: var(--spacing-md) 0;
+    font-size: 1.1rem;
+    text-transform: none;
+    border-radius: 12px;
+  }
+
+  &__going-card {
+    padding: var(--spacing-lg);
+    background-color: var(--color-success-background);
+    border: 2px solid var(--color-success-border);
+    border-radius: 12px;
+  }
+
+  &__going-text {
+    color: var(--color-success);
+
+    text-align: center;
+  }
+
+  &__post-join-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  &__calendar-card,
+  &__availability-card {
+    padding: var(--spacing-lg);
+    border: 1px solid #f1dfca;
+    border-radius: 12px;
+    background-color: var(--color-background-contrast);
+  }
+
+  &__card-header {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-sm);
+    align-items: center;
+  }
+
+  &__card-icon {
+    color: var(--color-accent-main);
+  }
+
+  &__card-title {
+    font-weight: 700;
+  }
+
+  &__card-description {
+    color: var(--color-text-secondary);
+  }
+
+  &__calendar-button {
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    text-transform: none;
+    font-weight: 600;
+  }
+
+  &__availability-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+}

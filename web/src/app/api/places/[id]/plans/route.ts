@@ -121,7 +121,7 @@ export async function GET(
             date.setHours(19, 0, 0, 0);
             return date.toISOString();
           })(),
-          stage: 'planned',
+          stage: 'idea',
           attendeeCount: 26,
           description: 'Open courts until sunset with rotating pickup games.',
           createdAt: new Date().toISOString(),
@@ -167,7 +167,6 @@ export async function POST(
       groupId: groupId || null,
       plannedDate: plannedDate || null,
       stage: 'idea',
-      attendeeCount: 1,
       createdAt: new Date().toISOString(),
     };
 

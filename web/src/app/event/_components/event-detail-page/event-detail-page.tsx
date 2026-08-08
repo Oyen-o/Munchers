@@ -6,7 +6,7 @@ import {
   Link,
   Box,
   Stack,
-  Avatar,
+  Avatar as MuiAvatar,
   AvatarGroup,
   IconButton,
   Button,
@@ -14,6 +14,7 @@ import {
   TextField,
   Divider,
 } from '@mui/material';
+import { Avatar } from '../../../../components/avatar/avatar';
 import {
   ArrowBack as ArrowBackIcon,
   LocationOn as LocationIcon,
@@ -40,64 +41,12 @@ import {
 } from '../../_hooks';
 import { WhenToMeetGrid, WhenToMeetGridSkeleton } from '../when-to-meet-grid';
 import { EventDetailSkeleton } from './event-detail.skeleton';
+import { JoinEventModal } from '../join-event-modal';
 import './event-detail-page.scss';
 
 interface EventDetailPageProps {
   eventId?: string;
 }
-
-// Mock attendees data
-const mockAttendees = [
-  {
-    id: '1',
-    name: 'edhamdh',
-    avatarUrl: 'https://i.pravatar.cc/150?img=1',
-    attendance: 'Going',
-    time: '14:30',
-  },
-  {
-    id: '2',
-    name: 'nb23d3',
-    avatarUrl: 'https://i.pravatar.cc/150?img=2',
-    attendance: 'Going',
-    time: '14:30',
-  },
-  {
-    id: '3',
-    name: 'omerrijq499',
-    avatarUrl: 'https://i.pravatar.cc/150?img=3',
-    attendance: 'Going',
-    time: '14:30',
-  },
-  {
-    id: '4',
-    name: 'xueanhuang1023',
-    avatarUrl: 'https://i.pravatar.cc/150?img=4',
-    attendance: 'Going',
-    time: '14:30',
-  },
-  {
-    id: '5',
-    name: 'jennu',
-    avatarUrl: 'https://i.pravatar.cc/150?img=5',
-    attendance: 'Going',
-    time: '14:30',
-  },
-  {
-    id: '6',
-    name: 'sarah_k',
-    avatarUrl: 'https://i.pravatar.cc/150?img=6',
-    attendance: 'Maybe',
-    time: '',
-  },
-  {
-    id: '7',
-    name: 'mike_chen',
-    avatarUrl: 'https://i.pravatar.cc/150?img=7',
-    attendance: 'Maybe',
-    time: '',
-  },
-];
 
 // Mock event data
 const mockEvent: Event = {
@@ -157,6 +106,9 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
   const [visibleAvailabilityDays, setVisibleAvailabilityDays] = useState<
     WhenToMeetDay[]
   >([...WHEN_TO_MEET_DEFAULT_DAYS]);
+  const [joinModalOpen, setJoinModalOpen] = useState(false);
+  const [attendeeIds, setAttendeeIds] = useState<string[]>([]);
+  const [isLoadingAttendees, setIsLoadingAttendees] = useState(false);
 
   const currentUserId = useMemo(() => {
     if (typeof window === 'undefined') {
@@ -260,6 +212,46 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
         : '',
     );
   }, [event?.plannedDate]);
+
+  // Fetch attendees when eventId changes
+  useEffect(() => {
+    if (!eventId) {
+      setAttendeeIds([]);
+      return;
+    }
+
+    const fetchAttendees = async () => {
+      setIsLoadingAttendees(true);
+      try {
+        const response = await fetch(`/api/events/${eventId}/attendees`);
+        if (response.ok) {
+          const data = await response.json();
+          setAttendeeIds(data.attendeeIds || []);
+        }
+      } catch (error) {
+        console.error('Error fetching attendees:', error);
+      } finally {
+        setIsLoadingAttendees(false);
+      }
+    };
+
+    fetchAttendees();
+  }, [eventId]);
+
+  // Refetch attendees (for use after joining event)
+  const refetchAttendees = async () => {
+    if (!eventId) return;
+
+    try {
+      const response = await fetch(`/api/events/${eventId}/attendees`);
+      if (response.ok) {
+        const data = await response.json();
+        setAttendeeIds(data.attendeeIds || []);
+      }
+    } catch (error) {
+      console.error('Error refetching attendees:', error);
+    }
+  };
 
   const comments =
     commentsQuery.data && commentsQuery.data.length > 0
@@ -413,8 +405,6 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
   const locationMapUrl = locationLabel
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locationLabel)}`
     : '';
-
-  const attendees = mockAttendees;
 
   const eventCountdownText = useMemo(() => {
     const targetDate = editDate
@@ -732,7 +722,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
                     variant="body2"
                     sx={{ color: '#fff', opacity: 0.9, fontSize: '0.95rem' }}
                   >
-                    {attendees.length} Attendees
+                    {attendeeIds.length} Attendees
                   </Typography>
                 </Stack>
               </Stack>
@@ -757,6 +747,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
               variant="contained"
               fullWidth
               className="event-detail-page__rsvp-button"
+              onClick={() => setJoinModalOpen(true)}
             >
               Join
             </Button>
@@ -897,19 +888,15 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
             variant="body2"
             sx={{ color: 'var(--color-text-secondary)', mb: 1.5 }}
           >
-            Attendees ({attendees.length})
+            Attendees ({attendeeIds.length})
           </Typography>
           <AvatarGroup
             max={20}
             className="event-detail-page__attendee-avatars"
             sx={{ justifyContent: 'flex-end' }}
           >
-            {attendees.map((attendee) => (
-              <Avatar
-                key={attendee.id}
-                src={attendee.avatarUrl}
-                alt={attendee.name}
-              />
+            {attendeeIds.map((userId) => (
+              <Avatar key={userId} userId={userId} size="medium" />
             ))}
           </AvatarGroup>
           {/* <List className="event-detail-page__attendees-list">
@@ -948,7 +935,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
             {comments.map((comment) => (
               <Box key={comment.id} className="event-detail-page__comment">
                 <Stack direction="row" spacing={1.5}>
-                  <Avatar
+                  <MuiAvatar
                     sx={{
                       width: 32,
                       height: 32,
@@ -956,7 +943,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
                     }}
                   >
                     <PersonIcon sx={{ fontSize: 18 }} />
-                  </Avatar>
+                  </MuiAvatar>
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="body2" sx={{ fontWeight: 600 }}>
                       User {comment.userId}
@@ -1008,6 +995,19 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
           </Stack>
         </Card>
       </Stack>
+
+      {/* Join Event Modal */}
+      {event && (
+        <JoinEventModal
+          open={joinModalOpen}
+          onClose={() => setJoinModalOpen(false)}
+          event={event}
+          currentUserId={currentUserId}
+          onSuccess={() => {
+            refetchAttendees();
+          }}
+        />
+      )}
     </Box>
   );
 }

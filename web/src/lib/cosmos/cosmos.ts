@@ -52,3 +52,7 @@ export function getEventAvailabilityContainer(): Container {
 export function getUsersContainer(): Container {
   return getContainer(process.env.COSMOS_USERS_CONTAINER_ID ?? 'Users');
 }
+
+export function getAttendancesContainer(): Container {
+  return getContainer(process.env.COSMOS_ATTENDANCES_CONTAINER_ID ?? 'Attendances');
+}
