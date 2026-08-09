@@ -109,6 +109,8 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
   const [joinModalOpen, setJoinModalOpen] = useState(false);
   const [attendeeIds, setAttendeeIds] = useState<string[]>([]);
   const [isLoadingAttendees, setIsLoadingAttendees] = useState(false);
+  const [isAttending, setIsAttending] = useState(false);
+  const [isCheckingAttendance, setIsCheckingAttendance] = useState(false);
 
   const currentUserId = useMemo(() => {
     if (typeof window === 'undefined') {
@@ -217,26 +219,30 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
   useEffect(() => {
     if (!eventId) {
       setAttendeeIds([]);
+      setIsAttending(false);
       return;
     }
 
     const fetchAttendees = async () => {
       setIsLoadingAttendees(true);
+      setIsCheckingAttendance(true);
       try {
         const response = await fetch(`/api/events/${eventId}/attendees`);
         if (response.ok) {
           const data = await response.json();
           setAttendeeIds(data.attendeeIds || []);
+          setIsAttending(data.attendeeIds?.includes(currentUserId) || false);
         }
       } catch (error) {
         console.error('Error fetching attendees:', error);
       } finally {
         setIsLoadingAttendees(false);
+        setIsCheckingAttendance(false);
       }
     };
 
     fetchAttendees();
-  }, [eventId]);
+  }, [eventId, currentUserId]);
 
   // Refetch attendees (for use after joining event)
   const refetchAttendees = async () => {
@@ -247,6 +253,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
       if (response.ok) {
         const data = await response.json();
         setAttendeeIds(data.attendeeIds || []);
+        setIsAttending(data.attendeeIds?.includes(currentUserId) || false);
       }
     } catch (error) {
       console.error('Error refetching attendees:', error);
@@ -732,7 +739,7 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
             </Box>
           </Card>
 
-          {/* Join Button - Overlapping */}
+          {/* Join Button or Going Card - Overlapping */}
           <Box
             className="event-detail-page__rsvp-button-container"
             sx={{
@@ -743,14 +750,61 @@ export function EventDetailPage({ eventId }: EventDetailPageProps) {
               padding: '0 var(--spacing-lg)',
             }}
           >
-            <Button
-              variant="contained"
-              fullWidth
-              className="event-detail-page__rsvp-button"
-              onClick={() => setJoinModalOpen(true)}
-            >
-              Join
-            </Button>
+            {isCheckingAttendance ? (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  padding: '12px',
+                }}
+              >
+                {/* Loading state */}
+              </Box>
+            ) : isAttending ? (
+              <Card
+                onClick={() => setJoinModalOpen(true)}
+                sx={{
+                  padding: '12px',
+                  textAlign: 'center',
+                  backgroundColor: 'var(--color-success-background)',
+                  border: '2px solid var(--color-success-border)',
+                  cursor: 'pointer',
+                  transition: 'opacity 0.2s',
+                  '&:hover': {
+                    opacity: 0.85,
+                  },
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{
+                    color: 'var(--color-success)',
+                    fontWeight: 600,
+                  }}
+                >
+                  ✓ Going!
+                </Typography>
+                <Typography
+                  variant="caption"
+                  component="p"
+                  sx={{
+                    color: 'var(--color-success)',
+                    textDecoration: 'underline',
+                  }}
+                >
+                  edit
+                </Typography>
+              </Card>
+            ) : (
+              <Button
+                variant="contained"
+                fullWidth
+                className="event-detail-page__rsvp-button"
+                onClick={() => setJoinModalOpen(true)}
+              >
+                Join
+              </Button>
+            )}
           </Box>
         </Box>
 
