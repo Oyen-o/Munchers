@@ -31,8 +31,8 @@ export const providerConfig: Record<ExperienceProvider, ProviderConfig> = {
     displayName: "Partiful",
     logo: "/logos/partiful.jpg",
     colors: {
-      primary: "#E9E8F5",
-      secondary: "#C8B8F8",
+      primary:  "#C8B8F8",
+      secondary: "#E8E8F5",
       accent: "#8E79F7",
       background: "#0F0C16",
     },
