@@ -17,11 +17,18 @@ type Plan = {
   id: string;
   title: string;
   placeId: string;
+  experienceId: string;
+  experienceTitle: string;
+  experienceImage: string;
+  experienceCategory: string;
   createdBy: string;
   creatorName?: string;
+  creatorAvatar?: string;
   groupId?: string | null;
   groupName?: string | null;
+  groupAvatar?: string | null;
   plannedDate?: string | null;
+  status: 'idea' | 'planning' | 'upcoming';
   stage: string;
   attendeeCount: number;
   createdAt: string;
@@ -79,8 +86,7 @@ export function PlacePlansSection({
       </Stack>
 
       <Typography variant="body2" className="place-plans__subtitle">
-        Your friends have created plans at this place. Join then to receive
-        updates and coordinate with them.
+        See what experiences people want to try at this place
       </Typography>
 
       {plans.length === 0 ? (
@@ -89,7 +95,7 @@ export function PlacePlansSection({
             variant="body2"
             sx={{ color: 'var(--color-text-secondary)', textAlign: 'center' }}
           >
-            No plans yet. Be the first to create one!
+            Be the first to create a plan for an experience at this place.
           </Typography>
           <Button
             variant="contained"
@@ -97,47 +103,71 @@ export function PlacePlansSection({
             onClick={onCreatePlan}
             sx={{ mt: 2 }}
           >
-            Create First Plan
+            Create Plan
           </Button>
         </Card>
       ) : (
         <Box className="place-plans__carousel">
           {plans.map((plan) => (
             <Box key={plan.id} className="place-plans__plan-card">
-              {/* Plan Image Backdrop */}
+              {/* Experience Image with Overlay */}
               <Box className="place-plans__plan-img-backdrop">
                 <Stack
                   className="place-plans__plan-header-layer"
                   direction="column"
+                  spacing={0.5}
                 >
-                  <Stack
-                    className="place-plans__plan-header-row"
-                    direction="row"
+                  {/* Status Badge */}
+                  {plan.status && (
+                    <Chip
+                      label={
+                        plan.status === 'idea'
+                          ? 'Want to try'
+                          : plan.status === 'planning'
+                            ? 'Planning'
+                            : 'Upcoming'
+                      }
+                      size="small"
+                      className="place-plans__idea-badge"
+                    />
+                  )}
+
+                  {/* Experience Title (primary) */}
+                  <Typography
+                    variant="h6"
+                    className="place-plans__experience-title"
                   >
-                    {plan.stage === 'idea' && (
-                      <Chip
-                        label="Idea"
-                        size="small"
-                        className="place-plans__idea-badge"
-                      />
-                    )}
-                  </Stack>
-                  <Typography variant="h5" className="place-plans__plan-title">
-                    {plan.title}
+                    {plan.experienceTitle}
+                  </Typography>
+
+                  {/* Experience Category */}
+                  <Typography
+                    variant="caption"
+                    className="place-plans__experience-category"
+                  >
+                    {plan.experienceCategory}
                   </Typography>
                 </Stack>
 
                 <Box className="place-plans__plan-image-gradient" />
                 <img
                   className="place-plans__plan-image"
-                  src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=200&fit=crop"
-                  alt={plan.title}
+                  src={plan.experienceImage}
+                  alt={plan.experienceTitle}
                 />
               </Box>
 
               {/* Plan Content */}
-              <Stack className="place-plans__plan-content" spacing={1}>
-                {/* Creator and Group */}
+              <Stack className="place-plans__plan-content" spacing={1.5}>
+                {/* Plan Title (user's context) */}
+                <Typography
+                  variant="body1"
+                  sx={{ fontWeight: 600, fontSize: '0.95rem' }}
+                >
+                  {plan.title}
+                </Typography>
+
+                {/* Creator Info */}
                 <Stack spacing={0.5}>
                   <Stack
                     direction="row"
@@ -159,6 +189,11 @@ export function PlacePlansSection({
                       }}
                     >
                       {plan.creatorName || plan.createdBy}
+                      {!plan.groupId && (
+                        <span style={{ marginLeft: 4, fontStyle: 'italic' }}>
+                          (Personal)
+                        </span>
+                      )}
                     </Typography>
                   </Stack>
 
@@ -188,35 +223,28 @@ export function PlacePlansSection({
                   )}
                 </Stack>
 
-                {/* Date */}
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  sx={{ alignItems: 'center' }}
-                >
-                  <CalendarToday
-                    fontSize="small"
-                    sx={{ color: 'var(--color-text-secondary)', fontSize: 14 }}
-                  />
-                  <Typography
-                    variant="caption"
-                    sx={{ fontWeight: 600, fontSize: '0.75rem' }}
+                {/* Date (if scheduled) */}
+                {plan.plannedDate && (
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    sx={{ alignItems: 'center' }}
                   >
-                    {formatDate(plan.plannedDate || null)}
-                  </Typography>
-                </Stack>
-
-                {/* Attendees */}
-                <Typography
-                  variant="caption"
-                  sx={{
-                    color: 'var(--color-text-secondary)',
-                    fontSize: '0.7rem',
-                  }}
-                >
-                  {plan.attendeeCount}{' '}
-                  {plan.attendeeCount === 1 ? 'person' : 'people'} interested
-                </Typography>
+                    <CalendarToday
+                      fontSize="small"
+                      sx={{
+                        color: 'var(--color-text-secondary)',
+                        fontSize: 14,
+                      }}
+                    />
+                    <Typography
+                      variant="caption"
+                      sx={{ fontWeight: 600, fontSize: '0.75rem' }}
+                    >
+                      {formatDate(plan.plannedDate)}
+                    </Typography>
+                  </Stack>
+                )}
               </Stack>
             </Box>
           ))}
