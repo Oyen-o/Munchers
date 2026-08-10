@@ -53,6 +53,12 @@
 
   --border-color-1: #f0f0f0;
 
+  --button-primary-gradient: linear-gradient(
+    135deg,
+    #f59e0b 0%,
+    var(--color-orange-scarf) 100%
+  );
+
   // Spacing
   --spacing-xs: 4px;
   --spacing-sm: 8px;

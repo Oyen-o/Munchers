@@ -235,6 +235,8 @@ export interface BrandDocument extends BaseDocument {
 	updatedAt?: string;
 }
 
+export type ExperienceProvider = 'meetup' | 'partiful' | 'sweatpals';
+
 export interface ExperienceDocument extends BaseDocument {
 	type: 'experience';
 	entityId: string;
@@ -247,6 +249,8 @@ export interface ExperienceDocument extends BaseDocument {
 	coverPhoto: string;
 	tags: string[];
 	followers: number;
+	provider?: ExperienceProvider;
+	externalUrl?: string;
 	createdAt: string;
 	updatedAt: string;
 }

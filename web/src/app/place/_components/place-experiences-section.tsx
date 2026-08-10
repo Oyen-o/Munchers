@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import {
   Box,
   Card,
@@ -8,7 +8,14 @@ import {
   CardMedia,
   Stack,
   Typography,
+  Chip,
 } from '@mui/material';
+import { OpenInNew as OpenInNewIcon } from '@mui/icons-material';
+import { ExternalProviderBadge } from '../../../components/external-provider-badge';
+import {
+  getProviderConfig,
+  type ExperienceProvider,
+} from '../../../lib/providers/provider-config';
 
 import './place-experiences-section.scss';
 
@@ -25,6 +32,8 @@ const experiencesByPlace: Record<string, any> = {
         coverImage:
           'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=400&h=250&fit=crop',
         badge: 'Official',
+        logoUrl: '/logos/az-sport-league.png',
+        brandId: 'az-sport-league', // ID for brand page navigation
       },
     ],
     community: [
@@ -35,7 +44,9 @@ const experiencesByPlace: Record<string, any> = {
         description:
           'Meet local players for casual games followed by coffee nearby.',
         coverImage:
-          'https://images.unsplash.com/photo-1593766787879-e8c78e09cec5?w=400&h=250&fit=crop',
+          'https://media.istockphoto.com/id/1217070875/photo/silhouette-of-beach-volleyball-player-on-the-beach.jpg?s=612x612&w=0&k=20&c=pp32lsImCnMZoHvcbQnOmzWrYg_-gHNKIrEkwlc9agw=',
+        provider: 'meetup' as ExperienceProvider,
+        externalUrl: 'https://meetup.com/example-event',
       },
       {
         id: 'exp2',
@@ -45,6 +56,8 @@ const experiencesByPlace: Record<string, any> = {
           'Weekend tournaments with multiple courts, vendors, spectators, and championship matches.',
         coverImage:
           'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=400&h=250&fit=crop',
+        provider: 'partiful' as ExperienceProvider,
+        externalUrl: 'https://partiful.com/example-event',
       },
       {
         id: 'exp3',
@@ -53,7 +66,7 @@ const experiencesByPlace: Record<string, any> = {
         description:
           'Perfect for learning rotations, serving, and basic gameplay with experienced players.',
         coverImage:
-          'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=250&fit=crop',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ322ZFapAQFmkj8q1G1xRNGpiC1NwVw-bEKSsU1G9QUA&s=612x612',
       },
       {
         id: 'exp4',
@@ -62,7 +75,9 @@ const experiencesByPlace: Record<string, any> = {
         description:
           'One of the most popular recurring volleyball nights at this park.',
         coverImage:
-          'https://images.unsplash.com/photo-1519315901367-f34ff9154487?w=400&h=250&fit=crop',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4Jm5scD1doXer_wA8Io_y9gtuoc0bPI5E0-XhulPqfQ&s=10',
+        provider: 'sweatpals' as ExperienceProvider,
+        externalUrl: 'https://sweatpals.com/example-event',
       },
     ],
   },
@@ -70,8 +85,19 @@ const experiencesByPlace: Record<string, any> = {
 
 export function PlaceExperiencesSection() {
   const params = useParams();
+  const router = useRouter();
   const placeId = params?.id as string;
   const experiences = experiencesByPlace[placeId];
+
+  const handleBrandClick = (brandId: string, event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent card click
+    router.push(`/brand/${brandId}`);
+  };
+
+  const handleExternalLink = (url: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <Box className="place-experiences">
@@ -79,7 +105,7 @@ export function PlaceExperiencesSection() {
         Experiences
       </Typography>
       <Typography variant="body2" className="place-experiences__subtitle">
-        Discover curated experiences at this place
+        Discover official and community experiences at this place
       </Typography>
 
       <Stack spacing={3}>
@@ -114,6 +140,45 @@ export function PlaceExperiencesSection() {
                       image={exp.coverImage}
                       alt={exp.title}
                     />
+                    {exp.logoUrl && exp.brandId && (
+                      <Box
+                        onClick={(e) => handleBrandClick(exp.brandId, e)}
+                        sx={{
+                          position: 'absolute',
+                          top: '12px',
+                          right: '12px',
+                          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                          padding: '10px',
+                          borderRadius: '12px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease-in-out',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                          '&:hover': {
+                            transform: 'scale(1.08)',
+                            backgroundColor: 'rgba(255, 255, 255, 1)',
+                            boxShadow: '0 4px 16px rgba(0,0,0,0.25)',
+                          },
+                          '&:active': {
+                            transform: 'scale(1.02)',
+                          },
+                        }}
+                        title="View brand page"
+                      >
+                        <img
+                          src={exp.logoUrl}
+                          alt="Official logo"
+                          style={{
+                            width: 48,
+                            height: 48,
+                            display: 'block',
+                            pointerEvents: 'none',
+                          }}
+                        />
+                      </Box>
+                    )}
                     <Box
                       sx={{
                         position: 'absolute',
@@ -125,6 +190,28 @@ export function PlaceExperiencesSection() {
                           'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)',
                       }}
                     >
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          fontFamily: 'goldman',
+                          background:
+                            'linear-gradient(135deg, #C0C0C0 0%, #808080 50%, #2C2C2C 100%)',
+                          color: '#fff',
+                          textTransform: 'uppercase',
+                          fontWeight: 800,
+                          fontSize: '0.65rem',
+                          padding: '5px 12px',
+                          borderRadius: '6px',
+                          letterSpacing: '1px',
+                          boxShadow:
+                            '0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.3)',
+                          textShadow: '0 1px 2px rgba(0,0,0,0.5)',
+                          display: 'inline-block',
+                          mb: 1,
+                        }}
+                      >
+                        {exp.badge || 'Official'}
+                      </Typography>
                       <Typography
                         variant="h6"
                         sx={{
@@ -138,39 +225,19 @@ export function PlaceExperiencesSection() {
                     </Box>
                   </Box>
                   <CardContent>
-                    <Stack
-                      direction="row"
-                      spacing={1}
-                      alignItems="center"
-                      sx={{ mb: 1 }}
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: 'var(--color-text-secondary)',
+                        textTransform: 'uppercase',
+                        fontWeight: 600,
+                        fontSize: '0.7rem',
+                        display: 'block',
+                        mb: 1,
+                      }}
                     >
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          color: '#fff',
-                          backgroundColor: 'var(--color-accent-main)',
-                          textTransform: 'uppercase',
-                          fontWeight: 700,
-                          fontSize: '0.65rem',
-                          padding: '4px 10px',
-                          borderRadius: '12px',
-                          letterSpacing: '0.5px',
-                        }}
-                      >
-                        {exp.badge || 'Official'}
-                      </Typography>
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          color: 'var(--color-text-secondary)',
-                          textTransform: 'uppercase',
-                          fontWeight: 600,
-                          fontSize: '0.7rem',
-                        }}
-                      >
-                        {exp.category}
-                      </Typography>
-                    </Stack>
+                      {exp.category}
+                    </Typography>
                     <Typography
                       variant="body2"
                       sx={{ color: 'var(--color-text-secondary)', mt: 1 }}
@@ -217,12 +284,20 @@ export function PlaceExperiencesSection() {
             <Box className="place-experiences__carousel">
               {experiences.community.map((exp: any) => {
                 const isMeetup = exp.category === 'Meetup';
+                const providerConfig = getProviderConfig(exp.provider);
+                const hasProvider = !!exp.provider;
+
                 return (
                   <Card
                     key={exp.id}
                     className={`place-experiences__card place-experiences__card--filled ${
                       isMeetup ? 'place-experiences__card--meetup' : ''
                     }`}
+                    sx={{
+                      ...(providerConfig && {
+                        borderLeft: `4px solid ${providerConfig.colors.primary}`,
+                      }),
+                    }}
                   >
                     <Box sx={{ position: 'relative' }}>
                       <CardMedia
@@ -231,7 +306,30 @@ export function PlaceExperiencesSection() {
                         image={exp.coverImage}
                         alt={exp.title}
                       />
-                      {isMeetup && (
+
+                      {/* Provider Badge (replaces brand logo position) */}
+                      {exp.provider && (
+                        <Box
+                          sx={{
+                            position: 'absolute',
+                            top: '12px',
+                            right: '12px',
+                          }}
+                        >
+                          <ExternalProviderBadge
+                            provider={exp.provider}
+                            size="medium"
+                            onClick={
+                              exp.externalUrl
+                                ? (e) => handleExternalLink(exp.externalUrl, e)
+                                : undefined
+                            }
+                          />
+                        </Box>
+                      )}
+
+                      {/* Meetup badge (for backward compatibility) */}
+                      {isMeetup && !exp.provider && (
                         <Box
                           sx={{
                             position: 'absolute',
@@ -251,6 +349,7 @@ export function PlaceExperiencesSection() {
                           MEET-UP
                         </Box>
                       )}
+
                       <Box
                         sx={{
                           position: 'absolute',
@@ -278,20 +377,47 @@ export function PlaceExperiencesSection() {
                       <Typography
                         variant="caption"
                         sx={{
-                          color: 'var(--color-accent-main)',
+                          color: hasProvider
+                            ? providerConfig?.colors.accent
+                            : 'var(--color-accent-main)',
                           textTransform: 'uppercase',
                           fontWeight: 600,
-                          fontSize: '0.7rem',
+                          fontSize: 'var(--font-size-lg)',
+                          display: 'block',
+                          mb: 1,
                         }}
                       >
                         {exp.category}
                       </Typography>
                       <Typography
                         variant="body2"
-                        sx={{ color: 'var(--color-text-secondary)', mt: 1 }}
+                        sx={{ color: 'var(--color-text-secondary)', mb: 2 }}
                       >
                         {exp.description}
                       </Typography>
+
+                      {/* Hosted on Provider chip */}
+                      {hasProvider && providerConfig && (
+                        <Chip
+                          onClick={(e) =>
+                            handleExternalLink(exp.externalUrl, e)
+                          }
+                          icon={<OpenInNewIcon sx={{ fontSize: '0.9rem' }} />}
+                          label={` ${providerConfig.displayName}`}
+                          size="small"
+                          sx={{
+                            mb: 1.5,
+                            backgroundColor: providerConfig.colors.background,
+                            color: providerConfig.colors.primary,
+                            fontWeight: 600,
+                            fontSize: '0.7rem',
+                            border: `1px solid ${providerConfig.colors.primary}40`,
+                            '& .MuiChip-icon': {
+                              color: providerConfig.colors.primary,
+                            },
+                          }}
+                        />
+                      )}
                     </CardContent>
                   </Card>
                 );

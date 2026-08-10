@@ -11,3 +11,16 @@
     format('truetype');
   font-style: normal;
 }
+
+@font-face {
+  font-family: goldman;
+  src: url('../../public/fonts/Goldman/Goldman-Regular.ttf') format('truetype');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: goldman;
+  src: url('../../public/fonts/Goldman/Goldman-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}

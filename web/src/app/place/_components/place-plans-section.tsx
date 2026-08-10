@@ -79,7 +79,8 @@ export function PlacePlansSection({
       </Stack>
 
       <Typography variant="body2" className="place-plans__subtitle">
-        Upcoming plans at this place
+        Your friends have created plans at this place. Join then to receive
+        updates and coordinate with them.
       </Typography>
 
       {plans.length === 0 ? (
