@@ -8,6 +8,7 @@ import {
   CircularProgress,
   Stack,
   Typography,
+  Avatar,
 } from '@mui/material';
 import { Add, CalendarToday, Person, Group } from '@mui/icons-material';
 
@@ -27,6 +28,7 @@ type Plan = {
   groupId?: string | null;
   groupName?: string | null;
   groupAvatar?: string | null;
+  groupMemberCount?: number;
   plannedDate?: string | null;
   status: 'idea' | 'planning' | 'upcoming';
   stage: string;
@@ -81,12 +83,12 @@ export function PlacePlansSection({
           onClick={onCreatePlan}
           variant="outlined"
         >
-          New Plan
+          Plan a Visit
         </Button>
       </Stack>
 
       <Typography variant="body2" className="place-plans__subtitle">
-        See what experiences people want to try at this place
+        See what friends & groups are planning
       </Typography>
 
       {plans.length === 0 ? (
@@ -95,7 +97,7 @@ export function PlacePlansSection({
             variant="body2"
             sx={{ color: 'var(--color-text-secondary)', textAlign: 'center' }}
           >
-            Be the first to create a plan for an experience at this place.
+            Be the first to plan something special here
           </Typography>
           <Button
             variant="contained"
@@ -103,7 +105,7 @@ export function PlacePlansSection({
             onClick={onCreatePlan}
             sx={{ mt: 2 }}
           >
-            Create Plan
+            Start Planning
           </Button>
         </Card>
       ) : (
@@ -122,10 +124,10 @@ export function PlacePlansSection({
                     <Chip
                       label={
                         plan.status === 'idea'
-                          ? 'Want to try'
+                          ? 'Saved'
                           : plan.status === 'planning'
-                            ? 'Planning'
-                            : 'Upcoming'
+                            ? 'Organizing'
+                            : 'Confirmed'
                       }
                       size="small"
                       className="place-plans__idea-badge"
@@ -174,52 +176,46 @@ export function PlacePlansSection({
                     spacing={1}
                     sx={{ alignItems: 'center' }}
                   >
-                    <Person
-                      fontSize="small"
-                      sx={{
-                        color: 'var(--color-text-secondary)',
-                        fontSize: 14,
-                      }}
+                    <Avatar
+                      src={plan.creatorAvatar}
+                      alt={plan.creatorName || plan.createdBy}
+                      sx={{ width: 32, height: 32 }}
                     />
                     <Typography
-                      variant="caption"
+                      variant="body2"
                       sx={{
-                        color: 'var(--color-text-secondary)',
-                        fontSize: '0.75rem',
+                        color: 'var(--color-text-primary)',
+                        fontSize: '0.875rem',
+                        fontWeight: 500,
                       }}
                     >
                       {plan.creatorName || plan.createdBy}
-                      {!plan.groupId && (
-                        <span style={{ marginLeft: 4, fontStyle: 'italic' }}>
-                          (Personal)
-                        </span>
-                      )}
                     </Typography>
                   </Stack>
 
                   {plan.groupId && plan.groupName && (
-                    <Stack
-                      direction="row"
-                      spacing={1}
-                      sx={{ alignItems: 'center' }}
-                    >
-                      <Group
-                        fontSize="small"
-                        sx={{
-                          color: 'var(--color-text-secondary)',
-                          fontSize: 14,
-                        }}
-                      />
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          color: 'var(--color-text-secondary)',
-                          fontSize: '0.75rem',
-                        }}
-                      >
-                        {plan.groupName}
-                      </Typography>
-                    </Stack>
+                    <Chip
+                      icon={<Group fontSize="small" />}
+                      label={
+                        <span>
+                          {plan.groupName}
+                          {plan.groupMemberCount && (
+                            <span style={{ opacity: 0.7, marginLeft: 4 }}>
+                              · {plan.groupMemberCount} members
+                            </span>
+                          )}
+                        </span>
+                      }
+                      className="place-plans__group-chip"
+                      sx={{
+                        width: '100%',
+                        backgroundImage: plan.groupAvatar
+                          ? `linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url(${plan.groupAvatar})`
+                          : 'none',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      }}
+                    />
                   )}
                 </Stack>
 

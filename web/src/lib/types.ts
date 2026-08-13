@@ -197,6 +197,12 @@ export interface PlaceCommunityRatings {
   friends?: {
     average: number;
     count: number;
+    users?: Array<{
+      id: string;
+      name: string;
+      avatar: string;
+      rating: number;
+    }>;
   };
 }
 

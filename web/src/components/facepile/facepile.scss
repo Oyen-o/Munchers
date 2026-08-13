@@ -1,0 +1,14 @@
+@import '../../themes/variables.scss';
+
+.facepile {
+  display: flex;
+  align-items: center;
+
+  &__avatar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    &--overflow {
+      background-color: var(--color-text-secondary);
+    }
+  }
+}

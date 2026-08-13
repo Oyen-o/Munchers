@@ -1,6 +1,6 @@
 .place-ratings {
-  padding: var(--spacing-lg);
-  background: #f8f8f8;
+  padding: var(--spacing-xl);
+  background: var(--bg-section);
   border-bottom: 1px solid #f1e2d3;
 
   &__title {
@@ -31,7 +31,7 @@
 
   &__rating-card {
     min-width: 200px;
-    padding: var(--spacing-lg);
+    padding: var(--spacing-xl);
     border-radius: 16px;
     border: 1px solid #f1e2d3;
     background: #fffdf8;

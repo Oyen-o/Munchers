@@ -71,6 +71,9 @@ const theme = createTheme({
           textTransform: 'none',
           fontWeight: 700,
           padding: 'var(--spacing-sm) var(--spacing-xl)',
+          '&:active': {
+            transform: 'scale(0.98)',
+          },
         },
         contained: {
           backgroundColor: 'var(--color-orange-scarf)',

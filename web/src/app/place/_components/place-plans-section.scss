@@ -1,6 +1,6 @@
 .place-plans {
-  padding: var(--spacing-lg);
-  background: #f8f8f8;
+  padding: var(--spacing-xl);
+  background: var(--bg-section);
 
   &__title {
     font-weight: 800;
@@ -63,12 +63,11 @@
     height: 100%;
     color: var(--color-cream-highlights);
     z-index: 2;
-    padding: var(--spacing-md);
+    padding: var(--spacing-lg);
   }
 
   &__experience-title {
     color: var(--color-cream-highlights);
-
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
     line-height: 1;
     letter-spacing: -1px;
@@ -121,14 +120,62 @@
 
   &__plan-content {
     width: 100%;
-    padding: var(--spacing-md);
+    padding: var(--spacing-lg);
+    background: var(--bg-card);
+
+    margin: auto;
+  }
+
+  &__creator-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+
+  &__group-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
+  }
+
+  &__group-chip {
+    width: 100% !important;
+    height: auto !important;
+    padding: var(--spacing-sm) var(--spacing-md) !important;
+    border-radius: 12px !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    border: 1px solid var(--bg-border-light) !important;
+    backdrop-filter: blur(8px);
+    transition: all 0.2s ease !important;
+    justify-content: flex-start !important;
+
+    .MuiChip-icon {
+      margin-left: 4px !important;
+      color: var(--color-text-secondary) !important;
+    }
+
+    .MuiChip-label {
+      padding-left: 8px !important;
+      padding-right: 12px !important;
+      color: var(--color-text-primary) !important;
+      width: 100%;
+      text-align: left;
+    }
+
+    &:hover {
+      border-color: var(--bg-border-medium) !important;
+      transform: scale(1.01);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
   }
 
   &__card {
     padding: var(--spacing-md);
     border-radius: 16px;
     border: 1px solid #f1dfca;
-    background: #fffdf8;
+    background: var(--bg-card);
     box-shadow: 0 2px 8px rgba(94, 63, 31, 0.04);
     cursor: pointer;
     transition: all 0.2s ease;
@@ -136,6 +183,10 @@
     &:hover {
       box-shadow: 0 4px 16px rgba(94, 63, 31, 0.1);
       transform: translateY(-2px);
+
+      .place-plans__plan-content {
+        background: var(--bg-section-elevated);
+      }
     }
 
     &--empty {
@@ -151,7 +202,11 @@
   }
 
   &__idea-badge {
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    background: linear-gradient(
+      135deg,
+      var(--bg-accent-warm) 0%,
+      var(--bg-accent-warm-end) 100%
+    );
     color: #92400e;
     font-weight: 700;
     border: 1px solid #fbbf24;

@@ -1,6 +1,6 @@
 .place-experiences {
-  padding: var(--spacing-lg);
-  background: #f8f8f8;
+  padding: var(--spacing-xl);
+  background: var(--bg-section);
   border-bottom: 1px solid #f1e2d3;
 
   &__title {
@@ -27,16 +27,16 @@
     }
 
     &::-webkit-scrollbar-track {
-      background: #f1e2d3;
+      background: var(--bg-border-light);
       border-radius: 4px;
     }
 
     &::-webkit-scrollbar-thumb {
-      background: #d4af7a;
+      background: var(--bg-border-medium);
       border-radius: 4px;
 
       &:hover {
-        background: #c29d64;
+        background: var(--bg-border-dark);
       }
     }
   }
@@ -45,10 +45,10 @@
     padding: var(--spacing-xl);
     border-radius: 16px;
     border: 1px solid #f1dfca;
-    background: #fffdf8;
+    background: var(--bg-card);
 
     &--empty {
-      background: #fafaf9;
+      background: var(--bg-card-hover);
       border-style: dashed;
     }
 
@@ -66,7 +66,7 @@
       flex-direction: column;
 
       &:hover {
-        transform: translateY(-4px);
+        transform: translateY(-2px);
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
       }
 

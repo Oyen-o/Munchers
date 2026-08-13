@@ -22,6 +22,44 @@ export async function GET(
           friends: {
             average: 4.3,
             count: 12,
+            users: [
+              {
+                id: '1',
+                name: 'Sarah Chen',
+                avatar: 'https://i.pravatar.cc/150?img=5',
+                rating: 5,
+              },
+              {
+                id: '2',
+                name: 'Mike Johnson',
+                avatar: 'https://i.pravatar.cc/150?img=12',
+                rating: 4,
+              },
+              {
+                id: '3',
+                name: 'Emma Davis',
+                avatar: 'https://i.pravatar.cc/150?img=9',
+                rating: 5,
+              },
+              {
+                id: '4',
+                name: 'Alex Martinez',
+                avatar: 'https://i.pravatar.cc/150?img=33',
+                rating: 4,
+              },
+              {
+                id: '5',
+                name: 'Jordan Lee',
+                avatar: 'https://i.pravatar.cc/150?img=20',
+                rating: 4,
+              },
+              {
+                id: '6',
+                name: 'Taylor Swift',
+                avatar: 'https://i.pravatar.cc/150?img=23',
+                rating: 5,
+              },
+            ],
           },
         },
         lists: {
@@ -36,9 +74,9 @@ export async function GET(
             },
             {
               listId: 'list2',
-              listName: 'Casual Dining',
+              listName: 'Student Discounts',
               groupId: 'group2',
-              groupName: 'College Friends',
+              groupName: 'ASU TEMPE STUDENT BODY',
               rank: 1,
               totalItems: 8,
             },
@@ -140,6 +178,44 @@ export async function GET(
           friends: {
             average: 4.8,
             count: 28,
+            users: [
+              {
+                id: '7',
+                name: 'Chris Anderson',
+                avatar: 'https://i.pravatar.cc/150?img=13',
+                rating: 5,
+              },
+              {
+                id: '8',
+                name: 'Samantha Miller',
+                avatar: 'https://i.pravatar.cc/150?img=10',
+                rating: 5,
+              },
+              {
+                id: '9',
+                name: 'Ryan Thompson',
+                avatar: 'https://i.pravatar.cc/150?img=15',
+                rating: 5,
+              },
+              {
+                id: '10',
+                name: 'Jessica Garcia',
+                avatar: 'https://i.pravatar.cc/150?img=24',
+                rating: 4,
+              },
+              {
+                id: '11',
+                name: 'Kevin Brown',
+                avatar: 'https://i.pravatar.cc/150?img=31',
+                rating: 5,
+              },
+              {
+                id: '12',
+                name: 'Ashley Wilson',
+                avatar: 'https://i.pravatar.cc/150?img=26',
+                rating: 5,
+              },
+            ],
           },
         },
         lists: {

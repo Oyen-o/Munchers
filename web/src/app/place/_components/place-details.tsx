@@ -31,6 +31,7 @@ import { CreatePlanModal } from './create-plan-modal';
 import { PlaceExperiencesSection } from './place-experiences-section';
 import { PlacePlansSection } from './place-plans-section';
 import { PlaceRatingsSection } from './place-ratings-section';
+import { Facepile } from 'src/components/facepile';
 
 type PlaceDetailsProps = {
   placeId: string;
@@ -153,42 +154,51 @@ export function PlaceDetails({ placeId }: PlaceDetailsProps) {
         </Stack>
       </Box>
 
+      {/* Friends Rating Hero */}
+      {ratingsQuery.data?.ratings?.friends &&
+        ratingsQuery.data.ratings.friends.count > 0 && (
+          <Box className="place-details__friends-hero">
+            <Stack spacing={3} sx={{ alignItems: 'center' }}>
+              <img
+                src={getRatingImage(ratingsQuery.data.ratings.friends.average)}
+                alt="star"
+                className="place-details__friends-hero-star"
+              />
+              <Stack spacing={1} sx={{ alignItems: 'center' }}>
+                <Typography
+                  variant="h1"
+                  className="place-details__friends-hero-rating"
+                >
+                  {ratingsQuery.data.ratings.friends.average.toFixed(1)}
+                </Typography>
+                <Typography
+                  variant="h6"
+                  className="place-details__friends-hero-text"
+                >
+                  {ratingsQuery.data.ratings.friends.count}{' '}
+                  {ratingsQuery.data.ratings.friends.count === 1
+                    ? 'friend loves this place'
+                    : 'friends love this place'}
+                </Typography>
+              </Stack>
+              {ratingsQuery.data.ratings.friends.users &&
+                ratingsQuery.data.ratings.friends.users.length > 0 && (
+                  <Facepile
+                    users={ratingsQuery.data.ratings.friends.users}
+                    max={8}
+                    size="large"
+                  />
+                )}
+            </Stack>
+          </Box>
+        )}
+
       {/* Place Info Bar */}
       <Stack className="place-details__info-bar" spacing={2}>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           <LocationOn fontSize="small" />
           <Typography variant="body2">{place.address}</Typography>
         </Stack>
-
-        {/* Friends Rating */}
-        {ratingsQuery.data?.ratings?.friends &&
-          ratingsQuery.data.ratings.friends.count > 0 && (
-            <Stack
-              direction="row"
-              spacing={1}
-              sx={{ alignItems: 'center', mt: 1 }}
-              className="place-details__friends-rating"
-            >
-              <img
-                src={getRatingImage(ratingsQuery.data.ratings.friends.average)}
-                alt="star"
-                style={{ width: 63, height: 63 }}
-              />
-              <Typography variant="h5" sx={{ fontWeight: 700, lineHeight: 1 }}>
-                {ratingsQuery.data.ratings.friends.average.toFixed(1)}
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{ color: 'var(--color-text-secondary)' }}
-              >
-                ({ratingsQuery.data.ratings.friends.count}{' '}
-                {ratingsQuery.data.ratings.friends.count === 1
-                  ? 'friend'
-                  : 'friends'}
-                )
-              </Typography>
-            </Stack>
-          )}
 
         <Stack direction="row" spacing={1} className="place-details__actions">
           <Button
@@ -197,7 +207,7 @@ export function PlaceDetails({ placeId }: PlaceDetailsProps) {
             onClick={() => setCreatePlanOpen(true)}
             className="place-details__primary-action"
           >
-            Plan
+            Plan a Visit
           </Button>
           <IconButton size="small">
             <BookmarkBorder />

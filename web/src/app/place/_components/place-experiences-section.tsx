@@ -116,7 +116,7 @@ export function PlaceExperiencesSection() {
           ) : (
             <Card className="place-experiences__card place-experiences__card--empty">
               <Typography variant="body2" className="experience-item__empty">
-                No official experiences yet.
+                No official events listed — discover community favorites below
               </Typography>
             </Card>
           )}
